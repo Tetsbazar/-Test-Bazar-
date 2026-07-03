@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bazar - Master Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        /* ================= COLOR SCHEME ================= */
+        :root {
+            --primary: #1a7a4a;
+            --primary-hover: #2aad68;
+            --accent: #f9a825;
+            --bg-main: #f0faf4;
+            --bg-card: #ffffff;
+            --text-main: #1c2e24;
+            --text-meta: #5a7a66;
+            --border-color: #c5dccb;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: 'Tiro Bangla', serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+        .en-font { font-family: 'Syne', sans-serif; }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--bg-card); padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1.5px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(26,122,74,0.06);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--text-main); }
+        .logo span { color: var(--accent); }
+        .student-count-badge { background: var(--primary); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+
+        /* Admin Login Screen */
+        #loginScreen {
+            max-width: 400px; margin: 5rem auto; background: var(--bg-card);
+            padding: 2.5rem; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center; border: 1.5px solid var(--border-color);
+        }
+        #loginScreen h2 { color: var(--primary); margin-bottom: 10px; }
+        #loginScreen p { color: var(--text-meta); margin-bottom: 20px; font-size: 0.95rem; }
+
+        input[type="text"], input[type="password"], textarea {
+            width: 100%; padding: 10px; margin-bottom: 15px; border: 1.5px solid var(--border-color);
+            border-radius: 8px; font-size: 1rem; font-family: 'Syne', sans-serif; box-sizing: border-box;
+        }
+        textarea { height: 120px; resize: vertical; }
+
+        button {
+            width: 100%; background: var(--primary); color: white; border: none;
+            padding: 12px; border-radius: 8px; font-size: 1rem; font-family: 'Tiro Bangla', serif;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--danger); width: auto; padding: 6px 12px; font-size: 0.85rem; }
+        .btn-danger:hover { background: #c82333; }
+
+        /* Dashboard Grid */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+
+        .card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color); box-shadow: 0 4px 10px rgba(26,122,74,0.05); }
+        .card h3 { margin-top: 0; color: var(--primary); font-size: 1.2rem; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px; margin-bottom: 15px; }
+
+        .flex-input { display: flex; gap: 10px; }
+        .flex-input input { margin-bottom: 0; }
+        .flex-input button { width: 80px; }
+
+        .hint { font-size: 0.8rem; color: var(--text-meta); margin-bottom: 8px; display: block; }
+        .example-box { background: var(--bg-main); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-meta); font-family: 'Syne', sans-serif; margin-bottom: 15px; border: 1px dashed var(--border-color); }
+
+        /* Student List */
+        .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .student-table th, .student-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-family: 'Syne', sans-serif; font-size: 0.95rem; }
+        .student-table th { background: var(--bg-main); color: var(--primary); font-weight: bold; }
+        .empty-msg { text-align: center; color: var(--text-meta); padding: 20px; font-style: italic; }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <div class="logo en-font">Test<span>Bazar</span> <small style="font-size: 0.7rem; color: var(--text-meta);">Master Control Panel</small></div>
+        <div class="student-count-badge hidden" id="topBadge"><span id="totalStudentsTop">0</span> Students</div>
+    </header>
+
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <h2>Admin Access</h2>
+        <p>Admin Panel এ প্রবেশ করতে password দিন</p>
+        <input type="password" id="adminPass" placeholder="Admin Password (Hint: 1234)">
+        <button onclick="loginAdmin()">প্রবেশ করুন</button>
+        <div id="loginError" style="color: red; margin-top: 10px; font-size: 0.9rem; display: none;">পাসওয়ার্ড ভুল!</div>
+    </div>
+
+    <!-- Main Dashboard (Hidden initially) -->
+    <div class="container hidden" id="dashboardScreen">
+
+        <div class="dashboard-grid">
+            <!-- Single Add Card -->
+            <div class="card">
+                <h3>+ নতুন Student যোগ করুন</h3>
+                <span class="hint">একটি করে স্টুডেন্ট যোগ করুন</span>
+                <input type="text" id="singleUser" placeholder="Username (যেমন: sagun)">
+                <input type="text" id="singlePass" placeholder="Password (যেমন: sagun123)">
+                <button onclick="addSingleStudent()">Add Student</button>
+            </div>
+
+            <!-- Bulk Add Card -->
+            <div class="card">
+                <h3>একসাথে অনেক Student যোগ করুন (Bulk Add)</h3>
+                <span class="hint">Format: প্রতি লাইনে username, password লিখুন</span>
+                <div class="example-box">
+                    উদাহরণ:<br>
+                    sagun, sagun123<br>
+                    samir, samir456<br>
+                    pradip, pradip789
+                </div>
+                <textarea id="bulkData" placeholder="sagun, sagun123&#10;samir, samir456..."></textarea>
+                <button onclick="addBulkStudents()">সবাইকে একসাথে Add করুন</button>
+            </div>
+        </div>
+
+        <!-- Student List Card -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); margin-bottom: 15px; padding-bottom: 8px;">
+                <h3 style="border: none; margin: 0; padding: 0;">Student List</h3>
+                <span style="font-weight: bold; color: var(--primary);"><span id="listCount">0</span> Students</span>
+            </div>
+
+            <table class="student-table" id="studentTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="studentListBody">
+                    <!-- Students will be loaded here -->
+                </tbody>
+            </table>
+            <div id="emptyMessage" class="empty-msg">
+                কোনো student নেই। উপরে থেকে add করুন।
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Local Storage Key for testing
+    const STORAGE_KEY = "testBazarStudents";
+
+    // Initialize Database
+    let studentsDB = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
+    // 1. Login Function
+    function loginAdmin() {
+        const pass = document.getElementById("adminPass").value;
+        if(pass === "1234") { // ডেমো পাসওয়ার্ড
+            document.getElementById("loginScreen").classList.add("hidden");
+            document.getElementById("dashboardScreen").classList.remove("hidden");
+            document.getElementById("topBadge").classList.remove("hidden");
+            updateUI();
+        } else {
+            document.getElementById("loginError").style.display = "block";
+        }
+    }
+
+    // 2. Add Single Student
+    function addSingleStudent() {
+        const user = document.getElementById("singleUser").value.trim();
+        const pass = document.getElementById("singlePass").value.trim();
+
+        if(!user || !pass) { alert("ইউজারনেম এবং পাসওয়ার্ড দুটোই দিতে হবে!"); return; }
+        if(studentsDB[user]) { alert("এই ইউজারনেমটি আগে থেকেই আছে!"); return; }
+
+        studentsDB[user] = pass;
+        saveData();
+
+        document.getElementById("singleUser").value = "";
+        document.getElementById("singlePass").value = "";
+        alert("Student সফলভাবে যোগ করা হয়েছে!");
+    }
+
+    // 3. Bulk Add Students
+    function addBulkStudents() {
+        const data = document.getElementById("bulkData").value.trim();
+        if(!data) { alert("বক্সে কিছু ডেটা দিন!"); return; }
+
+        const lines = data.split('\n');
+        let addedCount = 0;
+
+        lines.forEach(line => {
+            const parts = line.split(',');
+            if(parts.length >= 2) {
+                const user = parts.trim();
+                const pass = parts.trim();
+                if(user && pass && !studentsDB[user]) {
+                    studentsDB[user] = pass;
+                    addedCount++;
+                }
+            }
+        });
+
+        saveData();
+        document.getElementById("bulkData").value = "";
+        alert(`${addedCount} জন Student সফলভাবে যোগ করা হয়েছে!`);
+    }
+
+    // 4. Delete Student
+    function deleteStudent(user) {
+        if(confirm(`আপনি কি নিশ্চিত যে '${user}' কে ডিলিট করতে চান?`)) {
+            delete studentsDB[user];
+            saveData();
+        }
+    }
+
+    // 5. Save and Update UI
+    function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studentsDB));
+        updateUI();
+    }
+
+    function updateUI() {
+        const tbody = document.getElementById("studentListBody");
+        const emptyMsg = document.getElementById("emptyMessage");
+        const users = Object.keys(studentsDB);
+
+        document.getElementById("totalStudentsTop").innerText = users.length;
+        document.getElementById("listCount").innerText = users.length;
+
+        tbody.innerHTML = "";
+
+        if(users.length === 0) {
+            emptyMsg.style.display = "block";
+            document.getElementById("studentTable").style.display = "none";
+        } else {
+            emptyMsg.style.display = "none";
+            document.getElementById("studentTable").style.display = "table";
+
+            users.forEach(user => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${user}</td>
+                    <td>${studentsDB[user]}</td>
+                    <td style="text-align: right;">
+                        <button class="btn-danger" onclick="deleteStudent('${user}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
+
