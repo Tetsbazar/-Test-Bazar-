@@ -1,13 +1,22 @@
+গিটহাবে (GitHub Pages) আপনার ওয়েবসাইটটি লাইভ বা হোস্ট করার জন্য আপনাকে সবার প্রথমে যে ফাইলটি আপলোড করতে হবে, তার নাম অবশ্যই **`index.html`** হতে হবে। 
+
+**এর কারণ হলো:** কেউ যখন আপনার ডোমেইনে (যেমন- www.testbazar.com) প্রবেশ করবে, তখন সার্ভার স্বয়ংক্রিয়ভাবে এই `index.html` ফাইলটিকেই হোমপেজ হিসেবে সবার প্রথমে ওপেন করবে।
+
+আপনার স্টুডেন্টদের জন্য তৈরি করা সেই প্রথম পেজের (যেখানে Class 10, 11 ও 12 সিলেক্ট করার অপশন আছে) সম্পূর্ণ কোড নিচে দেওয়া হলো। 
+
+এই কোডটি কপি করে **`index.html`** নামে সেভ করুন এবং গিটহাবে আপনার রিপোজিটরিতে (Repository) আপলোড করুন:
+
+```html
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Bazar - Home</title>
-
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
-
+    
     <style>
         /* ================= COLOR SCHEME & VARIABLES ================= */
         :root {
@@ -36,7 +45,7 @@
         /* ================= TOP BAR ================= */
         .top-bar {
             position: sticky; top: 0; z-index: 100;
-            background-color: var(--bg-card);
+            background-color: var(--bg-card); 
             padding: 1rem 2rem;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1.5px solid var(--border-color);
@@ -44,7 +53,7 @@
         }
         .logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--text-main); }
         .logo span { color: var(--accent); }
-
+        
         .nav-buttons button {
             background: var(--primary); color: #fff;
             border: none; padding: 0.6rem 1.2rem;
@@ -128,16 +137,16 @@
             font-weight: 600; margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 5px;
         }
         .back-btn:hover { color: var(--primary); }
-
+        
         .subject-header { border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 2rem; }
         .subject-header h2 { color: var(--primary); margin: 0; font-size: 1.8rem; }
-
+        
         .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.2rem;
         }
-
+        
         .subject-card {
             background: var(--bg-card); padding: 1.5rem; border-radius: 12px;
             border: 1.5px solid var(--border-color); cursor: pointer;
@@ -165,7 +174,7 @@
     </header>
 
     <div class="main-container">
-
+        
         <!-- ================= HOME VIEW (Class Selection) ================= -->
         <div id="homeView">
             <div class="hero-section">
@@ -200,7 +209,7 @@
         <!-- ================= SUBJECT VIEW ================= -->
         <div id="subjectView" class="subject-view">
             <button class="back-btn" onclick="goHome()">← ফিরে যান</button>
-
+            
             <div class="subject-header">
                 <h2 id="selectedClassTitle" class="en-font">Class 10</h2>
                 <p>আপনার বিষয় নির্বাচন করুন</p>
@@ -251,7 +260,7 @@
         document.getElementById('selectedClassTitle').innerText = className;
 
         const grid = document.getElementById('subjectGrid');
-        grid.innerHTML = '';
+        grid.innerHTML = ''; 
 
         const subjects = subjectsData[className];
         if(subjects) {
@@ -278,5 +287,11 @@
 
 </body>
 </html>
+```
 
+**গিটহাবে আপলোড করার পদ্ধতি:**
+১. গিটহাবে আপনার রিপোজিটরিতে (Repository) গিয়ে `Add file` > `Create new file`-এ ক্লিক করবেন। 
+২. ফাইলের নাম দেবেন `index.html`।
+৩. উপরের কোডটি সেখানে পেস্ট করে নিচে `Commit changes`-এ ক্লিক করে সেভ করবেন। 
 
+এই ফাইলটি আপলোড করা হয়ে গেলে আমাকে জানাবেন, তারপর আমরা আগে তৈরি করা `admin.html` ফাইলটিও আপলোড করে দেবো।
