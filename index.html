@@ -1,10 +1,8 @@
-গিটহাবে (GitHub Pages) আপনার ওয়েবসাইটটি লাইভ বা হোস্ট করার জন্য আপনাকে সবার প্রথমে যে ফাইলটি আপলোড করতে হবে, তার নাম অবশ্যই **`index.html`** হতে হবে। 
+আপনার দেওয়া **Idea.pdf** ফাইলের ডিজাইন এবং কনসেপ্টটি আমি খুব ভালোভাবে দেখেছি। আপনার আইডিয়াটি দুর্দান্ত! একটি ফাইলের ভেতরেই **Student Panel (Home)** এবং **Admin Panel** দুটোই থাকলে সেটি পরিচালনা করা অনেক সহজ হবে। 
 
-**এর কারণ হলো:** কেউ যখন আপনার ডোমেইনে (যেমন- www.testbazar.com) প্রবেশ করবে, তখন সার্ভার স্বয়ংক্রিয়ভাবে এই `index.html` ফাইলটিকেই হোমপেজ হিসেবে সবার প্রথমে ওপেন করবে।
+আমি আপনার দেওয়া কনসেপ্ট অনুযায়ী একটি **Single Page Application (SPA)** তৈরি করে দিয়েছি। অর্থাৎ, এখন আর দুটি আলাদা ফাইলের প্রয়োজন নেই। একটি ফাইলের ভেতরেই মেনু (ট্যাব) পরিবর্তন করে স্টুডেন্টরা তাদের ক্লাস সিলেক্ট করতে পারবে এবং আপনি অ্যাডমিন হিসেবে লগইন করে স্টুডেন্টদের কন্ট্রোল করতে পারবেন। সাথে **Export/Import** এবং **Attempts Reset**-এর অপশনও যুক্ত করে দিয়েছি।
 
-আপনার স্টুডেন্টদের জন্য তৈরি করা সেই প্রথম পেজের (যেখানে Class 10, 11 ও 12 সিলেক্ট করার অপশন আছে) সম্পূর্ণ কোড নিচে দেওয়া হলো। 
-
-এই কোডটি কপি করে **`index.html`** নামে সেভ করুন এবং গিটহাবে আপনার রিপোজিটরিতে (Repository) আপলোড করুন:
+নিচের কোডটি কপি করে **`index.html`** নামে সেভ করুন এবং গিটহাবে আপলোড করে দিন:
 
 ```html
 <!DOCTYPE html>
@@ -12,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Bazar - Home</title>
+    <title>Test Bazar - Home & Admin</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
@@ -28,6 +26,7 @@
             --text-main: #1c2e24;
             --text-meta: #5a7a66;
             --border-color: #c5dccb;
+            --danger: #dc3545;
         }
 
         /* ================= FONTS & TYPOGRAPHY ================= */
@@ -35,228 +34,294 @@
             font-family: 'Tiro Bangla', serif;
             background-color: var(--bg-main);
             color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            line-height: 1.6;
+            margin: 0; padding: 0; box-sizing: border-box; line-height: 1.6;
         }
         .en-font { font-family: 'Syne', sans-serif; }
 
         /* ================= TOP BAR ================= */
         .top-bar {
             position: sticky; top: 0; z-index: 100;
-            background-color: var(--bg-card); 
-            padding: 1rem 2rem;
+            background-color: var(--bg-card); padding: 1rem 2rem;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1.5px solid var(--border-color);
             box-shadow: 0 2px 10px rgba(26,122,74,0.06);
         }
-        .logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--text-main); }
+        .logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--text-main); cursor: pointer;}
         .logo span { color: var(--accent); }
         
-        .nav-buttons button {
-            background: var(--primary); color: #fff;
-            border: none; padding: 0.6rem 1.2rem;
-            border-radius: 8px; font-family: 'Tiro Bangla', serif;
-            font-size: 0.95rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s;
+        .nav-menu { display: flex; gap: 15px; align-items: center; }
+        .nav-btn {
+            background: none; color: var(--text-main); border: 1.5px solid transparent;
+            padding: 0.5rem 1rem; border-radius: 8px; font-family: 'Syne', sans-serif;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
         }
-        .nav-buttons button:hover { background: var(--primary-hover); }
+        .nav-btn:hover { background: var(--bg-main); color: var(--primary); }
+        .nav-btn.active { background: var(--bg-main); border-color: var(--primary); color: var(--primary); }
+        
+        .logout-btn { background: var(--danger); color: #fff; border: none; }
+        .logout-btn:hover { background: #c82333; color: #fff; }
 
-        /* ================= MAIN CONTAINER ================= */
-        .main-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-            text-align: center;
-        }
+        .main-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
 
-        .hero-section h1 {
-            font-size: 2.2rem;
-            color: var(--primary);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        .hero-section p {
-            font-size: 1.1rem;
-            color: var(--text-meta);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        /* ================= HOME VIEW ================= */
+        .hero-section { text-align: center; margin-bottom: 2.5rem; }
+        .hero-section h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 10px; line-height: 1.3; }
+        .hero-section p { font-size: 1.1rem; color: var(--text-meta); max-width: 600px; margin: 0 auto; }
 
-        /* ================= CLASS GRID ================= */
-        .class-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
+        .class-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
         .class-card {
-            background: var(--bg-card);
-            border: 1.5px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(26,122,74,0.05);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 16px;
+            padding: 2rem 1.5rem; cursor: pointer; transition: all 0.3s ease; text-align: center;
+            box-shadow: 0 4px 12px rgba(26,122,74,0.05); display: flex; flex-direction: column; align-items: center;
         }
+        .class-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 8px 25px rgba(26,122,74,0.15); }
+        .class-icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .class-title { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; font-family: 'Syne', sans-serif; }
+        .class-desc { font-size: 0.95rem; color: var(--text-meta); }
 
-        .class-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 8px 25px rgba(26,122,74,0.15);
-        }
-
-        .class-icon {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-        }
-
-        .class-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-family: 'Syne', sans-serif;
-        }
-
-        .class-desc {
-            font-size: 0.95rem;
-            color: var(--text-meta);
-        }
-
-        /* ================= SUBJECT VIEW (Hidden by default) ================= */
-        .subject-view { display: none; text-align: left; }
+        /* ================= SUBJECT VIEW ================= */
         .back-btn {
-            background: none; border: none; color: var(--text-meta);
-            font-size: 1rem; cursor: pointer; font-family: 'Tiro Bangla', serif;
-            font-weight: 600; margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 5px;
+            background: none; border: none; color: var(--text-meta); font-size: 1rem; cursor: pointer;
+            font-family: 'Tiro Bangla', serif; font-weight: 600; margin-bottom: 1.5rem;
         }
         .back-btn:hover { color: var(--primary); }
-        
-        .subject-header { border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 2rem; }
-        .subject-header h2 { color: var(--primary); margin: 0; font-size: 1.8rem; }
-        
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
-        }
-        
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
         .subject-card {
-            background: var(--bg-card); padding: 1.5rem; border-radius: 12px;
-            border: 1.5px solid var(--border-color); cursor: pointer;
-            transition: all 0.2s; display: flex; align-items: center; gap: 15px;
+            background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color);
+            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 15px;
         }
         .subject-card:hover { border-color: var(--primary); background: var(--bg-main); }
-        .sub-icon { font-size: 2rem; }
-        .sub-name { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .hero-section h1 { font-size: 1.8rem; }
-            .class-grid { grid-template-columns: 1fr; }
+        /* ================= ADMIN LOGIN ================= */
+        .admin-login-box {
+            max-width: 400px; margin: 3rem auto; background: var(--bg-card); padding: 2.5rem;
+            border-radius: 14px; text-align: center; border: 1.5px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
+        .admin-login-box h2 { color: var(--primary); margin-bottom: 10px; }
+        .admin-login-box input {
+            width: 100%; padding: 12px; margin: 15px 0; border: 1.5px solid var(--border-color);
+            border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: 'Syne', sans-serif;
+        }
+        .btn-primary {
+            width: 100%; background: var(--primary); color: white; border: none; padding: 12px;
+            border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-primary:hover { background: var(--primary-hover); }
+
+        /* ================= ADMIN DASHBOARD ================= */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color); box-shadow: 0 4px 10px rgba(26,122,74,0.05); }
+        .card h3 { color: var(--primary); font-size: 1.2rem; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px; margin-top:0; margin-bottom: 15px; }
+        
+        .card input, .card textarea {
+            width: 100%; padding: 10px; margin-bottom: 12px; border: 1.5px solid var(--border-color);
+            border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; font-family: 'Syne', sans-serif;
+        }
+        .card textarea { height: 100px; resize: vertical; }
+        
+        .example-box { background: var(--bg-main); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-meta); margin-bottom: 15px; border: 1px dashed var(--border-color); }
+        .action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-outline { background: none; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; }
+        .btn-outline:hover { background: var(--primary); color: #fff; }
+        .btn-danger-outline { border-color: var(--danger); color: var(--danger); }
+        .btn-danger-outline:hover { background: var(--danger); color: #fff; }
+
+        .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .student-table th, .student-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
+        .student-table th { color: var(--primary); }
+        .btn-sm-danger { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
+    <!-- TOP BAR -->
     <header class="top-bar">
-        <a href="#" class="logo en-font" onclick="goHome()">Test<span>Bazar</span></a>
-        <div class="nav-buttons">
-            <button onclick="alert('লগইন সিস্টেমটি ফায়ারবেস (Firebase) এর সাহায্যে যুক্ত করা হবে।')">লগইন / রেজিস্টার</button>
+        <div class="logo en-font" onclick="switchTab('home')">Test<span>Bazar</span></div>
+        <div class="nav-menu">
+            <button class="nav-btn active" id="tabHome" onclick="switchTab('home')">Home / Students</button>
+            <button class="nav-btn" id="tabAdmin" onclick="switchTab('admin')">Admin</button>
+            <button class="nav-btn logout-btn hidden" id="btnLogout" onclick="logoutAdmin()">Logout</button>
         </div>
     </header>
 
     <div class="main-container">
         
-        <!-- ================= HOME VIEW (Class Selection) ================= -->
-        <div id="homeView">
-            <div class="hero-section">
-                <h1>আপনার প্রস্তুতির সেরা ঠিকানা</h1>
-                <p>Test Bazar-এ আপনাকে স্বাগতম। নিচে থেকে আপনার ক্লাস নির্বাচন করুন এবং বিষয়ভিত্তিক মক টেস্ট দেওয়া শুরু করুন।</p>
+        <!-- ================= HOME / STUDENT VIEW ================= -->
+        <div id="viewHome">
+            
+            <!-- Class Selection -->
+            <div id="classSelection">
+                <div class="hero-section">
+                    <h1>Class নির্বাচন করুন</h1>
+                    <p>আপনার নির্দিষ্ট ক্লাস বেছে নিয়ে বিষয়ভিত্তিক টেস্ট দেওয়া শুরু করুন।</p>
+                </div>
+                <div class="class-grid">
+                    <div class="class-card" onclick="showSubjects('Class 10')">
+                        <div class="class-icon">📖</div>
+                        <div class="class-title">Class 10</div>
+                        <div class="class-desc">7 Subjects • মাধ্যমিক</div>
+                    </div>
+                    <div class="class-card" onclick="showSubjects('Class 11')">
+                        <div class="class-icon">🎓</div>
+                        <div class="class-title">Class 11</div>
+                        <div class="class-desc">Science & Arts</div>
+                    </div>
+                    <div class="class-card" onclick="showSubjects('Class 12')">
+                        <div class="class-icon">🎯</div>
+                        <div class="class-title">Class 12</div>
+                        <div class="class-desc">Science & Arts</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="class-grid">
-                <!-- Class 10 -->
-                <div class="class-card" onclick="openClass('Class 10 (মাধ্যমিক)')">
-                    <div class="class-icon">📖</div>
-                    <div class="class-title">Class 10</div>
-                    <div class="class-desc">মাধ্যমিক পরীক্ষার সম্পূর্ণ প্রস্তুতি</div>
+            <!-- Subject Selection -->
+            <div id="subjectSelection" class="hidden">
+                <button class="back-btn" onclick="showClasses()">← ফিরে যান</button>
+                <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                    <h2 style="color: var(--primary); margin: 0; font-size: 1.8rem;" id="selectedClassTitle" class="en-font">Class 10</h2>
+                    <p style="color: var(--text-meta); margin: 5px 0 0 0;">আপনার বিষয় নির্বাচন করুন</p>
                 </div>
+                <div class="subject-grid" id="subjectGrid"></div>
+            </div>
+            
+        </div>
 
-                <!-- Class 11 -->
-                <div class="class-card" onclick="openClass('Class 11 (একাদশ শ্রেণি)')">
-                    <div class="class-icon">🎓</div>
-                    <div class="class-title">Class 11</div>
-                    <div class="class-desc">একাদশ শ্রেণির বিষয়ভিত্তিক মক টেস্ট</div>
-                </div>
-
-                <!-- Class 12 -->
-                <div class="class-card" onclick="openClass('Class 12 (উচ্চ মাধ্যমিক)')">
-                    <div class="class-icon">🎯</div>
-                    <div class="class-title">Class 12</div>
-                    <div class="class-desc">উচ্চ মাধ্যমিকের চূড়ান্ত প্রস্তুতি</div>
-                </div>
+        <!-- ================= ADMIN LOGIN VIEW ================= -->
+        <div id="viewAdminLogin" class="hidden">
+            <div class="admin-login-box">
+                <h2>Admin Access</h2>
+                <p style="color: var(--text-meta);">Admin Panel এ প্রবেশ করতে password দিন</p>
+                <input type="password" id="adminPass" placeholder="Password (Hint: 1234)">
+                <button class="btn-primary" onclick="verifyAdmin()">প্রবেশ করুন</button>
+                <div id="loginError" style="color: var(--danger); margin-top: 10px; font-size: 0.9rem; display: none;">পাসওয়ার্ড ভুল!</div>
             </div>
         </div>
 
-        <!-- ================= SUBJECT VIEW ================= -->
-        <div id="subjectView" class="subject-view">
-            <button class="back-btn" onclick="goHome()">← ফিরে যান</button>
-            
-            <div class="subject-header">
-                <h2 id="selectedClassTitle" class="en-font">Class 10</h2>
-                <p>আপনার বিষয় নির্বাচন করুন</p>
+        <!-- ================= ADMIN DASHBOARD VIEW ================= -->
+        <div id="viewAdminDashboard" class="hidden">
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: var(--primary); margin: 0;">Master Control Panel</h2>
+                <span style="background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-family: 'Syne', sans-serif;"><span id="totalStudentsCount">0</span> Students</span>
             </div>
 
-            <div class="subject-grid" id="subjectGrid">
-                <!-- Subjects will be injected here by JavaScript -->
+            <div class="dashboard-grid">
+                <!-- Single Add -->
+                <div class="card">
+                    <h3>+ নতুন Student যোগ করুন</h3>
+                    <input type="text" id="singleUser" class="en-font" placeholder="Username (যেমন: sagun)">
+                    <input type="text" id="singlePass" class="en-font" placeholder="Password (যেমন: sagun123)">
+                    <button class="btn-primary" onclick="addSingleStudent()">Add Student</button>
+                </div>
+
+                <!-- Bulk Add -->
+                <div class="card">
+                    <h3>একসাথে অনেক Student যোগ করুন</h3>
+                    <div class="example-box">
+                        <b>Format:</b> username, password<br>
+                        sagun, sagun123<br>
+                        samir, samir456
+                    </div>
+                    <textarea id="bulkData" class="en-font" placeholder="sagun, sagun123..."></textarea>
+                    <button class="btn-primary" onclick="addBulkStudents()">সবাইকে Add করুন</button>
+                </div>
+
+                <!-- Tools & Operations -->
+                <div class="card">
+                    <h3>Tools & Operations</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-meta); margin-top: 0;">Export করে Backup রাখুন বা অন্য ডিভাইসে Import করুন।</p>
+                    <div class="action-btns" style="margin-bottom: 15px;">
+                        <button class="btn-outline" onclick="exportUsers()">📤 Export</button>
+                        <button class="btn-outline" onclick="importUsersPrompt()">📥 Import</button>
+                    </div>
+                    <h4 style="margin: 10px 0 5px 0; font-size: 0.9rem; color: var(--danger);">Danger Zone</h4>
+                    <div class="action-btns">
+                        <button class="btn-outline btn-danger-outline" onclick="resetAllAttempts()">সব Attempts Reset</button>
+                        <button class="btn-outline btn-danger-outline" onclick="clearAllUsers()">সব Students মুছুন</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student List -->
+            <div class="card">
+                <h3>Student List</h3>
+                <table class="student-table" id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentListBody" class="en-font"></tbody>
+                </table>
+                <div id="emptyMessage" style="text-align: center; color: var(--text-meta); padding: 20px; font-style: italic;">কোনো student নেই।</div>
             </div>
         </div>
 
     </div>
 
 <script>
-    // আপনার নির্দেশ অনুযায়ী সাবজেক্ট ডেটাবেস
+    // ================== DATA CONFIGURATION ==================
+    const STORAGE_KEY_USERS = "testBazarUsersDB";
+    const STORAGE_KEY_ATTEMPTS = "testBazarAttemptsWBPMock1"; // Attempts key from quiz
+    
+    // Subject Data
     const subjectsData = {
-        "Class 10 (মাধ্যমিক)": [
-            { name: "বাংলা (Bengali)", icon: "✒️", link: "#" },
-            { name: "ইংরেজি (English)", icon: "🔠", link: "#" },
-            { name: "গণিত (Maths)", icon: "📐", link: "#" },
-            { name: "ভৌতবিজ্ঞান (Physical Science)", icon: "⚛️", link: "#" },
-            { name: "জীবনবিজ্ঞান (Life Science)", icon: "🧬", link: "#" },
-            { name: "ইতিহাস (History)", icon: "📜", link: "#" },
-            { name: "ভূগোল (Geography)", icon: "🌍", link: "#" }
+        "Class 10": [
+            { name: "বাংলা", icon: "✒️" }, { name: "ইংরেজি", icon: "🔠" },
+            { name: "গণিত", icon: "📐" }, { name: "ভৌতবিজ্ঞান", icon: "⚛️" },
+            { name: "জীবনবিজ্ঞান", icon: "🧬" }, { name: "ইতিহাস", icon: "📜" }, { name: "ভূগোল", icon: "🌍" }
         ],
-        "Class 11 (একাদশ শ্রেণি)": [
-            { name: "Physics (Science)", icon: "⚡", link: "#" },
-            { name: "Chemistry (Science)", icon: "🧪", link: "#" },
-            { name: "Mathematics (Science)", icon: "🔢", link: "#" },
-            { name: "Biology (Science)", icon: "🌿", link: "#" },
-            { name: "History (Arts)", icon: "🏛️", link: "#" },
-            { name: "Geography (Arts)", icon: "🗺️", link: "#" },
-            { name: "Political Science (Arts)", icon: "⚖️", link: "#" }
+        "Class 11": [
+            { name: "Physics", icon: "⚡" }, { name: "Chemistry", icon: "🧪" },
+            { name: "Mathematics", icon: "🔢" }, { name: "Biology", icon: "🌿" },
+            { name: "History", icon: "🏛️" }, { name: "Geography", icon: "🗺️" }
         ],
-        "Class 12 (উচ্চ মাধ্যমিক)": [
-            { name: "Physics (Science)", icon: "⚡", link: "#" },
-            { name: "Chemistry (Science)", icon: "🧪", link: "#" },
-            { name: "Mathematics (Science)", icon: "🔢", link: "#" },
-            { name: "Biology (Science)", icon: "🌿", link: "#" },
-            { name: "History (Arts)", icon: "🏛️", link: "#" },
-            { name: "Geography (Arts)", icon: "🗺️", link: "#" },
-            { name: "Political Science (Arts)", icon: "⚖️", link: "#" }
+        "Class 12": [
+            { name: "Physics", icon: "⚡" }, { name: "Chemistry", icon: "🧪" },
+            { name: "Mathematics", icon: "🔢" }, { name: "Biology", icon: "🌿" },
+            { name: "History", icon: "🏛️" }, { name: "Geography", icon: "🗺️" }
         ]
     };
 
-    function openClass(className) {
-        document.getElementById('homeView').style.display = 'none';
-        document.getElementById('subjectView').style.display = 'block';
+    let isAdminLoggedIn = false;
+
+    // ================== NAVIGATION LOGIC ==================
+    function switchTab(tabName) {
+        document.getElementById('tabHome').classList.remove('active');
+        document.getElementById('tabAdmin').classList.remove('active');
+        
+        document.getElementById('viewHome').classList.add('hidden');
+        document.getElementById('viewAdminLogin').classList.add('hidden');
+        document.getElementById('viewAdminDashboard').classList.add('hidden');
+
+        if(tabName === 'home') {
+            document.getElementById('tabHome').classList.add('active');
+            document.getElementById('viewHome').classList.remove('hidden');
+            showClasses();
+        } else if(tabName === 'admin') {
+            document.getElementById('tabAdmin').classList.add('active');
+            if(isAdminLoggedIn) {
+                document.getElementById('viewAdminDashboard').classList.remove('hidden');
+                document.getElementById('btnLogout').classList.remove('hidden');
+                updateAdminUI();
+            } else {
+                document.getElementById('viewAdminLogin').classList.remove('hidden');
+            }
+        }
+    }
+
+    // ================== HOME / STUDENT LOGIC ==================
+    function showClasses() {
+        document.getElementById('classSelection').classList.remove('hidden');
+        document.getElementById('subjectSelection').classList.add('hidden');
+    }
+
+    function showSubjects(className) {
+        document.getElementById('classSelection').classList.add('hidden');
+        document.getElementById('subjectSelection').classList.remove('hidden');
         document.getElementById('selectedClassTitle').innerText = className;
 
         const grid = document.getElementById('subjectGrid');
@@ -267,31 +332,170 @@
             subjects.forEach(sub => {
                 const card = document.createElement('div');
                 card.className = 'subject-card';
-                card.innerHTML = `
-                    <div class="sub-icon">${sub.icon}</div>
-                    <div class="sub-name">${sub.name}</div>
-                `;
+                card.innerHTML = `<div style="font-size: 2rem;">${sub.icon}</div> <div style="font-size: 1.1rem; font-weight: 700;">${sub.name}</div>`;
                 card.onclick = () => {
-                    alert(`আপনি "${sub.name}" সিলেক্ট করেছেন। পরবর্তী ধাপে এখানে চ্যাপ্টারের লিস্ট ওপেন হবে।`);
+                    alert(`আপনি "${sub.name}" সিলেক্ট করেছেন। পরবর্তী ধাপে এখানে Chapter ও Sets ওপেন হবে।`);
                 };
                 grid.appendChild(card);
             });
         }
     }
 
-    function goHome() {
-        document.getElementById('subjectView').style.display = 'none';
-        document.getElementById('homeView').style.display = 'block';
+    // ================== ADMIN LOGIC ==================
+    function verifyAdmin() {
+        const pass = document.getElementById('adminPass').value;
+        if(pass === '1234') { // Admin Password
+            isAdminLoggedIn = true;
+            document.getElementById('adminPass').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            switchTab('admin');
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
     }
+
+    function logoutAdmin() {
+        isAdminLoggedIn = false;
+        document.getElementById('btnLogout').classList.add('hidden');
+        switchTab('home');
+    }
+
+    // ================== DATABASE OPERATIONS ==================
+    function getUsers() {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
+    }
+
+    function saveUsers(data) {
+        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(data));
+        updateAdminUI();
+    }
+
+    function addSingleStudent() {
+        const user = document.getElementById("singleUser").value.trim();
+        const pass = document.getElementById("singlePass").value.trim();
+        if(!user || !pass) { alert("Username এবং Password দুটোই দিতে হবে!"); return; }
+        
+        let users = getUsers();
+        if(users[user]) { alert("এই Username আগে থেকেই আছে!"); return; }
+        
+        users[user] = pass;
+        saveUsers(users);
+        document.getElementById("singleUser").value = "";
+        document.getElementById("singlePass").value = "";
+    }
+
+    function addBulkStudents() {
+        const text = document.getElementById("bulkData").value.trim();
+        if(!text) return;
+        
+        let users = getUsers();
+        let added = 0;
+        const lines = text.split('\n');
+        
+        lines.forEach(line => {
+            const parts = line.split(',');
+            if(parts.length >= 2) {
+                const u = parts.trim();
+                const p = parts.trim();
+                if(u && p && !users[u]) { users[u] = p; added++; }
+            }
+        });
+        
+        saveUsers(users);
+        document.getElementById("bulkData").value = "";
+        alert(`${added} জন Student যোগ করা হয়েছে!`);
+    }
+
+    function deleteStudent(user) {
+        if(confirm(`'${user}' কে ডিলিট করতে চান?`)) {
+            let users = getUsers();
+            delete users[user];
+            saveUsers(users);
+        }
+    }
+
+    function clearAllUsers() {
+        if(confirm("সতর্কতা: সমস্ত Students ডিলিট হয়ে যাবে! আপনি কি নিশ্চিত?")) {
+            saveUsers({});
+        }
+    }
+
+    function resetAllAttempts() {
+        if(confirm("সমস্ত Students এর Test Attempts জিরো (0) হয়ে যাবে। নিশ্চিত?")) {
+            localStorage.removeItem(STORAGE_KEY_ATTEMPTS);
+            alert("সব Attempts সফলভাবে Reset করা হয়েছে!");
+        }
+    }
+
+    function exportUsers() {
+        const users = getUsers();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(users));
+        const a = document.createElement('a');
+        a.setAttribute("href", dataStr);
+        a.setAttribute("download", "TestBazar_Users_Backup.json");
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
+    function importUsersPrompt() {
+        const input = prompt("Import করার জন্য Export করা JSON text এখানে পেস্ট করুন:");
+        if(input) {
+            try {
+                const importedData = JSON.parse(input);
+                let currentUsers = getUsers();
+                // Merge data
+                for(let key in importedData) {
+                    currentUsers[key] = importedData[key];
+                }
+                saveUsers(currentUsers);
+                alert("Users সফলভাবে Import করা হয়েছে!");
+            } catch(e) {
+                alert("ভুল ফরম্যাট! সঠিক JSON ডাটা দিন।");
+            }
+        }
+    }
+
+    function updateAdminUI() {
+        const users = getUsers();
+        const tbody = document.getElementById("studentListBody");
+        const emptyMsg = document.getElementById("emptyMessage");
+        const userKeys = Object.keys(users);
+        
+        document.getElementById("totalStudentsCount").innerText = userKeys.length;
+        tbody.innerHTML = "";
+
+        if(userKeys.length === 0) {
+            emptyMsg.style.display = "block";
+            document.getElementById("studentTable").style.display = "none";
+        } else {
+            emptyMsg.style.display = "none";
+            document.getElementById("studentTable").style.display = "table";
+
+            userKeys.forEach(user => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${user}</td>
+                    <td>${users[user]}</td>
+                    <td style="text-align: right;">
+                        <button class="btn-sm-danger" onclick="deleteStudent('${user}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
 </script>
 
 </body>
 </html>
 ```
 
-**গিটহাবে আপলোড করার পদ্ধতি:**
-১. গিটহাবে আপনার রিপোজিটরিতে (Repository) গিয়ে `Add file` > `Create new file`-এ ক্লিক করবেন। 
-২. ফাইলের নাম দেবেন `index.html`।
-৩. উপরের কোডটি সেখানে পেস্ট করে নিচে `Commit changes`-এ ক্লিক করে সেভ করবেন। 
+### এই `index.html` ফাইলটির মধ্যে কী কী নতুন যুক্ত করা হয়েছে? 
+১. **সিঙ্গেল ফাইল সিস্টেম (SPA):** উপরে মেনুবারে **Home** এবং **Admin** নামের দুটি অপশন আছে। পেজ রিলোড না করেই আপনি স্টুডেন্ট প্যানেল ও অ্যাডমিন প্যানেল দুটোই ব্রাউজ করতে পারবেন।
+২. **অ্যাডমিন অপশন:** Idea.pdf-এর কনসেপ্ট অনুযায়ী Admin-এ ক্লিক করলে প্রথমে পাসওয়ার্ড (Hint: 1234) চাইবে। লগইন করলে স্টুডেন্ট কন্ট্রোল প্যানেল ওপেন হবে।
+৩. **ইম্পোর্ট/এক্সপোর্ট (Export/Import):** আপনি যেকোনো সময় অ্যাডমিন প্যানেল থেকে সমস্ত স্টুডেন্টের ডেটা (Backup) আপনার মোবাইলে বা কম্পিউটারে ফাইল হিসেবে সেভ করে রাখতে পারবেন।
+৪. **Reset Attempts:** এর আগে যে কুইজ ফাইলটি দিয়েছিলাম, তার Attempts (যে ১০ বার লিমিট ছিল) এখান থেকে এক ক্লিকেই মুছে দিয়ে সবাইকে নতুন করে সুযোগ করে দিতে পারবেন।
 
-এই ফাইলটি আপলোড করা হয়ে গেলে আমাকে জানাবেন, তারপর আমরা আগে তৈরি করা `admin.html` ফাইলটিও আপলোড করে দেবো।
+আপনি এই একটিমাত্র কোড গিটহাবে **`index.html`** হিসেবে আপলোড করে দিন। এরপর আপনার ওয়েবসাইটটি পুরোপুরি লাইভ এবং প্রফেশনাল কন্ট্রোলের আওতায় চলে আসবে!
