@@ -1,23 +1,13 @@
-আপনার এই আইডিয়াটি সত্যিই খুব প্রফেশনাল! একজন স্টুডেন্ট যেন তার নির্দিষ্ট ক্লাসের বাইরে অন্য কোনো ক্লাসের টেস্ট দিতে না পারে (Access Control), সেটি একটি ভালো এডুকেশনাল প্ল্যাটফর্মের অন্যতম প্রধান শর্ত। 
-
-আপনার নির্দেশ অনুযায়ী আমি **`index.html`** ফাইলটিকে আপডেট করে দিয়েছি। এখন এতে নিচের নতুন সুবিধাগুলো যুক্ত করা হয়েছে:
-১. **অ্যাডমিন পাসওয়ার্ড:** অ্যাডমিন প্যানেলের পাসওয়ার্ড পরিবর্তন করে **`Ajay@725`** করা হয়েছে।
-২. **ক্লাস-ভিত্তিক ইউজার (Class-based Users):** অ্যাডমিন প্যানেল থেকে স্টুডেন্ট অ্যাড করার সময় আপনি সিলেক্ট করে দিতে পারবেন সে কোন ক্লাসের স্টুডেন্ট (Class 10, 11 বা 12)।
-৩. **স্টুডেন্ট লগইন সিস্টেম:** কোনো স্টুডেন্ট হোমপেজে এসে যখনই 'Class 10' বা অন্য কোনো ক্লাসে ক্লিক করবে, তখন একটি লগইন বক্স আসবে। Class 10-এর আইডি দিয়ে সে কখনোই Class 11 বা 12-এ ঢুকতে পারবে না। তাকে সিস্টেম আটকে দেবে।
-
-নিচের সম্পূর্ণ কোডটি কপি করে আপনার গিটহাবের **`index.html`** ফাইলে আপডেট করে সেভ করে দিন:
-
-```html
 <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Bazar - Home & Admin</title>
-    
+    <title>Test Bazar - Final Platform</title>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
-    
+
     <style>
         /* ================= COLOR SCHEME & VARIABLES ================= */
         :root {
@@ -30,117 +20,84 @@
             --text-meta: #5a7a66;
             --border-color: #c5dccb;
             --danger: #dc3545;
+            --wa-color: #25D366;
         }
 
-        /* ================= FONTS & TYPOGRAPHY ================= */
-        body {
-            font-family: 'Tiro Bangla', serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            margin: 0; padding: 0; box-sizing: border-box; line-height: 1.6;
-        }
+        body { font-family: 'Tiro Bangla', serif; background-color: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
         .en-font { font-family: 'Syne', sans-serif; }
 
         /* ================= TOP BAR ================= */
-        .top-bar {
-            position: sticky; top: 0; z-index: 100;
-            background-color: var(--bg-card); padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1.5px solid var(--border-color);
-            box-shadow: 0 2px 10px rgba(26,122,74,0.06);
-        }
-        .logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: var(--text-main); cursor: pointer;}
+        .top-bar { position: sticky; top: 0; z-index: 100; background-color: var(--bg-card); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); box-shadow: 0 2px 10px rgba(26,122,74,0.06); }
+        .logo { font-size: 1.5rem; font-weight: 800; cursor: pointer; color: var(--text-main); }
         .logo span { color: var(--accent); }
-        
-        .nav-menu { display: flex; gap: 15px; align-items: center; }
-        .nav-btn {
-            background: none; color: var(--text-main); border: 1.5px solid transparent;
-            padding: 0.5rem 1rem; border-radius: 8px; font-family: 'Syne', sans-serif;
-            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
-        }
-        .nav-btn:hover { background: var(--bg-main); color: var(--primary); }
-        .nav-btn.active { background: var(--bg-main); border-color: var(--primary); color: var(--primary); }
-        
-        .logout-btn { background: var(--danger); color: #fff; border: none; }
-        .logout-btn:hover { background: #c82333; color: #fff; }
+        .nav-menu { display: flex; gap: 10px; align-items: center; }
+        .nav-btn { background: none; color: var(--text-main); border: 1.5px solid transparent; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Syne', sans-serif; transition: 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--bg-main); color: var(--primary); }
+        .logout-btn { background: var(--danger); color: white; border: none; padding: 5px 12px; font-size: 0.85rem;}
+        .logout-btn:hover { background: #c82333; color: white; }
 
         .main-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
 
-        /* ================= HOME VIEW ================= */
-        .hero-section { text-align: center; margin-bottom: 2.5rem; }
-        .hero-section h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 10px; line-height: 1.3; }
-        .hero-section p { font-size: 1.1rem; color: var(--text-meta); max-width: 600px; margin: 0 auto; }
+        /* ================= WHATSAPP BOX ================= */
+        .wa-contact-box { background: #e8f7ef; border: 1.5px dashed var(--primary); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; text-align: center; }
+        .wa-contact-box p { margin: 0 0 10px 0; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .wa-btn { background: var(--wa-color); color: white; padding: 10px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
 
+        /* ================= HOME & CLASS CARDS ================= */
+        .hero-section { text-align: center; margin-bottom: 2rem; }
+        .hero-section h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 5px; }
         .class-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .class-card {
-            background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 16px;
-            padding: 2rem 1.5rem; cursor: pointer; transition: all 0.3s ease; text-align: center;
-            box-shadow: 0 4px 12px rgba(26,122,74,0.05); display: flex; flex-direction: column; align-items: center;
-        }
+        .class-card { background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 16px; padding: 2rem; cursor: pointer; text-align: center; transition: 0.3s; box-shadow: 0 4px 12px rgba(26,122,74,0.05); }
         .class-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 8px 25px rgba(26,122,74,0.15); }
-        .class-icon { font-size: 3.5rem; margin-bottom: 15px; }
-        .class-title { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; font-family: 'Syne', sans-serif; }
-        .class-desc { font-size: 0.95rem; color: var(--text-meta); }
+        .class-icon { font-size: 3.5rem; margin-bottom: 10px; }
+        .class-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); font-family: 'Syne', sans-serif; }
 
-        /* ================= SUBJECT VIEW ================= */
-        .back-btn {
-            background: none; border: none; color: var(--text-meta); font-size: 1rem; cursor: pointer;
-            font-family: 'Tiro Bangla', serif; font-weight: 600; margin-bottom: 1.5rem;
-        }
+        /* ================= SUBJECT GRID ================= */
+        .back-btn { background: none; border: none; color: var(--text-meta); font-size: 1rem; cursor: pointer; font-weight: 600; font-family: 'Tiro Bangla', serif; margin-bottom: 1rem; }
         .back-btn:hover { color: var(--primary); }
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; }
-        .subject-card {
-            background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color);
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 15px;
-        }
+        .subject-card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color); cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
         .subject-card:hover { border-color: var(--primary); background: var(--bg-main); }
+        .sub-title { font-size: 1.1rem; font-weight: bold; color: var(--text-main); }
+        .demo-card { border-color: #f9a825; background: #fffdf5; }
+        .demo-card:hover { background: #fff8e1; border-color: #f9a825; }
 
-        /* ================= MODALS & LOGIN BOXES ================= */
-        .admin-login-box {
-            max-width: 400px; margin: 3rem auto; background: var(--bg-card); padding: 2.5rem;
-            border-radius: 14px; text-align: center; border: 1.5px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-        .admin-login-box h2 { color: var(--primary); margin-bottom: 10px; }
-        .admin-login-box input, .admin-login-box select {
-            width: 100%; padding: 12px; margin: 10px 0; border: 1.5px solid var(--border-color);
-            border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: 'Syne', sans-serif;
-        }
-        .btn-primary {
-            width: 100%; background: var(--primary); color: white; border: none; padding: 12px;
-            border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Tiro Bangla', serif;
-        }
+        /* ================= QUIZ UI ================= */
+        .quiz-card { background: var(--bg-card); padding: 2rem; border-radius: 14px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .q-num { font-weight: 700; color: var(--accent); margin-bottom: 10px; }
+        .q-text { font-size: 1.25rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+        .option-btn { width: 100%; background: var(--bg-card); border: 1.5px solid var(--border-color); padding: 1rem; border-radius: 10px; font-size: 1.05rem; font-family: 'Tiro Bangla', serif; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; transition: 0.2s; }
+        .option-btn:hover:not(:disabled) { background: var(--bg-main); border-color: var(--primary); }
+        .opt-circle { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; border: 1.5px solid var(--border-color); display: flex; justify-content: center; align-items: center; font-weight: 700; font-family: 'Syne', sans-serif; font-size: 13px; }
+
+        .opt-correct { border-color: var(--primary) !important; background: #e8f7ef !important; }
+        .opt-correct .opt-circle { background: var(--primary); color: white; border-color: var(--primary); }
+        .opt-wrong { border-color: var(--danger) !important; background: #fdf0f0 !important; }
+        .opt-wrong .opt-circle { background: var(--danger); color: white; border-color: var(--danger); }
+        .exp-box { display: none; background: #f0faf4; border-left: 4px solid var(--primary); padding: 1rem; margin-top: 15px; border-radius: 0 8px 8px 0; }
+
+        /* ================= RESULT UI ================= */
+        .score-display { font-size: 4rem; font-weight: 800; color: var(--primary); margin: 10px 0; font-family: 'Syne', sans-serif; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 20px; }
+        .stat-box { padding: 1rem; border-radius: 10px; font-size: 1.2rem; font-weight: bold; text-align: center; }
+
+        /* ================= MODALS & FORMS ================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: var(--bg-card); padding: 2.5rem; border-radius: 14px; width: 90%; max-width: 400px; text-align: center; }
+        .login-box input, .login-box select { width: 100%; padding: 12px; margin: 10px 0; border: 1.5px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: 'Syne', sans-serif; }
+        .btn-primary { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Tiro Bangla', serif; }
         .btn-primary:hover { background: var(--primary-hover); }
-        
-        /* Modal Overlay */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 999;
-            display: flex; justify-content: center; align-items: center;
-        }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: #c82333; }
 
-        /* ================= ADMIN DASHBOARD ================= */
+        /* ================= ADMIN ================= */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color); box-shadow: 0 4px 10px rgba(26,122,74,0.05); }
-        .card h3 { color: var(--primary); font-size: 1.2rem; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px; margin-top:0; margin-bottom: 15px; }
-        
-        .card input, .card textarea, .card select {
-            width: 100%; padding: 10px; margin-bottom: 12px; border: 1.5px solid var(--border-color);
-            border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; font-family: 'Syne', sans-serif;
-        }
+        .card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color); }
         .card textarea { height: 100px; resize: vertical; }
-        
-        .example-box { background: var(--bg-main); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-meta); margin-bottom: 15px; border: 1px dashed var(--border-color); }
-        .action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-outline { background: none; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; font-family: 'Tiro Bangla', serif;}
-        .btn-outline:hover { background: var(--primary); color: #fff; }
-        .btn-danger-outline { border-color: var(--danger); color: var(--danger); }
-        .btn-danger-outline:hover { background: var(--danger); color: #fff; }
+        .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-family: 'Syne', sans-serif; font-size: 0.95rem; }
+        .student-table th, .student-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .btn-sm-danger { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
 
-        .student-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .student-table th, .student-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; }
-        .student-table th { color: var(--primary); }
-        .btn-sm-danger { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -150,201 +107,299 @@
     <header class="top-bar">
         <div class="logo en-font" onclick="switchTab('home')">Test<span>Bazar</span></div>
         <div class="nav-menu">
-            <button class="nav-btn active" id="tabHome" onclick="switchTab('home')">Home / Students</button>
+            <span id="studentNavInfo" class="hidden" style="font-weight:bold; color:var(--primary); font-size: 0.9rem;">👤 Student</span>
+            <button class="nav-btn active" id="tabHome" onclick="switchTab('home')">Home</button>
             <button class="nav-btn" id="tabAdmin" onclick="switchTab('admin')">Admin</button>
-            <button class="nav-btn logout-btn hidden" id="btnLogout" onclick="logoutAdmin()">Logout</button>
+            <button class="nav-btn logout-btn hidden" id="btnLogout" onclick="logoutSession()">Logout</button>
         </div>
     </header>
 
     <!-- STUDENT LOGIN MODAL -->
     <div id="studentLoginModal" class="modal-overlay hidden">
-        <div class="admin-login-box" style="margin: 0; width: 90%;">
-            <h2 id="studentLoginTitle" class="en-font">Class Login</h2>
-            <p style="color: var(--text-meta); margin-top:0;">টেস্ট দিতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
-            
+        <div class="login-box">
+            <h2 id="studentLoginTitle" class="en-font" style="color: var(--primary); margin-top:0;">Student Login</h2>
+            <p style="color: var(--text-meta);">বিষয়টি আনলক করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
             <input type="text" id="studentUser" class="en-font" placeholder="Username">
             <input type="password" id="studentPass" class="en-font" placeholder="Password">
-            
-            <div id="studentLoginError" class="hidden" style="color: var(--danger); margin: 10px 0; font-size: 0.9rem; font-weight:bold;"></div>
-            
-            <div class="action-btns" style="margin-top:15px;">
+            <div id="studentLoginError" class="hidden" style="color: var(--danger); margin: 10px 0; font-weight:bold;"></div>
+            <div style="display: flex; gap: 10px; margin-top:15px;">
                 <button class="btn-primary" onclick="verifyStudentLogin()">লগইন</button>
-                <button class="btn-outline btn-danger-outline" onclick="closeStudentLogin()">বাতিল</button>
+                <button class="btn-primary btn-danger" onclick="closeStudentLogin()">বাতিল</button>
             </div>
         </div>
     </div>
 
     <div class="main-container">
-        
-        <!-- ================= HOME / STUDENT VIEW ================= -->
+
+        <!-- ================= HOME / CLASS SELECTION ================= -->
         <div id="viewHome">
-            
-            <!-- Class Selection -->
-            <div id="classSelection">
-                <div class="hero-section">
-                    <h1>Class নির্বাচন করুন</h1>
-                    <p>আপনার নির্দিষ্ট ক্লাস বেছে নিয়ে বিষয়ভিত্তিক টেস্ট দেওয়া শুরু করুন।</p>
-                </div>
-                <div class="class-grid">
-                    <div class="class-card" onclick="promptStudentLogin('Class 10')">
-                        <div class="class-icon">📖</div>
-                        <div class="class-title">Class 10</div>
-                        <div class="class-desc">মাধ্যমিক প্রস্তুতি</div>
-                    </div>
-                    <div class="class-card" onclick="promptStudentLogin('Class 11')">
-                        <div class="class-icon">🎓</div>
-                        <div class="class-title">Class 11</div>
-                        <div class="class-desc">Science & Arts</div>
-                    </div>
-                    <div class="class-card" onclick="promptStudentLogin('Class 12')">
-                        <div class="class-icon">🎯</div>
-                        <div class="class-title">Class 12</div>
-                        <div class="class-desc">Science & Arts</div>
-                    </div>
-                </div>
+            <div class="wa-contact-box">
+                <p>লগইন আইডি (Username) এবং পাসওয়ার্ড পেতে অ্যাডমিনের সাথে যোগাযোগ করুন</p>
+                <a href="https://wa.me/918710032880?text=I%20need%20a%20Username%20and%20Password%20for%20Test%20Bazar" target="_blank" class="wa-btn">💬 WhatsApp: 8710032880</a>
             </div>
 
-            <!-- Subject Selection -->
-            <div id="subjectSelection" class="hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <button class="back-btn" style="margin:0;" onclick="showClasses()">← ফিরে যান</button>
-                    <div class="en-font" style="background: var(--bg-card); border:1px solid var(--border-color); padding: 5px 15px; border-radius: 20px; font-size:0.85rem; font-weight:bold; color:var(--primary);" id="loggedInUserDisplay">👤 Student</div>
-                </div>
-                
-                <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
-                    <h2 style="color: var(--primary); margin: 0; font-size: 1.8rem;" id="selectedClassTitle" class="en-font">Class 10</h2>
-                    <p style="color: var(--text-meta); margin: 5px 0 0 0;">আপনার বিষয় নির্বাচন করুন</p>
-                </div>
-                <div class="subject-grid" id="subjectGrid"></div>
+            <div class="hero-section">
+                <h1>Class নির্বাচন করুন</h1>
+                <p>আপনার ক্লাস বেছে নিয়ে ফ্রি ডেমো টেস্ট বা ফুল টেস্ট দেওয়া শুরু করুন।</p>
             </div>
-            
+
+            <div class="class-grid">
+                <div class="class-card" onclick="openStreamSelection('Class 10')">
+                    <div class="class-icon">📖</div>
+                    <div class="class-title">Class 10</div>
+                    <div style="color: var(--text-meta); margin-top: 5px;">Demo + 7 Subjects</div>
+                </div>
+                <div class="class-card" onclick="openStreamSelection('Class 11')">
+                    <div class="class-icon">🎓</div>
+                    <div class="class-title">Class 11</div>
+                    <div style="color: var(--text-meta); margin-top: 5px;">Arts & Science Streams</div>
+                </div>
+                <div class="class-card" onclick="openStreamSelection('Class 12')">
+                    <div class="class-icon">🎯</div>
+                    <div class="class-title">Class 12</div>
+                    <div style="color: var(--text-meta); margin-top: 5px;">Arts & Science Streams</div>
+                </div>
+            </div>
         </div>
 
-        <!-- ================= ADMIN LOGIN VIEW ================= -->
+        <!-- ================= STREAM SELECTION (ARTS/SCIENCE) ================= -->
+        <div id="viewStreamSelection" class="hidden">
+            <button class="back-btn" style="margin:0;" onclick="showHomeView()">← ক্লাসের লিস্টে ফিরে যান</button>
+            <div class="hero-section" style="margin-top: 2rem;">
+                <h1 id="streamClassTitle" class="en-font">Class 11</h1>
+                <p style="color: var(--text-meta);">আপনার নির্দিষ্ট বিভাগ (Stream) নির্বাচন করুন</p>
+            </div>
+            <div class="class-grid" style="max-width: 600px; margin: 0 auto;">
+                <div class="class-card" id="artsStreamBtn">
+                    <div class="class-icon">🎨</div>
+                    <div class="class-title">Arts</div>
+                    <div style="color: var(--text-meta); margin-top: 5px;">কলা বিভাগ</div>
+                </div>
+                <div class="class-card" id="scienceStreamBtn">
+                    <div class="class-icon">🔬</div>
+                    <div class="class-title">Science</div>
+                    <div style="color: var(--text-meta); margin-top: 5px;">বিজ্ঞান বিভাগ</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SUBJECT SELECTION ================= -->
+        <div id="viewSubjectSelection" class="hidden">
+            <button class="back-btn" style="margin:0;" onclick="goBackFromSubjects()">← ফিরে যান</button>
+
+            <div style="margin-top: 1.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                <h2 style="color: var(--primary); margin: 0; font-size: 1.8rem;" id="selectedClassTitle" class="en-font">Class 10</h2>
+                <p style="color: var(--text-meta); margin: 5px 0 0 0;">কোন বিষয়ের পরীক্ষা দেবেন তা বেছে নিন</p>
+            </div>
+            <div class="subject-grid" id="subjectGrid"></div>
+        </div>
+
+        <!-- ================= QUIZ VIEW ================= -->
+        <div id="viewQuiz" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <button class="back-btn" style="margin:0;" onclick="exitQuiz()">← কুইজ বন্ধ করুন</button>
+                <div id="quizSubjectTitle" style="font-weight:bold; color:var(--primary); font-size:1.1rem;"></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+                <div class="q-text" id="qText">Question?</div>
+                <div id="optionsBox"></div>
+                <div class="exp-box" id="expBox"></div>
+                <button class="btn-primary hidden" id="nextBtn" style="margin-top: 20px;" onclick="nextQuestion()">পরবর্তী প্রশ্ন</button>
+                <button class="btn-primary hidden" id="submitBtn" style="margin-top: 20px;" onclick="showResult()">ফলাফল দেখুন</button>
+            </div>
+        </div>
+
+        <div id="viewResult" class="hidden text-center" style="text-align: center;">
+            <div class="quiz-card">
+                <h2>আপনার ফলাফল</h2>
+                <div class="score-display" id="finalScoreText">100%</div>
+                <div class="stat-grid">
+                    <div class="stat-box" style="color: var(--primary); border: 1.5px solid var(--primary); background: #e8f7ef;">সঠিক: <span id="correctCount">0</span></div>
+                    <div class="stat-box" style="color: var(--danger); border: 1.5px solid var(--danger); background: #fdf0f0;">ভুল: <span id="wrongCount">0</span></div>
+                </div>
+                <button class="btn-primary" onclick="exitQuiz()">ফিরে যান</button>
+            </div>
+        </div>
+
+        <!-- ================= ADMIN LOGIN ================= -->
         <div id="viewAdminLogin" class="hidden">
-            <div class="admin-login-box">
-                <h2>Admin Access</h2>
+            <div class="login-box" style="margin: 3rem auto;">
+                <h2 style="color: var(--primary); margin-top:0;">Admin Access</h2>
                 <p style="color: var(--text-meta);">Admin Panel এ প্রবেশ করতে password দিন</p>
                 <input type="password" id="adminPass" placeholder="Admin Password">
                 <button class="btn-primary" onclick="verifyAdmin()">প্রবেশ করুন</button>
-                <div id="loginError" style="color: var(--danger); margin-top: 10px; font-size: 0.9rem; font-weight:bold; display: none;">পাসওয়ার্ড ভুল!</div>
+                <div id="loginError" style="color: var(--danger); margin-top: 10px; font-weight:bold; display: none;">পাসওয়ার্ড ভুল!</div>
             </div>
         </div>
 
-        <!-- ================= ADMIN DASHBOARD VIEW ================= -->
+        <!-- ================= ADMIN DASHBOARD ================= -->
         <div id="viewAdminDashboard" class="hidden">
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
                 <h2 style="color: var(--primary); margin: 0;">Master Control Panel</h2>
-                <span style="background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-family: 'Syne', sans-serif;"><span id="totalStudentsCount">0</span> Students</span>
+                <span class="en-font" style="background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-weight: bold;"><span id="totalStudentsCount">0</span> Students</span>
             </div>
 
             <div class="dashboard-grid">
-                <!-- Single Add -->
                 <div class="card">
-                    <h3>+ নতুন Student যোগ করুন</h3>
+                    <h3 style="margin-top:0; color:var(--primary);">+ নতুন Student যোগ করুন</h3>
                     <select id="singleClass" class="en-font">
                         <option value="Class 10">Class 10</option>
-                        <option value="Class 11">Class 11</option>
-                        <option value="Class 12">Class 12</option>
+                        <option value="Class 11 - Arts">Class 11 - Arts</option>
+                        <option value="Class 11 - Science">Class 11 - Science</option>
+                        <option value="Class 12 - Arts">Class 12 - Arts</option>
+                        <option value="Class 12 - Science">Class 12 - Science</option>
                     </select>
-                    <input type="text" id="singleUser" class="en-font" placeholder="Username (যেমন: sagun)">
-                    <input type="text" id="singlePass" class="en-font" placeholder="Password (যেমন: sagun123)">
+                    <input type="text" id="singleUser" class="en-font" placeholder="Username">
+                    <input type="text" id="singlePass" class="en-font" placeholder="Password">
                     <button class="btn-primary" onclick="addSingleStudent()">Add Student</button>
                 </div>
 
-                <!-- Bulk Add -->
                 <div class="card">
-                    <h3>একসাথে অনেক Student যোগ করুন</h3>
+                    <h3 style="margin-top:0; color:var(--primary);">একসাথে অনেক Student যোগ করুন</h3>
                     <select id="bulkClass" class="en-font">
                         <option value="Class 10">Class 10</option>
-                        <option value="Class 11">Class 11</option>
-                        <option value="Class 12">Class 12</option>
+                        <option value="Class 11 - Arts">Class 11 - Arts</option>
+                        <option value="Class 11 - Science">Class 11 - Science</option>
+                        <option value="Class 12 - Arts">Class 12 - Arts</option>
+                        <option value="Class 12 - Science">Class 12 - Science</option>
                     </select>
-                    <div class="example-box">
-                        <b>Format:</b> username, password<br>
-                        sagun, sagun123<br>
-                        samir, samir456
-                    </div>
-                    <textarea id="bulkData" class="en-font" placeholder="sagun, sagun123..."></textarea>
+                    <textarea id="bulkData" class="en-font" placeholder="user1, pass1&#10;user2, pass2"></textarea>
                     <button class="btn-primary" onclick="addBulkStudents()">সবাইকে Add করুন</button>
-                </div>
-
-                <!-- Tools & Operations -->
-                <div class="card">
-                    <h3>Tools & Operations</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-meta); margin-top: 0;">Export করে Backup রাখুন বা অন্য ডিভাইসে Import করুন।</p>
-                    <div class="action-btns" style="margin-bottom: 15px;">
-                        <button class="btn-outline" onclick="exportUsers()">📤 Export</button>
-                        <button class="btn-outline" onclick="importUsersPrompt()">📥 Import</button>
-                    </div>
-                    <h4 style="margin: 10px 0 5px 0; font-size: 0.9rem; color: var(--danger);">Danger Zone</h4>
-                    <div class="action-btns">
-                        <button class="btn-outline btn-danger-outline" onclick="resetAllAttempts()">সব Attempts Reset</button>
-                        <button class="btn-outline btn-danger-outline" onclick="clearAllUsers()">সব Students মুছুন</button>
-                    </div>
                 </div>
             </div>
 
-            <!-- Student List -->
             <div class="card">
-                <h3>Student List</h3>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button class="btn-primary" style="background: var(--danger);" onclick="clearAllUsers()">⚠️ সব Delete করুন</button>
+                </div>
                 <table class="student-table" id="studentTable">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Class</th>
-                            <th style="text-align: right;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentListBody" class="en-font"></tbody>
+                    <thead><tr><th>Username</th><th>Password</th><th>Class/Stream</th><th style="text-align: right;">Action</th></tr></thead>
+                    <tbody id="studentListBody"></tbody>
                 </table>
-                <div id="emptyMessage" style="text-align: center; color: var(--text-meta); padding: 20px; font-style: italic;">কোনো student নেই।</div>
             </div>
         </div>
 
     </div>
 
 <script>
-    // ================== DATA CONFIGURATION ==================
-    const STORAGE_KEY_USERS = "testBazarUsersDB";
-    const STORAGE_KEY_ATTEMPTS = "testBazarAttemptsWBPMock1";
-    
-    // Subject Data
-    const subjectsData = {
+    // ================== SUBJECT CONFIGURATION ==================
+    const ALL_SUBJECTS = {
         "Class 10": [
-            { name: "বাংলা", icon: "✒️" }, { name: "ইংরেজি", icon: "🔠" },
-            { name: "গণিত", icon: "📐" }, { name: "ভৌতবিজ্ঞান", icon: "⚛️" },
-            { name: "জীবনবিজ্ঞান", icon: "🧬" }, { name: "ইতিহাস", icon: "📜" }, { name: "ভূগোল", icon: "🌍" }
+            { id: "bengali", name: "বাংলা", icon: "✒️" }, { id: "english", name: "ইংরেজি", icon: "🔠" },
+            { id: "history", name: "ইতিহাস", icon: "📜" }, { id: "geography", name: "ভূগোল", icon: "🌍" },
+            { id: "life_science", name: "জীবনবিজ্ঞান", icon: "🧬" }, { id: "physical_science", name: "ভৌতবিজ্ঞান", icon: "⚛️" },
+            { id: "math", name: "গণিত", icon: "📐" }
         ],
-        "Class 11": [
-            { name: "Physics", icon: "⚡" }, { name: "Chemistry", icon: "🧪" },
-            { name: "Mathematics", icon: "🔢" }, { name: "Biology", icon: "🌿" },
-            { name: "History", icon: "🏛️" }, { name: "Geography", icon: "🗺️" }
+        "Class 11 - Arts": [
+            { id: "bengali", name: "বাংলা", icon: "✒️" }, { id: "english", name: "ইংরেজি", icon: "🔠" },
+            { id: "history", name: "ইতিহাস", icon: "🏛️" }, { id: "geography", name: "ভূগোল", icon: "🗺️" },
+            { id: "political_science", name: "রাষ্ট্রবিজ্ঞান", icon: "⚖️" }, { id: "education", name: "শিক্ষাবিজ্ঞান", icon: "📚" }
         ],
-        "Class 12": [
-            { name: "Physics", icon: "⚡" }, { name: "Chemistry", icon: "🧪" },
-            { name: "Mathematics", icon: "🔢" }, { name: "Biology", icon: "🌿" },
-            { name: "History", icon: "🏛️" }, { name: "Geography", icon: "🗺️" }
+        "Class 11 - Science": [
+            { id: "bengali", name: "বাংলা", icon: "✒️" }, { id: "english", name: "ইংরেজি", icon: "🔠" },
+            { id: "physics", name: "পদার্থবিদ্যা (Physics)", icon: "⚡" }, { id: "chemistry", name: "রসায়ন (Chemistry)", icon: "🧪" },
+            { id: "math", name: "গণিত (Maths)", icon: "🔢" }, { id: "biology", name: "জীববিদ্যা (Biology)", icon: "🌿" }
+        ],
+        "Class 12 - Arts": [
+            { id: "bengali", name: "বাংলা", icon: "✒️" }, { id: "english", name: "ইংরেজি", icon: "🔠" },
+            { id: "history", name: "ইতিহাস", icon: "🏛️" }, { id: "geography", name: "ভূগোল", icon: "🗺️" },
+            { id: "education", name: "শিক্ষাবিজ্ঞান", icon: "📚" }, { id: "political_science", name: "রাষ্ট্রবিজ্ঞান", icon: "⚖️" }
+        ],
+        "Class 12 - Science": [
+            { id: "bengali", name: "বাংলা", icon: "✒️" }, { id: "english", name: "ইংরেজি", icon: "🔠" },
+            { id: "physics", name: "পদার্থবিদ্যা (Physics)", icon: "⚡" }, { id: "chemistry", name: "রসায়ন (Chemistry)", icon: "🧪" },
+            { id: "math", name: "গণিত (Maths)", icon: "🔢" }, { id: "biology", name: "জীববিদ্যা (Biology)", icon: "🌿" }
         ]
     };
 
-    let isAdminLoggedIn = false;
-    let pendingClassForLogin = "";
+    // ================== 15 MCQ QUESTIONS (Database) ==================
+    const class10_qs = [
+        {q:"১. লজ্জাবতীর পাতায় স্পর্শ করলে পাতা ও বিটপের সংলগ্ন অংশ নীচের দিকে ঝুলে পড়ে। এটি কী ধরনের চলন?", opts:["ফটোন্যাস্টিক","থার্মোন্যাস্টিক","সিসমোন্যাস্টিক","কেমোন্যাস্টিক"], ans:2, exp:"আঘাত, স্পর্শ, ঘর্ষণ দ্বারা নিয়ন্ত্রিত চলনকে সিসমোন্যাস্টিক চলন বলে।"},
+        {q:"২. কৃত্রিমভাবে কোন্ হরমোন প্রয়োগ করে নিষেকের আগেই বীজহীন ফল উৎপাদন সম্ভব?", opts:["অক্সিন","জিব্বারেলিন","সাইটোকাইনিন","ইথিলিন"], ans:0, exp:"অক্সিনের প্রভাবে বীজহীন ফল উৎপাদনের পদ্ধতিকে পার্থেনোকার্পি বলা হয়।"},
+        {q:"৩. চোখের লেন্সের ফোকাস দৈর্ঘ্যের প্রয়োজনমতো পরিমার্জন করার ক্ষমতাকে কী বলা হয়?", opts:["একনেত্র দৃষ্টি","দ্বিনেত্র দৃষ্টি","উপযোজন","ক্যাটার‍্যাক্ট"], ans:2, exp:"চোখের প্রতিসরণ ক্ষমতা পরিবর্তনের মাধ্যমে স্পষ্ট দেখার পদ্ধতিকে উপযোজন বলে।"},
+        {q:"৪. DNA অণুর গঠনে পিউরিন বেস 'অ্যাডিনিন' (A) সর্বদা কোন্ বেস-এর সাথে যুক্ত থাকে?", opts:["গুয়ানিন (G)","সাইটোসিন (C)","থাইমিন (T)","ইউরাসিল (U)"], ans:2, exp:"অ্যাডিনিন সর্বদা থাইমিনের সাথে দুটি হাইড্রোজেন বন্ধন (A=T) দ্বারা যুক্ত থাকে।"},
+        {q:"৫. মাইটোসিস কোশ বিভাজনের কোন্ দশায় ক্রোমোজোমগুলি বিষুব অঞ্চলে 'মেটাফেজ প্লেট' গঠন করে?", opts:["প্রফেজ","মেটাফেজ","অ্যানাফেজ","টেলোফেজ"], ans:1, exp:"মেটাফেজ দশায় ক্রোমোজোমগুলি বিষুব অঞ্চলে একতলে সজ্জিত হয়।"},
+        {q:"৬. ঈস্ট এবং হাইড্রা প্রধানত কোন্ অযৌন জনন পদ্ধতির মাধ্যমে বংশবিস্তার করে?", opts:["দ্বিবিভাজন","খণ্ডীভবন","কোরকোদ্গম","রেণু উৎপাদন"], ans:2, exp:"ঈস্ট ও হাইড্রার দেহে কোরকোদ্গম (Budding) পদ্ধতিতে অযৌন জনন হয়।"},
+        {q:"৭. মেন্ডেলের একসংকর জনন পরীক্ষায় F2 জনুর ফিনোটাইপিক অনুপাত কত?", opts:["১:২:১","৯:৩:৩:১","৩:১","২:১"], ans:2, exp:"F2 জনুতে ৭৫% প্রকট এবং ২৫% প্রচ্ছন্ন বৈশিষ্ট্য পাওয়া যায়, তাই অনুপাত ৩:১।"},
+        {q:"৮. থ্যালাসেমিয়া রোগের জন্য দায়ী জিন মানুষের কোন্ ক্রোমোজোমে অবস্থান করে?", opts:["X ক্রোমোজোমে","Y ক্রোমোজোমে","অটোজোমে","জনন কোশে"], ans:2, exp:"এটি অটোজোমাল জিনের মিউটেশনজনিত প্রচ্ছন্ন বংশগত রোগ।"},
+        {q:"৯. মানুষের ক্ষেত্রে মহিলাদের স্বাভাবিক ডিম্বাণুর ক্রোমোজোম বিন্যাস কোনটি?", opts:["44A + XX","22A + X","22A + Y","22A + XY"], ans:1, exp:"মহিলাদের সকল ডিম্বাণুই সমপ্রকৃতির হয় (22A + X)।"},
+        {q:"১০. অর্জিত গুণাবলির বংশ পরম্পরায় সঞ্চারণ—এই মতবাদটি কোন্ বিজ্ঞানীর?", opts:["চার্লস ডারউইন","জ্যাঁ ব্যাপটিস্ট দ্য ল্যামার্ক","ওপারিন","স্ট্যানলি মিলার"], ans:1, exp:"বিজ্ঞানী ল্যামার্ক ১৮০৯ খ্রিস্টাব্দে এই মতবাদ প্রকাশ করেন।"},
+        {q:"১১. পতঙ্গ, পাখি ও বাদুড় প্রভৃতির ডানা কী ধরনের অঙ্গের উদাহরণ?", opts:["সমসংস্থ অঙ্গ","সমবৃত্তীয় অঙ্গ","নিষ্ক্রিয় অঙ্গ","প্রতিস্থাপিত অঙ্গ"], ans:1, exp:"এরা উৎপত্তিগতভাবে পৃথক হলেও একই কাজ করে, তাই সমবৃত্তীয় অঙ্গ।"},
+        {q:"১২. মৌমাছিদের খাদ্যের উৎস ৭৫-১০০ মিটারের মধ্যে হলে তারা কোন নৃত্য প্রদর্শন করে?", opts:["রাউন্ড ডান্স","সোয়াইপ ডান্স","ওয়াগল ডান্স","ফোরেজার ডান্স"], ans:2, exp:"ইংরেজি '8' অক্ষরের ন্যায় পাক সম্পূর্ণ করে এই ওয়াগল ডান্স দেখানো হয়।"},
+        {q:"১৩. শিম্বগোত্রীয় উদ্ভিদের মূলে অর্বুদ সৃষ্টি করে কোন্ মিথোজীবী ব্যাকটেরিয়া নাইট্রোজেন আবদ্ধ করে?", opts:["নাইট্রোসোমোনাস","সিউডোমোনাস","রাইজোবিয়াম","থায়োব্যাসিলাস"], ans:2, exp:"রাইজোবিয়াম ব্যাকটেরিয়া মিথোজীবীরূপে বাস করে নাইট্রোজেন আবদ্ধ করে।"},
+        {q:"১৪. খাদ্যশৃঙ্খলের মাধ্যমে রাসায়নিক পদার্থ সর্বোচ্চ স্তরে পুঞ্জীভূত হওয়ার ঘটনাকে কী বলে?", opts:["ইউট্রফিকেশন","জীব বিবর্ধন","গ্রিনহাউস প্রভাব","সংবন্ধন"], ans:1, exp:"একে জীব বিবর্ধন (Biomagnification) বলে।"},
+        {q:"১৫. সুন্দরবনে রয়্যাল বেঙ্গল টাইগার সংরক্ষণের জন্য গড়ে ওঠা বায়োস্ফিয়ার রিজার্ভ কোন সংরক্ষণ?", opts:["এক্স-সিটু","ইন-সিটু","ক্রায়ো সংরক্ষণ","বোটানিক্যাল গার্ডেন"], ans:1, exp:"জীবকে তার নিজস্ব প্রাকৃতিক পরিবেশে সংরক্ষণ করাকে ইন-সিটু সংরক্ষণ বলে।"}
+    ];
 
-    // ================== NAVIGATION LOGIC ==================
+    const arts_qs = [
+        {q:"১. প্রাক্-ইতিহাস কথাটি সর্বপ্রথম কে ব্যবহার করেছিলেন?", opts:["ড্যানিয়েল উইলসন","পল তুর্নাল","ডেভিড ব্রুনো","ই. এইচ. কার"], ans:1, exp:"ফরাসি প্রত্নতত্ত্ববিদ পল তুর্নাল সর্বপ্রথম 'প্রাক্‌-ইতিহাস' কথাটি ব্যবহার করেন।"},
+        {q:"২. 'প্রায়-ঐতিহাসিক যুগ' বলতে কী বোঝায়?", opts:["পাথরের ব্যবহার জানত","লিপির পাঠোদ্ধার হয়েছে","লিপির ব্যবহার শুরু হয়েছে কিন্তু পাঠোদ্ধার হয়নি","গুহাচিত্র আঁকতে শুরু করে"], ans:2, exp:"যেমন ভারতের হরপ্পা সভ্যতা, যার লিপির পাঠোদ্ধার হয়নি।"},
+        {q:"৩. 'হামুরাবির আইন সংহিতা' প্রাচীন কোন্ লিপিতে লেখা হয়েছিল?", opts:["হায়ারোগ্লিফিক","ডিমোটিক","ব্রাহ্মী","কিউনিফর্ম লিপি"], ans:3, exp:"হামুরাবির আইন সংহিতাটি আটকোনা পাথরের ওপর 'কিউনিফর্ম' লিপিতে লেখা।"},
+        {q:"৪. গ্রিক রাজদূত মেগাস্থিনিস প্রাচীন ভারত সম্পর্কে যে গ্রন্থটি রচনা করেন, তার নাম কী?", opts:["ইন্ডিকা","ন্যাচুরালিস ইস্তোরিয়া","পেরিপ্লাস অব দি ইরিথ্রিয়ান সি","জিওগ্রাফিকে"], ans:0, exp:"মেগাস্থিনিস চন্দ্রগুপ্ত মৌর্যের রাজসভায় অবস্থানকালে 'ইন্ডিকা' রচনা করেন।"},
+        {q:"৫. 'ইন্দো-পারসিক' ইতিহাসচর্চায় আরবীয় ঐতিহাসিকের কাছ থেকে পাওয়া বড়ো বৈশিষ্ট্য কী ছিল?", opts:["ধর্মীয় দৃষ্টিকোণ","সঠিক কালানুক্রম ও সন-তারিখের উপস্থাপনা","জীবনযাত্রার বর্ণনা","গৌরবগাথা প্রচার"], ans:1, exp:"আরবদের ইতিহাসচর্চার বড়ো গুণ ছিল সঠিক কালানুক্রম ও সন-তারিখ।"},
+        {q:"৬. ৪৭৬ খ্রিস্টাব্দে কার হাতে পশ্চিম রোমান সাম্রাজ্যের চূড়ান্ত পতন ঘটেছিল?", opts:["অ্যাটিলা","এলারিক","জার্মান নেতা ওডোয়েসার","শাপুর"], ans:2, exp:"জার্মান নেতা ওডোয়েসার পশ্চিম রোমের শেষ সম্রাটকে পরাজিত করেন।"},
+        {q:"৭. 'কর্পাস জুরিস সিভিলিস' নামক আইন সংহিতা কোন্ সম্রাট প্রণয়ন করেছিলেন?", opts:["কনস্টানটাইন","প্রথম জাস্টিনিয়ান","জুলিয়াস সিজার","অগাস্টাস সিজার"], ans:1, exp:"বাইজানটাইন সাম্রাজ্যের শ্রেষ্ঠ সম্রাট প্রথম জাস্টিনিয়ান এটি রচনা করেন।"},
+        {q:"৮. প্রাচীন রোমান অর্থনীতিতে 'ল্যাটিফান্ডিয়াম' বলতে কী বোঝানো হতো?", opts:["বিশাল আকারের কৃষিক্ষেত্র","টাঁকশাল","দাসদের বাজার","স্নানাগার"], ans:0, exp:"প্যাট্রিসিয়ানদের মালিকানাধীন বিশাল আকারের কৃষিক্ষেত্রগুলিকে ল্যাটিফান্ডিয়াম বলা হতো।"},
+        {q:"৯. প্রাচীন গ্রিসের স্পার্টায় রাষ্ট্রের মালিকানাধীন দাসদের কী বলা হতো?", opts:["থিটিস","পেরিওকয়","মেটিক","হেলট"], ans:3, exp:"স্পার্টায় 'হেলট' নামের ক্রীতদাস শ্রেণিটি ছিল সবচেয়ে বেশি নির্যাতিত।"},
+        {q:"১০. খ্রিস্টপূর্ব ৭৩-৭১ অব্দে রোমে দাস বিদ্রোহের নেতৃত্ব কে দিয়েছিলেন?", opts:["স্পার্টাকাস","হ্যানিবল","ক্রাসাস","পম্পেই"], ans:0, exp:"গ্ল্যাডিয়েটর স্পার্টাকাসের নেতৃত্বে এক ভয়ংকর দাস বিদ্রোহ সংঘটিত হয়।"},
+        {q:"১১. প্লেটোর মতে একটি আদর্শ নগর-রাষ্ট্রের জনসংখ্যা কত হওয়া উচিত?", opts:["১ লক্ষ","২০ হাজার","১০ হাজার","৫ হাজার"], ans:3, exp:"প্লেটো ৫,০০০ জনসংখ্যাকে একটি আদর্শ পলিসের জন্য সমর্থন করেছেন।"},
+        {q:"১২. প্রাচীন ভারতের ষোড়শ মহাজনপদের মধ্যে কোন্ মহাজনপদটি প্রজাতান্ত্রিক ছিল?", opts:["মগধ","বৃজি","কোশল","অবন্তি"], ans:1, exp:"ষোলোটি মহাজনপদের মধ্যে 'বৃজি' এবং 'মল্ল' ছিল প্রজাতান্ত্রিক।"},
+        {q:"১৩. ড. ভিনসেন্ট স্মিথ প্রাচীন ভারতের কোন্ সম্রাটকে 'ভারতের নেপোলিয়ন' বলেছেন?", opts:["অশোক","প্রথম চন্দ্রগুপ্ত","সমুদ্রগুপ্ত","দ্বিতীয় চন্দ্রগুপ্ত"], ans:2, exp:"সমুদ্রগুপ্তের সামরিক কৃতিত্বের জন্য তাঁকে এই আখ্যা দেওয়া হয়।"},
+        {q:"১৪. চোল শাসনব্যবস্থায় ব্রাহ্মণদের বসতিপূর্ণ গ্রামের সভাকে কী বলা হতো?", opts:["উর","নগরম্","নাড়ু","সভা বা মহাসভা"], ans:3, exp:"ব্রাহ্মণদের নিষ্কর জমি বা ব্রহ্মদেয় গ্রামের সভাকে 'মহাসভা' বলা হতো।"},
+        {q:"১৫. ১২৯৯ খ্রিস্টাব্দে অটোমান বা ওসমানীয় সাম্রাজ্যের প্রতিষ্ঠা কে করেছিলেন?", opts:["প্রথম সেলিম","সুলেমান","ওসমান","দ্বিতীয় মহম্মদ"], ans:2, exp:"তুরস্কে 'ওসমান' নামক এক তুর্কি বীর এই নতুন সাম্রাজ্যের প্রতিষ্ঠা করেন।"}
+    ];
+
+    const science_qs = [
+        {q:"১. গ্যাসোলিনে (gasoline) দ্রাব ও দ্রাবকের ভৌত অবস্থা যথাক্রমে কী কী?", opts:["গ্যাস, তরল","তরল, তরল","তরল, গ্যাস","গ্যাস, গ্যাস"], ans:1, exp:"গ্যাসোলিন হলো বিভিন্ন তরল হাইড্রোকার্বনের একটি সমসত্ত্ব মিশ্রণ। তাই এতে দ্রাব ও দ্রাবক উভয়েই তরল দশায় থাকে।"},
+        {q:"২. 100 g জলে কত গ্রাম ইউরিয়া যোগ করলে দ্রবণটির ওজনগত (W/W) শতকরা গাঢ়ত্ব 10% হবে?", opts:["10 g","11.12 g","12.37 g","13.05 g"], ans:1, exp:"সূত্র অনুযায়ী গণনা করলে 11.12 g ইউরিয়া প্রয়োজন।"},
+        {q:"৩. 76.8 g বেঞ্জিনে কত মোল ন্যাপথালিন দ্রবীভূত করলে দ্রবণটির ওজনগত (W/W) শতকরা গাঢ়ত্ব 4% হবে?", opts:["2.8 x 10⁻²","3.2 x 10⁻²","2.5 x 10⁻²","4.3 x 10⁻²"], ans:2, exp:"গণনা করে মোল সংখ্যা 2.5 x 10⁻² পাওয়া যায়।"},
+        {q:"৪. ইউরিয়ার একটি জলীয় দ্রবণের মোলালিটি 5.5 m। উক্ত দ্রবণে ইউরিয়ার মোল-ভগ্নাংশ কত?", opts:["0.058","0.064","0.069","0.09"], ans:3, exp:"5.5 m গাঢ়ত্ব মানে 1000 g দ্রাবকে 5.5 মোল ইউরিয়া আছে। মোল-ভগ্নাংশ 0.09।"},
+        {q:"৫. মাছের কোশের প্রতি kg-তে 2.1 mg DDT উপস্থিত থাকলে ppm এককে DDT-এর গাঢ়ত্ব কত হবে?", opts:["210","2.1","0.21","21"], ans:1, exp:"যেহেতু 1 kg কোশে 2.1 mg DDT আছে, তাই ppm এককে গাঢ়ত্ব হবে সরাসরি 2.1 ppm।"},
+        {q:"৬. 100 g জলে কত গ্রাম গ্লুকোজ দ্রবীভূত করলে উৎপন্ন দ্রবণের স্ফুটনাঙ্ক উন্নয়ন 0.13°C হবে?", opts:["3.8 g","3.5 g","4.5 g","5.0 g"], ans:2, exp:"সূত্র ΔT_b = k_b × m প্রয়োগ করে W = 4.5 g পাওয়া যায়।"},
+        {q:"৭. ২০°C-এ বিশুদ্ধ বেঞ্জিনের বাষ্পচাপ 75 torr হলে ওই উন্নতায় 78 g বেঞ্জিন ও 46 g টলুইন দ্বারা গঠিত দ্রবণের বাষ্পে বেঞ্চিনের আংশিক বাষ্পচাপ হবে-", opts:["62.5","50.0","54.3","56.8"], ans:1, exp:"রাউল্টের সূত্র অনুযায়ী, আংশিক বাষ্পচাপ = 2/3 × 75 = 50.0 torr।"},
+        {q:"৮. 50 g জলে 50 cm³ ইথিলিন গ্লাইকল দ্রবীভূত আছে এরূপ একটি আদর্শ দ্রবণের হিমাঙ্ক -34°C। ইথিলিন গ্লাইকলের ঘনত্ব কত?", opts:["1.09","1.13","1.28","1.21"], ans:1, exp:"হিসাব করে ঘনত্ব d = 1.13 g/cm³ পাওয়া যায়।"},
+        {q:"৯. 27°C উয়তায় 5.4% (W/V) গ্লুকোজ দ্রবণের অভিস্রবণ চাপের মান (bar এককে) হল-", opts:["6.28","6.86","7.47","7.92"], ans:2, exp:"π = CRT সম্পর্ক থেকে π = 7.47 bar পাওয়া যায়।"},
+        {q:"১০. 10 mL প্রমাণ গোল্ড সলের মধ্যে 1 mL 10% NaCl দ্রবণ যোগ করার ফলে যে তঞ্চন শুরু হয়, তা প্রতিহত করার জন্য ব্যবহৃত স্টার্চের ন্যূনতম পরিমাণ 0.025 g। স্টার্চের স্বর্ণসংখ্যা কত?", opts:["20","25","15","30"], ans:1, exp:"0.025 g বা 25 mg স্টার্চ ব্যবহৃত হয়েছে। তাই স্টার্চের স্বর্ণসংখ্যা 25।"},
+        {q:"১১. Ba(NO₃)₂-এর একটি জলীয় দ্রবণের গাঢ়ত্ব 0.1M। উক্ত দ্রবণে Ba(NO₃)₂-এর ভ্যান্ট হফ ফ্যাক্টরের মান 2.74 হলে ওর শতকরা বিয়োজন কত?", opts:["78%","82%","87%","96%"], ans:2, exp:"সূত্র α = (i - 1) / (n - 1) প্রয়োগ করে শতকরা বিয়োজন 87% হয়।"},
+        {q:"১২. 1 atm চাপ ও 20°C উয়তায় জলে O₂ গ্যাসের দ্রাব্যতা 0.043 g/L। চাপের মান কত হলে দ্রাব্যতা 0.16 g/L হবে?", opts:["2.65","3.14","3.72","4.06"], ans:2, exp:"হেন্ডির সূত্রানুসারে, P₂ = 0.16 / 0.043 = 3.72 atm।"},
+        {q:"১৩. কত গ্রাম ইথিলিন গ্লাইকল 250 গ্রাম জলে দ্রবীভূত করলে উৎপন্ন দ্রবণের হিমাঙ্ক -6°C হবে?", opts:["46 g","50 g","58 g","62 g"], ans:1, exp:"গণনা করে ভর 50 g পাওয়া যায়।"},
+        {q:"১৪. 10⁻⁴ g জিলেটিনের উপস্থিতিতে 100 mL গোল্ড সলে 1 mL 10% NaCl দ্রবণ যোগ করলে তঞ্চন প্রতিহত হয়। জিলেটিনের স্বর্ণসংখ্যা কত?", opts:["0.01","0.05","0.1","0.5"], ans:0, exp:"10 mL সলের জন্য লাগবে 0.01 mg। অতএব স্বর্ণসংখ্যা = 0.01।"},
+        {q:"১৫. তেল-ভিত্তিক রং যে কোলয়ডীয় সিস্টেমের অন্তর্ভুক্ত তার নাম হল-", opts:["ফোম","জেল","সল","ইমালসন"], ans:2, exp:"কঠিন-তরল কোলয়ডীয় সিস্টেমকে 'সল' বলা হয়।"}
+    ];
+
+    const TEST_DATABASE = {
+        "Class 10": { "demo": class10_qs, "life_science": class10_qs },
+        "Class 11 - Arts": { "demo": arts_qs, "history": arts_qs },
+        "Class 11 - Science": { "demo": science_qs, "chemistry": science_qs },
+        "Class 12 - Arts": { "demo": arts_qs, "history": arts_qs },
+        "Class 12 - Science": { "demo": science_qs, "chemistry": science_qs }
+    };
+
+    // ================== APP LOGIC ==================
+    const STORAGE_KEY_USERS = "testBazarFinalDB_v3"; // Changed to v3 to support Stream formatting properly
+    let isAdminLoggedIn = false;
+    let loggedInUser = null;
+    let pendingTest = {};
+    let activeTest = [];
+    let currentQIdx = 0;
+    let score = 0;
+
     function switchTab(tabName) {
         document.getElementById('tabHome').classList.remove('active');
         document.getElementById('tabAdmin').classList.remove('active');
-        
         document.getElementById('viewHome').classList.add('hidden');
+        document.getElementById('viewStreamSelection').classList.add('hidden');
+        document.getElementById('viewSubjectSelection').classList.add('hidden');
+        document.getElementById('viewQuiz').classList.add('hidden');
+        document.getElementById('viewResult').classList.add('hidden');
         document.getElementById('viewAdminLogin').classList.add('hidden');
         document.getElementById('viewAdminDashboard').classList.add('hidden');
 
         if(tabName === 'home') {
             document.getElementById('tabHome').classList.add('active');
             document.getElementById('viewHome').classList.remove('hidden');
-            showClasses();
         } else if(tabName === 'admin') {
             document.getElementById('tabAdmin').classList.add('active');
             if(isAdminLoggedIn) {
@@ -357,94 +412,212 @@
         }
     }
 
-    // ================== STUDENT LOGIN & FLOW ==================
-    function showClasses() {
-        document.getElementById('classSelection').classList.remove('hidden');
-        document.getElementById('subjectSelection').classList.add('hidden');
+    function showHomeView() {
+        document.getElementById('viewStreamSelection').classList.add('hidden');
+        document.getElementById('viewSubjectSelection').classList.add('hidden');
+        document.getElementById('viewResult').classList.add('hidden');
+        document.getElementById('viewHome').classList.remove('hidden');
     }
 
-    function promptStudentLogin(className) {
-        pendingClassForLogin = className;
-        document.getElementById('studentLoginTitle').innerText = className + " Login";
-        document.getElementById('studentUser').value = '';
-        document.getElementById('studentPass').value = '';
-        document.getElementById('studentLoginError').classList.add('hidden');
-        document.getElementById('studentLoginModal').classList.remove('hidden');
+    // ================== STREAM & SUBJECT SELECTION ==================
+    function openStreamSelection(baseClass) {
+        if(baseClass === 'Class 10') {
+            openSubjectView('Class 10');
+            return;
+        }
+        document.getElementById('viewHome').classList.add('hidden');
+        document.getElementById('viewSubjectSelection').classList.add('hidden');
+        document.getElementById('viewStreamSelection').classList.remove('hidden');
+
+        document.getElementById('streamClassTitle').innerText = baseClass;
+
+        document.getElementById('artsStreamBtn').onclick = () => openSubjectView(baseClass + ' - Arts');
+        document.getElementById('scienceStreamBtn').onclick = () => openSubjectView(baseClass + ' - Science');
     }
 
-    function closeStudentLogin() {
-        document.getElementById('studentLoginModal').classList.add('hidden');
+    function goBackFromSubjects() {
+        let currentClass = document.getElementById('selectedClassTitle').innerText;
+        if(currentClass.includes('Class 11')) {
+            openStreamSelection('Class 11');
+        } else if(currentClass.includes('Class 12')) {
+            openStreamSelection('Class 12');
+        } else {
+            showHomeView();
+        }
     }
 
-    function verifyStudentLogin() {
-        const u = document.getElementById('studentUser').value.trim();
-        const p = document.getElementById('studentPass').value.trim();
-        const err = document.getElementById('studentLoginError');
-        
-        if(!u || !p) {
-            err.innerText = "ইউজারনেম এবং পাসওয়ার্ড দিন!";
-            err.classList.remove('hidden');
-            return;
-        }
-
-        let users = getUsers();
-        
-        if(!users[u]) {
-            err.innerText = "ইউজারনেম খুঁজে পাওয়া যায়নি!";
-            err.classList.remove('hidden');
-            return;
-        }
-
-        // Handle both old format (string) and new format (object)
-        let uData = users[u];
-        let actualPass = typeof uData === 'string' ? uData : uData.pass;
-        let actualClass = typeof uData === 'string' ? 'Any' : uData.className;
-
-        if(actualPass !== p) {
-            err.innerText = "পাসওয়ার্ড ভুল হয়েছে!";
-            err.classList.remove('hidden');
-            return;
-        }
-
-        // Class Validation (Block accessing wrong class)
-        if(actualClass !== pendingClassForLogin && actualClass !== 'Any') {
-            err.innerText = `আপনি ${pendingClassForLogin} এর স্টুডেন্ট নন! আপনার আইডি ${actualClass} এর জন্য।`;
-            err.classList.remove('hidden');
-            return;
-        }
-
-        // Login Success
-        closeStudentLogin();
-        document.getElementById('loggedInUserDisplay').innerText = `👤 ${u}`;
-        showSubjects(pendingClassForLogin);
-    }
-
-    function showSubjects(className) {
-        document.getElementById('classSelection').classList.add('hidden');
-        document.getElementById('subjectSelection').classList.remove('hidden');
+    function openSubjectView(className) {
+        document.getElementById('viewHome').classList.add('hidden');
+        document.getElementById('viewStreamSelection').classList.add('hidden');
+        document.getElementById('viewSubjectSelection').classList.remove('hidden');
         document.getElementById('selectedClassTitle').innerText = className;
 
         const grid = document.getElementById('subjectGrid');
-        grid.innerHTML = ''; 
+        grid.innerHTML = '';
 
-        const subjects = subjectsData[className];
-        if(subjects) {
-            subjects.forEach(sub => {
+        // 1. FREE DEMO CARD (No login needed)
+        const demoCard = document.createElement('div');
+        demoCard.className = 'subject-card demo-card';
+        demoCard.innerHTML = `<div style="font-size: 2.2rem;">🎁</div> <div><div class="sub-title" style="color: #e8730a;">Free Demo Test</div><small style="color: var(--primary); font-weight:bold;">লগইন ছাড়া (১৫টি প্রশ্ন)</small></div>`;
+        demoCard.onclick = () => startTest(className, 'demo', 'Free Demo Test');
+        grid.appendChild(demoCard);
+
+        // 2. LOCKED SUBJECTS
+        if(ALL_SUBJECTS[className]) {
+            ALL_SUBJECTS[className].forEach(sub => {
                 const card = document.createElement('div');
                 card.className = 'subject-card';
-                card.innerHTML = `<div style="font-size: 2rem;">${sub.icon}</div> <div style="font-size: 1.1rem; font-weight: 700;">${sub.name}</div>`;
-                card.onclick = () => {
-                    alert(`আপনি "${sub.name}" সিলেক্ট করেছেন। পরবর্তী ধাপে এখানে Chapter ও Sets ওপেন হবে।`);
-                };
+                card.innerHTML = `<div style="font-size: 2.2rem;">${sub.icon}</div> <div class="sub-title" style="display:flex; justify-content:space-between; width:100%;">${sub.name} <span style="font-size:0.9rem; color:#aaa;">🔒</span></div>`;
+                card.onclick = () => handleSubjectClick(className, sub.id, sub.name);
                 grid.appendChild(card);
             });
         }
     }
 
-    // ================== ADMIN LOGIC ==================
+    // ================== LOGIN VALIDATION ==================
+    function handleSubjectClick(className, subId, subName) {
+        if(loggedInUser) {
+            let users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
+            let userClass = users[loggedInUser] ? users[loggedInUser].className : '';
+            if(userClass !== className) {
+                alert(`⚠️ অ্যাক্সেস ডিনাইড! আপনার আইডিটি শুধুমাত্র '${userClass}' এর জন্য তৈরি করা হয়েছে। আপনি '${className}'-এ প্রবেশ করতে পারবেন না।`);
+                return;
+            }
+            startTest(className, subId, subName);
+        } else {
+            pendingTest = { className, subId, subName };
+            document.getElementById('studentLoginTitle').innerText = className + " Login";
+            document.getElementById('studentUser').value = '';
+            document.getElementById('studentPass').value = '';
+            document.getElementById('studentLoginError').classList.add('hidden');
+            document.getElementById('studentLoginModal').classList.remove('hidden');
+        }
+    }
+
+    function closeStudentLogin() { document.getElementById('studentLoginModal').classList.add('hidden'); }
+
+    function verifyStudentLogin() {
+        const u = document.getElementById('studentUser').value.trim();
+        const p = document.getElementById('studentPass').value.trim();
+        const err = document.getElementById('studentLoginError');
+
+        if(!u || !p) { err.innerText = "ইউজারনেম এবং পাসওয়ার্ড দিন!"; err.classList.remove('hidden'); return; }
+
+        let users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
+
+        if(!users[u] || users[u].pass !== p) {
+            err.innerText = "ইউজারনেম বা পাসওয়ার্ড ভুল!";
+            err.classList.remove('hidden');
+            return;
+        }
+
+        // STRICT STREAM VALIDATION
+        if(users[u].className !== pendingTest.className) {
+            err.innerText = `আপনি ${pendingTest.className} এর স্টুডেন্ট নন! আপনার আইডি ${users[u].className} এর জন্য বরাদ্দ।`;
+            err.classList.remove('hidden'); return;
+        }
+
+        loggedInUser = u;
+        closeStudentLogin();
+
+        document.getElementById('studentNavInfo').innerText = `👤 ${u}`;
+        document.getElementById('studentNavInfo').classList.remove('hidden');
+        document.getElementById('btnLogout').classList.remove('hidden');
+
+        startTest(pendingTest.className, pendingTest.subId, pendingTest.subName);
+    }
+
+    function logoutSession() {
+        if(isAdminLoggedIn) {
+            isAdminLoggedIn = false;
+            switchTab('home');
+        } else if(loggedInUser) {
+            loggedInUser = null;
+            document.getElementById('studentNavInfo').classList.add('hidden');
+            alert("সফলভাবে লগআউট হয়েছে!");
+            showHomeView();
+        }
+        document.getElementById('btnLogout').classList.add('hidden');
+    }
+
+    // ================== QUIZ LOGIC ==================
+    function startTest(className, subId, subName) {
+        if(TEST_DATABASE[className] && TEST_DATABASE[className][subId]) {
+            activeTest = TEST_DATABASE[className][subId];
+            document.getElementById('viewSubjectSelection').classList.add('hidden');
+            document.getElementById('viewQuiz').classList.remove('hidden');
+            document.getElementById('quizSubjectTitle').innerText = `${className} - ${subName}`;
+
+            currentQIdx = 0;
+            score = 0;
+            loadQuestion();
+        } else {
+            alert(`"${subName}" বিষয়ের প্রশ্নপত্র খুব শীঘ্রই আপলোড করা হবে!`);
+        }
+    }
+
+    function loadQuestion() {
+        const qData = activeTest[currentQIdx];
+        document.getElementById('qNum').innerText = `প্রশ্ন ${currentQIdx + 1} / ${activeTest.length}`;
+        document.getElementById('qText').innerText = qData.q;
+
+        const optsBox = document.getElementById('optionsBox');
+        optsBox.innerHTML = '';
+        document.getElementById('expBox').style.display = 'none';
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('submitBtn').classList.add('hidden');
+
+        const optLetters = ['A', 'B', 'C', 'D'];
+        qData.opts.forEach((opt, idx) => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerHTML = `<div class="opt-circle">${optLetters[idx]}</div> <span>${opt}</span>`;
+            btn.onclick = () => selectOption(btn, idx, qData.ans, qData.exp);
+            optsBox.appendChild(btn);
+        });
+    }
+
+    function selectOption(btn, selectedIdx, correctIdx, exp) {
+        const allBtns = document.getElementById("optionsBox").querySelectorAll("button");
+        allBtns.forEach(b => b.disabled = true);
+
+        if(selectedIdx === correctIdx) {
+            btn.classList.add("opt-correct"); score++;
+        } else {
+            btn.classList.add("opt-wrong");
+            allBtns[correctIdx].classList.add("opt-correct");
+        }
+
+        document.getElementById("expBox").innerHTML = `<b>ব্যাখ্যা:</b> ${exp}`;
+        document.getElementById("expBox").style.display = "block";
+
+        if(currentQIdx < activeTest.length - 1) {
+            document.getElementById("nextBtn").classList.remove("hidden");
+        } else {
+            document.getElementById("submitBtn").classList.remove("hidden");
+        }
+    }
+
+    function nextQuestion() { currentQIdx++; loadQuestion(); }
+
+    function showResult() {
+        document.getElementById('viewQuiz').classList.add('hidden');
+        document.getElementById('viewResult').classList.remove('hidden');
+        let percent = Math.round((score / activeTest.length) * 100);
+        document.getElementById('finalScoreText').innerText = percent + "%";
+        document.getElementById('correctCount').innerText = score;
+        document.getElementById('wrongCount').innerText = activeTest.length - score;
+    }
+
+    function exitQuiz() {
+        document.getElementById('viewQuiz').classList.add('hidden');
+        document.getElementById('viewResult').classList.add('hidden');
+        document.getElementById('viewSubjectSelection').classList.remove('hidden');
+    }
+
+    // ================== ADMIN SYSTEM ==================
     function verifyAdmin() {
-        const pass = document.getElementById('adminPass').value;
-        if(pass === 'Ajay@725') { // NEW ADMIN PASSWORD
+        if(document.getElementById('adminPass').value === 'Ajay@725') {
             isAdminLoggedIn = true;
             document.getElementById('adminPass').value = '';
             document.getElementById('loginError').style.display = 'none';
@@ -454,159 +627,49 @@
         }
     }
 
-    function logoutAdmin() {
-        isAdminLoggedIn = false;
-        document.getElementById('btnLogout').classList.add('hidden');
-        switchTab('home');
-    }
-
-    // ================== DATABASE OPERATIONS ==================
-    function getUsers() {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
-    }
-
-    function saveUsers(data) {
-        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(data));
-        updateAdminUI();
-    }
+    function getUsers() { return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {}; }
+    function saveUsers(data) { localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(data)); updateAdminUI(); }
 
     function addSingleStudent() {
-        const userClass = document.getElementById("singleClass").value;
-        const user = document.getElementById("singleUser").value.trim();
-        const pass = document.getElementById("singlePass").value.trim();
-        
-        if(!user || !pass) { alert("Username এবং Password দুটোই দিতে হবে!"); return; }
-        
+        const c = document.getElementById("singleClass").value;
+        const u = document.getElementById("singleUser").value.trim();
+        const p = document.getElementById("singlePass").value.trim();
+        if(!u || !p) return;
         let users = getUsers();
-        if(users[user]) { alert("এই Username আগে থেকেই আছে!"); return; }
-        
-        // Save as object containing password and class
-        users[user] = { pass: pass, className: userClass };
-        
-        saveUsers(users);
-        document.getElementById("singleUser").value = "";
-        document.getElementById("singlePass").value = "";
+        if(users[u]) { alert("এই Username আগে থেকেই আছে!"); return; }
+        users[u] = { pass: p, className: c }; saveUsers(users);
+        document.getElementById("singleUser").value = ""; document.getElementById("singlePass").value = "";
     }
 
     function addBulkStudents() {
-        const bulkClass = document.getElementById("bulkClass").value;
-        const text = document.getElementById("bulkData").value.trim();
-        if(!text) return;
-        
-        let users = getUsers();
-        let added = 0;
-        const lines = text.split('\n');
-        
-        lines.forEach(line => {
-            const parts = line.split(',');
-            if(parts.length >= 2) {
-                const u = parts.trim();
-                const p = parts.trim();
-                if(u && p && !users[u]) { 
-                    users[u] = { pass: p, className: bulkClass }; 
-                    added++; 
-                }
+        const c = document.getElementById("bulkClass").value;
+        const txt = document.getElementById("bulkData").value.trim();
+        if(!txt) return;
+        let users = getUsers(), added = 0;
+        txt.split('\n').forEach(line => {
+            const pts = line.split(',');
+            if(pts.length >= 2) {
+                const u = pts.trim(), p = pts.trim();
+                if(u && p && !users[u]) { users[u] = { pass: p, className: c }; added++; }
             }
         });
-        
-        saveUsers(users);
-        document.getElementById("bulkData").value = "";
-        alert(`${added} জন Student (${bulkClass}) যোগ করা হয়েছে!`);
+        saveUsers(users); document.getElementById("bulkData").value = ""; alert(`${added} জন স্টুডেন্ট যোগ করা হয়েছে!`);
     }
 
-    function deleteStudent(user) {
-        if(confirm(`'${user}' কে ডিলিট করতে চান?`)) {
-            let users = getUsers();
-            delete users[user];
-            saveUsers(users);
-        }
-    }
-
-    function clearAllUsers() {
-        if(confirm("সতর্কতা: সমস্ত Students ডিলিট হয়ে যাবে! আপনি কি নিশ্চিত?")) {
-            saveUsers({});
-        }
-    }
-
-    function resetAllAttempts() {
-        if(confirm("সমস্ত Students এর Test Attempts জিরো (0) হয়ে যাবে। নিশ্চিত?")) {
-            localStorage.removeItem(STORAGE_KEY_ATTEMPTS);
-            alert("সব Attempts সফলভাবে Reset করা হয়েছে!");
-        }
-    }
-
-    function exportUsers() {
-        const users = getUsers();
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(users));
-        const a = document.createElement('a');
-        a.setAttribute("href", dataStr);
-        a.setAttribute("download", "TestBazar_Users_Backup.json");
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-    }
-
-    function importUsersPrompt() {
-        const input = prompt("Import করার জন্য Export করা JSON text এখানে পেস্ট করুন:");
-        if(input) {
-            try {
-                const importedData = JSON.parse(input);
-                let currentUsers = getUsers();
-                for(let key in importedData) { currentUsers[key] = importedData[key]; }
-                saveUsers(currentUsers);
-                alert("Users সফলভাবে Import করা হয়েছে!");
-            } catch(e) {
-                alert("ভুল ফরম্যাট! সঠিক JSON ডাটা দিন।");
-            }
-        }
-    }
+    function deleteStudent(u) { if(confirm(`'${u}' কে Delete করতে চান?`)) { let users = getUsers(); delete users[u]; saveUsers(users); } }
+    function clearAllUsers() { if(confirm("সতর্কতা: সব ডাটা Delete হয়ে যাবে! নিশ্চিত?")) saveUsers({}); }
 
     function updateAdminUI() {
-        const users = getUsers();
-        const tbody = document.getElementById("studentListBody");
-        const emptyMsg = document.getElementById("emptyMessage");
-        const userKeys = Object.keys(users);
-        
-        document.getElementById("totalStudentsCount").innerText = userKeys.length;
-        tbody.innerHTML = "";
-
-        if(userKeys.length === 0) {
-            emptyMsg.style.display = "block";
-            document.getElementById("studentTable").style.display = "none";
-        } else {
-            emptyMsg.style.display = "none";
-            document.getElementById("studentTable").style.display = "table";
-
-            userKeys.forEach(user => {
-                let uData = users[user];
-                // Handle backward compatibility for old simple string passwords
-                let p = typeof uData === 'string' ? uData : uData.pass;
-                let c = typeof uData === 'string' ? 'Any' : uData.className;
-
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${user}</td>
-                    <td>${p}</td>
-                    <td><span style="background:#e8f7ef; color:#1a7a4a; padding:2px 8px; border-radius:12px; font-size:0.8rem; font-weight:bold;">${c}</span></td>
-                    <td style="text-align: right;">
-                        <button class="btn-sm-danger" onclick="deleteStudent('${user}')">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+        const users = getUsers(), tbody = document.getElementById("studentListBody"), keys = Object.keys(users);
+        document.getElementById("totalStudentsCount").innerText = keys.length; tbody.innerHTML = "";
+        keys.forEach(u => {
+            tbody.innerHTML += `<tr><td>${u}</td><td>${users[u].pass}</td><td><span style="background:#e8f7ef; color:#1a7a4a; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:0.8rem;">${users[u].className}</span></td><td style="text-align: right;"><button class="btn-sm-danger" onclick="deleteStudent('${u}')">Del</button></td></tr>`;
+        });
     }
-
 </script>
 
 </body>
 </html>
-```
 
-### নতুন কী কী পরিবর্তন হয়েছে দেখে নিন:
-১. **লগইন ছাড়া ক্লাসে প্রবেশ নিষেধ:** এখন কোনো স্টুডেন্ট 'Class 10' বা অন্য কোনো ক্লাসে ক্লিক করলেই একটি **লগইন বক্স** ওপেন হবে।
-২. **ক্লাস ভেরিফিকেশন (Class Verification):** আপনি অ্যাডমিন প্যানেল থেকে যাকে যে ক্লাসের জন্য (যেমন: Class 10) আইডি বানিয়ে দেবেন, সে শুধু সেই ক্লাসের টেস্ট-ই দিতে পারবে। সে যদি ভুল করে Class 12-এ গিয়ে লগইন করার চেষ্টা করে, সিস্টেম এরর দেখাবে: *"আপনি Class 12 এর স্টুডেন্ট নন!"* 
-৩. **অ্যাডমিনের নতুন পাসওয়ার্ড:** আপনার কথামতো অ্যাডমিনের লগইন পাসওয়ার্ডটি পরিবর্তন করে **`Ajay@725`** করা হয়েছে।
-৪. **Student List এ নতুন কলাম:** অ্যাডমিন ড্যাশবোর্ডে স্টুডেন্ট লিস্টের টেবিলে একটি নতুন কলাম যোগ করা হয়েছে, যেখানে দেখা যাবে কোন স্টুডেন্ট কোন ক্লাসের। 
 
-আপনি গিটহাবে এই নতুন কোডটি `index.html`-এ আপডেট করে চেক করে দেখতে পারেন। এটি ঠিকমতো কাজ করছে কিনা আমাকে জানাবেন!
+
