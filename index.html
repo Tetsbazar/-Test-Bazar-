@@ -1,8 +1,11 @@
-আপনার দেওয়া **Idea.pdf** ফাইলের ডিজাইন এবং কনসেপ্টটি আমি খুব ভালোভাবে দেখেছি। আপনার আইডিয়াটি দুর্দান্ত! একটি ফাইলের ভেতরেই **Student Panel (Home)** এবং **Admin Panel** দুটোই থাকলে সেটি পরিচালনা করা অনেক সহজ হবে। 
+আপনার এই আইডিয়াটি সত্যিই খুব প্রফেশনাল! একজন স্টুডেন্ট যেন তার নির্দিষ্ট ক্লাসের বাইরে অন্য কোনো ক্লাসের টেস্ট দিতে না পারে (Access Control), সেটি একটি ভালো এডুকেশনাল প্ল্যাটফর্মের অন্যতম প্রধান শর্ত। 
 
-আমি আপনার দেওয়া কনসেপ্ট অনুযায়ী একটি **Single Page Application (SPA)** তৈরি করে দিয়েছি। অর্থাৎ, এখন আর দুটি আলাদা ফাইলের প্রয়োজন নেই। একটি ফাইলের ভেতরেই মেনু (ট্যাব) পরিবর্তন করে স্টুডেন্টরা তাদের ক্লাস সিলেক্ট করতে পারবে এবং আপনি অ্যাডমিন হিসেবে লগইন করে স্টুডেন্টদের কন্ট্রোল করতে পারবেন। সাথে **Export/Import** এবং **Attempts Reset**-এর অপশনও যুক্ত করে দিয়েছি।
+আপনার নির্দেশ অনুযায়ী আমি **`index.html`** ফাইলটিকে আপডেট করে দিয়েছি। এখন এতে নিচের নতুন সুবিধাগুলো যুক্ত করা হয়েছে:
+১. **অ্যাডমিন পাসওয়ার্ড:** অ্যাডমিন প্যানেলের পাসওয়ার্ড পরিবর্তন করে **`Ajay@725`** করা হয়েছে।
+২. **ক্লাস-ভিত্তিক ইউজার (Class-based Users):** অ্যাডমিন প্যানেল থেকে স্টুডেন্ট অ্যাড করার সময় আপনি সিলেক্ট করে দিতে পারবেন সে কোন ক্লাসের স্টুডেন্ট (Class 10, 11 বা 12)।
+৩. **স্টুডেন্ট লগইন সিস্টেম:** কোনো স্টুডেন্ট হোমপেজে এসে যখনই 'Class 10' বা অন্য কোনো ক্লাসে ক্লিক করবে, তখন একটি লগইন বক্স আসবে। Class 10-এর আইডি দিয়ে সে কখনোই Class 11 বা 12-এ ঢুকতে পারবে না। তাকে সিস্টেম আটকে দেবে।
 
-নিচের কোডটি কপি করে **`index.html`** নামে সেভ করুন এবং গিটহাবে আপলোড করে দিন:
+নিচের সম্পূর্ণ কোডটি কপি করে আপনার গিটহাবের **`index.html`** ফাইলে আপডেট করে সেভ করে দিন:
 
 ```html
 <!DOCTYPE html>
@@ -92,28 +95,35 @@
         }
         .subject-card:hover { border-color: var(--primary); background: var(--bg-main); }
 
-        /* ================= ADMIN LOGIN ================= */
+        /* ================= MODALS & LOGIN BOXES ================= */
         .admin-login-box {
             max-width: 400px; margin: 3rem auto; background: var(--bg-card); padding: 2.5rem;
             border-radius: 14px; text-align: center; border: 1.5px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
         .admin-login-box h2 { color: var(--primary); margin-bottom: 10px; }
-        .admin-login-box input {
-            width: 100%; padding: 12px; margin: 15px 0; border: 1.5px solid var(--border-color);
+        .admin-login-box input, .admin-login-box select {
+            width: 100%; padding: 12px; margin: 10px 0; border: 1.5px solid var(--border-color);
             border-radius: 8px; font-size: 1rem; box-sizing: border-box; font-family: 'Syne', sans-serif;
         }
         .btn-primary {
             width: 100%; background: var(--primary); color: white; border: none; padding: 12px;
-            border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+            border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Tiro Bangla', serif;
         }
         .btn-primary:hover { background: var(--primary-hover); }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 999;
+            display: flex; justify-content: center; align-items: center;
+        }
 
         /* ================= ADMIN DASHBOARD ================= */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         .card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1.5px solid var(--border-color); box-shadow: 0 4px 10px rgba(26,122,74,0.05); }
         .card h3 { color: var(--primary); font-size: 1.2rem; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px; margin-top:0; margin-bottom: 15px; }
         
-        .card input, .card textarea {
+        .card input, .card textarea, .card select {
             width: 100%; padding: 10px; margin-bottom: 12px; border: 1.5px solid var(--border-color);
             border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; font-family: 'Syne', sans-serif;
         }
@@ -121,7 +131,7 @@
         
         .example-box { background: var(--bg-main); padding: 10px; border-radius: 6px; font-size: 0.85rem; color: var(--text-meta); margin-bottom: 15px; border: 1px dashed var(--border-color); }
         .action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-outline { background: none; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; }
+        .btn-outline { background: none; border: 1.5px solid var(--primary); color: var(--primary); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; font-family: 'Tiro Bangla', serif;}
         .btn-outline:hover { background: var(--primary); color: #fff; }
         .btn-danger-outline { border-color: var(--danger); color: var(--danger); }
         .btn-danger-outline:hover { background: var(--danger); color: #fff; }
@@ -146,6 +156,24 @@
         </div>
     </header>
 
+    <!-- STUDENT LOGIN MODAL -->
+    <div id="studentLoginModal" class="modal-overlay hidden">
+        <div class="admin-login-box" style="margin: 0; width: 90%;">
+            <h2 id="studentLoginTitle" class="en-font">Class Login</h2>
+            <p style="color: var(--text-meta); margin-top:0;">টেস্ট দিতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+            
+            <input type="text" id="studentUser" class="en-font" placeholder="Username">
+            <input type="password" id="studentPass" class="en-font" placeholder="Password">
+            
+            <div id="studentLoginError" class="hidden" style="color: var(--danger); margin: 10px 0; font-size: 0.9rem; font-weight:bold;"></div>
+            
+            <div class="action-btns" style="margin-top:15px;">
+                <button class="btn-primary" onclick="verifyStudentLogin()">লগইন</button>
+                <button class="btn-outline btn-danger-outline" onclick="closeStudentLogin()">বাতিল</button>
+            </div>
+        </div>
+    </div>
+
     <div class="main-container">
         
         <!-- ================= HOME / STUDENT VIEW ================= -->
@@ -158,17 +186,17 @@
                     <p>আপনার নির্দিষ্ট ক্লাস বেছে নিয়ে বিষয়ভিত্তিক টেস্ট দেওয়া শুরু করুন।</p>
                 </div>
                 <div class="class-grid">
-                    <div class="class-card" onclick="showSubjects('Class 10')">
+                    <div class="class-card" onclick="promptStudentLogin('Class 10')">
                         <div class="class-icon">📖</div>
                         <div class="class-title">Class 10</div>
-                        <div class="class-desc">7 Subjects • মাধ্যমিক</div>
+                        <div class="class-desc">মাধ্যমিক প্রস্তুতি</div>
                     </div>
-                    <div class="class-card" onclick="showSubjects('Class 11')">
+                    <div class="class-card" onclick="promptStudentLogin('Class 11')">
                         <div class="class-icon">🎓</div>
                         <div class="class-title">Class 11</div>
                         <div class="class-desc">Science & Arts</div>
                     </div>
-                    <div class="class-card" onclick="showSubjects('Class 12')">
+                    <div class="class-card" onclick="promptStudentLogin('Class 12')">
                         <div class="class-icon">🎯</div>
                         <div class="class-title">Class 12</div>
                         <div class="class-desc">Science & Arts</div>
@@ -178,7 +206,11 @@
 
             <!-- Subject Selection -->
             <div id="subjectSelection" class="hidden">
-                <button class="back-btn" onclick="showClasses()">← ফিরে যান</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="back-btn" style="margin:0;" onclick="showClasses()">← ফিরে যান</button>
+                    <div class="en-font" style="background: var(--bg-card); border:1px solid var(--border-color); padding: 5px 15px; border-radius: 20px; font-size:0.85rem; font-weight:bold; color:var(--primary);" id="loggedInUserDisplay">👤 Student</div>
+                </div>
+                
                 <div style="margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
                     <h2 style="color: var(--primary); margin: 0; font-size: 1.8rem;" id="selectedClassTitle" class="en-font">Class 10</h2>
                     <p style="color: var(--text-meta); margin: 5px 0 0 0;">আপনার বিষয় নির্বাচন করুন</p>
@@ -193,9 +225,9 @@
             <div class="admin-login-box">
                 <h2>Admin Access</h2>
                 <p style="color: var(--text-meta);">Admin Panel এ প্রবেশ করতে password দিন</p>
-                <input type="password" id="adminPass" placeholder="Password (Hint: 1234)">
+                <input type="password" id="adminPass" placeholder="Admin Password">
                 <button class="btn-primary" onclick="verifyAdmin()">প্রবেশ করুন</button>
-                <div id="loginError" style="color: var(--danger); margin-top: 10px; font-size: 0.9rem; display: none;">পাসওয়ার্ড ভুল!</div>
+                <div id="loginError" style="color: var(--danger); margin-top: 10px; font-size: 0.9rem; font-weight:bold; display: none;">পাসওয়ার্ড ভুল!</div>
             </div>
         </div>
 
@@ -210,6 +242,11 @@
                 <!-- Single Add -->
                 <div class="card">
                     <h3>+ নতুন Student যোগ করুন</h3>
+                    <select id="singleClass" class="en-font">
+                        <option value="Class 10">Class 10</option>
+                        <option value="Class 11">Class 11</option>
+                        <option value="Class 12">Class 12</option>
+                    </select>
                     <input type="text" id="singleUser" class="en-font" placeholder="Username (যেমন: sagun)">
                     <input type="text" id="singlePass" class="en-font" placeholder="Password (যেমন: sagun123)">
                     <button class="btn-primary" onclick="addSingleStudent()">Add Student</button>
@@ -218,6 +255,11 @@
                 <!-- Bulk Add -->
                 <div class="card">
                     <h3>একসাথে অনেক Student যোগ করুন</h3>
+                    <select id="bulkClass" class="en-font">
+                        <option value="Class 10">Class 10</option>
+                        <option value="Class 11">Class 11</option>
+                        <option value="Class 12">Class 12</option>
+                    </select>
                     <div class="example-box">
                         <b>Format:</b> username, password<br>
                         sagun, sagun123<br>
@@ -251,6 +293,7 @@
                         <tr>
                             <th>Username</th>
                             <th>Password</th>
+                            <th>Class</th>
                             <th style="text-align: right;">Action</th>
                         </tr>
                     </thead>
@@ -265,7 +308,7 @@
 <script>
     // ================== DATA CONFIGURATION ==================
     const STORAGE_KEY_USERS = "testBazarUsersDB";
-    const STORAGE_KEY_ATTEMPTS = "testBazarAttemptsWBPMock1"; // Attempts key from quiz
+    const STORAGE_KEY_ATTEMPTS = "testBazarAttemptsWBPMock1";
     
     // Subject Data
     const subjectsData = {
@@ -287,6 +330,7 @@
     };
 
     let isAdminLoggedIn = false;
+    let pendingClassForLogin = "";
 
     // ================== NAVIGATION LOGIC ==================
     function switchTab(tabName) {
@@ -313,10 +357,66 @@
         }
     }
 
-    // ================== HOME / STUDENT LOGIC ==================
+    // ================== STUDENT LOGIN & FLOW ==================
     function showClasses() {
         document.getElementById('classSelection').classList.remove('hidden');
         document.getElementById('subjectSelection').classList.add('hidden');
+    }
+
+    function promptStudentLogin(className) {
+        pendingClassForLogin = className;
+        document.getElementById('studentLoginTitle').innerText = className + " Login";
+        document.getElementById('studentUser').value = '';
+        document.getElementById('studentPass').value = '';
+        document.getElementById('studentLoginError').classList.add('hidden');
+        document.getElementById('studentLoginModal').classList.remove('hidden');
+    }
+
+    function closeStudentLogin() {
+        document.getElementById('studentLoginModal').classList.add('hidden');
+    }
+
+    function verifyStudentLogin() {
+        const u = document.getElementById('studentUser').value.trim();
+        const p = document.getElementById('studentPass').value.trim();
+        const err = document.getElementById('studentLoginError');
+        
+        if(!u || !p) {
+            err.innerText = "ইউজারনেম এবং পাসওয়ার্ড দিন!";
+            err.classList.remove('hidden');
+            return;
+        }
+
+        let users = getUsers();
+        
+        if(!users[u]) {
+            err.innerText = "ইউজারনেম খুঁজে পাওয়া যায়নি!";
+            err.classList.remove('hidden');
+            return;
+        }
+
+        // Handle both old format (string) and new format (object)
+        let uData = users[u];
+        let actualPass = typeof uData === 'string' ? uData : uData.pass;
+        let actualClass = typeof uData === 'string' ? 'Any' : uData.className;
+
+        if(actualPass !== p) {
+            err.innerText = "পাসওয়ার্ড ভুল হয়েছে!";
+            err.classList.remove('hidden');
+            return;
+        }
+
+        // Class Validation (Block accessing wrong class)
+        if(actualClass !== pendingClassForLogin && actualClass !== 'Any') {
+            err.innerText = `আপনি ${pendingClassForLogin} এর স্টুডেন্ট নন! আপনার আইডি ${actualClass} এর জন্য।`;
+            err.classList.remove('hidden');
+            return;
+        }
+
+        // Login Success
+        closeStudentLogin();
+        document.getElementById('loggedInUserDisplay').innerText = `👤 ${u}`;
+        showSubjects(pendingClassForLogin);
     }
 
     function showSubjects(className) {
@@ -344,7 +444,7 @@
     // ================== ADMIN LOGIC ==================
     function verifyAdmin() {
         const pass = document.getElementById('adminPass').value;
-        if(pass === '1234') { // Admin Password
+        if(pass === 'Ajay@725') { // NEW ADMIN PASSWORD
             isAdminLoggedIn = true;
             document.getElementById('adminPass').value = '';
             document.getElementById('loginError').style.display = 'none';
@@ -371,20 +471,25 @@
     }
 
     function addSingleStudent() {
+        const userClass = document.getElementById("singleClass").value;
         const user = document.getElementById("singleUser").value.trim();
         const pass = document.getElementById("singlePass").value.trim();
+        
         if(!user || !pass) { alert("Username এবং Password দুটোই দিতে হবে!"); return; }
         
         let users = getUsers();
         if(users[user]) { alert("এই Username আগে থেকেই আছে!"); return; }
         
-        users[user] = pass;
+        // Save as object containing password and class
+        users[user] = { pass: pass, className: userClass };
+        
         saveUsers(users);
         document.getElementById("singleUser").value = "";
         document.getElementById("singlePass").value = "";
     }
 
     function addBulkStudents() {
+        const bulkClass = document.getElementById("bulkClass").value;
         const text = document.getElementById("bulkData").value.trim();
         if(!text) return;
         
@@ -397,13 +502,16 @@
             if(parts.length >= 2) {
                 const u = parts.trim();
                 const p = parts.trim();
-                if(u && p && !users[u]) { users[u] = p; added++; }
+                if(u && p && !users[u]) { 
+                    users[u] = { pass: p, className: bulkClass }; 
+                    added++; 
+                }
             }
         });
         
         saveUsers(users);
         document.getElementById("bulkData").value = "";
-        alert(`${added} জন Student যোগ করা হয়েছে!`);
+        alert(`${added} জন Student (${bulkClass}) যোগ করা হয়েছে!`);
     }
 
     function deleteStudent(user) {
@@ -444,10 +552,7 @@
             try {
                 const importedData = JSON.parse(input);
                 let currentUsers = getUsers();
-                // Merge data
-                for(let key in importedData) {
-                    currentUsers[key] = importedData[key];
-                }
+                for(let key in importedData) { currentUsers[key] = importedData[key]; }
                 saveUsers(currentUsers);
                 alert("Users সফলভাবে Import করা হয়েছে!");
             } catch(e) {
@@ -473,10 +578,16 @@
             document.getElementById("studentTable").style.display = "table";
 
             userKeys.forEach(user => {
+                let uData = users[user];
+                // Handle backward compatibility for old simple string passwords
+                let p = typeof uData === 'string' ? uData : uData.pass;
+                let c = typeof uData === 'string' ? 'Any' : uData.className;
+
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${user}</td>
-                    <td>${users[user]}</td>
+                    <td>${p}</td>
+                    <td><span style="background:#e8f7ef; color:#1a7a4a; padding:2px 8px; border-radius:12px; font-size:0.8rem; font-weight:bold;">${c}</span></td>
                     <td style="text-align: right;">
                         <button class="btn-sm-danger" onclick="deleteStudent('${user}')">Delete</button>
                     </td>
@@ -492,10 +603,10 @@
 </html>
 ```
 
-### এই `index.html` ফাইলটির মধ্যে কী কী নতুন যুক্ত করা হয়েছে? 
-১. **সিঙ্গেল ফাইল সিস্টেম (SPA):** উপরে মেনুবারে **Home** এবং **Admin** নামের দুটি অপশন আছে। পেজ রিলোড না করেই আপনি স্টুডেন্ট প্যানেল ও অ্যাডমিন প্যানেল দুটোই ব্রাউজ করতে পারবেন।
-২. **অ্যাডমিন অপশন:** Idea.pdf-এর কনসেপ্ট অনুযায়ী Admin-এ ক্লিক করলে প্রথমে পাসওয়ার্ড (Hint: 1234) চাইবে। লগইন করলে স্টুডেন্ট কন্ট্রোল প্যানেল ওপেন হবে।
-৩. **ইম্পোর্ট/এক্সপোর্ট (Export/Import):** আপনি যেকোনো সময় অ্যাডমিন প্যানেল থেকে সমস্ত স্টুডেন্টের ডেটা (Backup) আপনার মোবাইলে বা কম্পিউটারে ফাইল হিসেবে সেভ করে রাখতে পারবেন।
-৪. **Reset Attempts:** এর আগে যে কুইজ ফাইলটি দিয়েছিলাম, তার Attempts (যে ১০ বার লিমিট ছিল) এখান থেকে এক ক্লিকেই মুছে দিয়ে সবাইকে নতুন করে সুযোগ করে দিতে পারবেন।
+### নতুন কী কী পরিবর্তন হয়েছে দেখে নিন:
+১. **লগইন ছাড়া ক্লাসে প্রবেশ নিষেধ:** এখন কোনো স্টুডেন্ট 'Class 10' বা অন্য কোনো ক্লাসে ক্লিক করলেই একটি **লগইন বক্স** ওপেন হবে।
+২. **ক্লাস ভেরিফিকেশন (Class Verification):** আপনি অ্যাডমিন প্যানেল থেকে যাকে যে ক্লাসের জন্য (যেমন: Class 10) আইডি বানিয়ে দেবেন, সে শুধু সেই ক্লাসের টেস্ট-ই দিতে পারবে। সে যদি ভুল করে Class 12-এ গিয়ে লগইন করার চেষ্টা করে, সিস্টেম এরর দেখাবে: *"আপনি Class 12 এর স্টুডেন্ট নন!"* 
+৩. **অ্যাডমিনের নতুন পাসওয়ার্ড:** আপনার কথামতো অ্যাডমিনের লগইন পাসওয়ার্ডটি পরিবর্তন করে **`Ajay@725`** করা হয়েছে।
+৪. **Student List এ নতুন কলাম:** অ্যাডমিন ড্যাশবোর্ডে স্টুডেন্ট লিস্টের টেবিলে একটি নতুন কলাম যোগ করা হয়েছে, যেখানে দেখা যাবে কোন স্টুডেন্ট কোন ক্লাসের। 
 
-আপনি এই একটিমাত্র কোড গিটহাবে **`index.html`** হিসেবে আপলোড করে দিন। এরপর আপনার ওয়েবসাইটটি পুরোপুরি লাইভ এবং প্রফেশনাল কন্ট্রোলের আওতায় চলে আসবে!
+আপনি গিটহাবে এই নতুন কোডটি `index.html`-এ আপডেট করে চেক করে দেখতে পারেন। এটি ঠিকমতো কাজ করছে কিনা আমাকে জানাবেন!
