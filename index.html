@@ -52,7 +52,6 @@
 
         .main-container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
 
-        /* ========== HOME ========== */
         .hero-section { text-align: center; margin-bottom: 2rem; }
         .hero-section h1 { font-size: 2rem; color: var(--primary); margin-bottom: 5px; }
         .class-grid {
@@ -78,7 +77,6 @@
         .class-icon { font-size: 3rem; margin-bottom: 10px; }
         .class-title { font-size: 1.3rem; font-weight: 700; color: var(--primary); font-family: 'Syne', sans-serif; }
 
-        /* ========== SUBJECT CARDS ========== */
         .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -117,7 +115,6 @@
 
         .hidden { display: none !important; }
 
-        /* ========== WHATSAPP BOX ========== */
         .wa-contact-box {
             background: #e8f7ef;
             border: 1.5px dashed var(--primary);
@@ -141,7 +138,6 @@
             box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
         }
 
-        /* ========== ADMIN ========== */
         .login-box {
             background: var(--bg-card);
             padding: 2.5rem;
@@ -354,12 +350,24 @@
     </div>
 
 <script>
+    // ======================== CHAPTER ICONS ========================
+    const CHAPTER_ICONS = {
+        'অধ্যায় 1': '📜',
+        'অধ্যায় 2': '⚔️',
+        'অধ্যায় 3': '🛡️',
+        'অধ্যায় 4': '🤝',
+        'অধ্যায় 5': '🖨️',
+        'অধ্যায় 6': '🌾',
+        'অধ্যায় 7': '👩‍🎓',
+        'অধ্যায় 8': '🇮🇳'
+    };
+
     // ======================== SUBJECT & CHAPTER CONFIG ========================
     const SUBJECTS = {
         class10: {
             title: 'Class 10',
             subjects: [
-                { id: 'history', name: 'ইতিহাস', icon: '📜', chapters: 7 },
+                { id: 'history', name: 'ইতিহাস', icon: '📜', chapters: 8 },
                 { id: 'geography', name: 'ভূগোল', icon: '🌍', chapters: 5 },
                 { id: 'life_science', name: 'জীবনবিজ্ঞান', icon: '🧬', chapters: 4 },
                 { id: 'physical_science', name: 'ভৌতবিজ্ঞান', icon: '⚛️', chapters: 4 },
@@ -472,7 +480,6 @@
         grid.innerHTML = '';
 
         if (data.streams) {
-            // For Class 11 & 12 - Show Streams first
             const streamKeys = Object.keys(data.streams);
             streamKeys.forEach(key => {
                 const stream = data.streams[key];
@@ -487,7 +494,6 @@
                 grid.appendChild(card);
             });
         } else {
-            // For Class 10
             data.subjects.forEach(sub => {
                 const card = document.createElement('div');
                 card.className = 'subject-card';
@@ -522,7 +528,6 @@
                 <span class="subject-name">${sub.name}</span>
                 <span class="subject-chapters">${sub.chapters} টি অধ্যায়</span>
             `;
-            const path = classId + '/' + streamKey + '/' + sub.id;
             card.onclick = () => showChapters(classId, sub.id, sub.name, streamKey);
             grid.appendChild(card);
         });
@@ -542,7 +547,6 @@
         const grid = document.getElementById('chapterGrid');
         grid.innerHTML = '';
 
-        // Build file path
         let basePath = '';
         if (classId === 'class10') {
             basePath = 'class10/' + subjectId + '/';
@@ -550,7 +554,6 @@
             basePath = classId + '/' + streamKey + '/' + subjectId + '/';
         }
 
-        // Find chapters count
         let chaptersCount = 3;
         if (classId === 'class10') {
             const sub = SUBJECTS[classId].subjects.find(s => s.id === subjectId);
@@ -567,12 +570,13 @@
             const card = document.createElement('div');
             card.className = 'subject-card';
             const chapterName = 'অধ্যায় ' + i;
+            // Get icon from CHAPTER_ICONS or use default
+            const icon = CHAPTER_ICONS[chapterName] || '📖';
             card.innerHTML = `
-                <span class="subject-icon">📖</span>
+                <span class="subject-icon">${icon}</span>
                 <span class="subject-name">${chapterName}</span>
                 <span class="subject-chapters">${i} / ${chaptersCount}</span>
             `;
-            // Link to individual chapter file
             const fileName = basePath + 'chapter' + i + '.html';
             card.onclick = () => {
                 window.location.href = fileName;
