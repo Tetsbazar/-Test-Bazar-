@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ভূগোল — Chapter 1 | Class 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c2e24}
+        
+        .top-bar{background:#1a7a4a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+        .top-logo{font-size:1.1rem;font-weight:800;color:white;cursor:pointer}
+        .top-logo span{color:#f9a825}
+        .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .user-info{color:#f9a825;font-weight:600;font-size:0.85rem}
+        .logout-btn{background:#dc3545;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-family:'Syne',sans-serif;font-size:0.75rem}
+        .logout-btn:hover{background:#c82333}
+        .timer-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:0.3rem 0.8rem;display:flex;align-items:center;gap:6px;font-size:0.9rem;font-weight:700;color:white}
+        .timer-box.danger{background:#dc3545}
+        
+        .main{max-width:800px;margin:0 auto;padding:1.5rem 1rem}
+        
+        .start-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb}
+        .start-wrap h2{font-family:'Tiro Bangla',serif;font-size:1.4rem;color:#1c2e24;margin-bottom:0.5rem}
+        .start-wrap p{font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#5a7a66;line-height:1.7;margin-bottom:1.2rem}
+        
+        .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+        .set-card{background:white;border-radius:12px;padding:1rem;border:1.5px solid #c5dccb;cursor:pointer;text-align:center;transition:0.3s;position:relative}
+        .set-card:hover{border-color:#1a7a4a;transform:translateY(-3px);box-shadow:0 4px 15px rgba(26,122,74,0.1)}
+        .set-card.locked{opacity:0.5;cursor:not-allowed}
+        .set-card.locked:hover{transform:none;box-shadow:none}
+        .set-icon{font-size:1.8rem;margin-bottom:0.2rem}
+        .set-title{font-family:'Tiro Bangla',serif;font-weight:700;font-size:0.95rem;color:#1c2e24}
+        .set-sub{font-family:'Tiro Bangla',serif;font-size:0.7rem;color:#5a7a66;margin-top:0.2rem}
+        .set-badge{display:inline-block;background:#e8f7ef;color:#1a7a4a;padding:0.1rem 0.6rem;border-radius:12px;font-size:0.6rem;font-weight:700;margin-top:0.3rem}
+        .attempts-left{font-size:0.7rem;color:#e8730a;font-weight:600;margin-top:0.3rem}
+        .lock-icon{position:absolute;top:5px;right:8px;font-size:1rem}
+        
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999;display:none;justify-content:center;align-items:center}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:white;padding:2rem;border-radius:14px;width:90%;max-width:400px;text-align:center}
+        .modal-box h2{color:#1a7a4a;margin-top:0}
+        .modal-box p{color:#5a7a66;font-size:0.9rem;margin-bottom:1rem}
+        .modal-box input{width:100%;padding:12px;margin:8px 0;border:1.5px solid #c5dccb;border-radius:8px;font-size:1rem;font-family:'Syne',sans-serif}
+        .modal-box .error-msg{color:#dc3545;font-weight:bold;margin:8px 0;display:none}
+        .modal-box .btn-primary{background:#1a7a4a;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-primary:hover{background:#2aad68}
+        .modal-box .btn-danger{background:#dc3545;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-danger:hover{background:#c82333}
+        
+        .quiz-info{background:white;border-radius:12px;padding:0.8rem 1.2rem;margin-bottom:1.2rem;border:1px solid #c5dccb;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+        .info-item{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66}
+        .info-item strong{color:#1a7a4a}
+        .progress-wrap{background:#c5dccb;border-radius:4px;height:6px;margin-bottom:1.2rem;overflow:hidden}
+        .progress-fill{height:100%;background:#1a7a4a;border-radius:4px;transition:width 0.3s}
+        .q-card{background:white;border-radius:14px;padding:1.4rem;margin-bottom:1rem;border:1px solid #c5dccb;box-shadow:0 2px 10px rgba(26,122,74,0.06)}
+        .q-num{font-size:0.75rem;font-weight:700;color:#e8730a;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+        .q-text{font-family:'Tiro Bangla',serif;font-size:1rem;color:#1c2e24;line-height:1.7;margin-bottom:1.1rem}
+        .opts{display:flex;flex-direction:column;gap:0.6rem}
+        .opt{display:flex;align-items:flex-start;gap:10px;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;width:100%}
+        .opt:hover:not(.disabled){border-color:#1a7a4a;background:#f0faf4}
+        .opt-circle{min-width:28px;height:28px;border-radius:50%;border:1.5px solid #c5dccb;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5a7a66;flex-shrink:0}
+        .opt-text{font-family:'Tiro Bangla',serif;font-size:0.92rem;color:#1c2e24;line-height:1.6;padding-top:2px}
+        .opt.correct{border-color:#1a7a4a;background:#e8f7ef}
+        .opt.correct .opt-circle{background:#1a7a4a;border-color:#1a7a4a;color:white}
+        .opt.wrong{border-color:#dc3545;background:#fdf0f0}
+        .opt.wrong .opt-circle{background:#dc3545;border-color:#dc3545;color:white}
+        .opt.disabled{cursor:default}
+        .explanation{background:#f0faf4;border-left:3px solid #1a7a4a;border-radius:0 8px 8px 0;padding:0.8rem 1rem;margin-top:0.8rem;display:none}
+        .explanation.show{display:block}
+        .explanation p{font-family:'Tiro Bangla',serif;font-size:0.88rem;color:#2c4035;line-height:1.7}
+        .explanation strong{color:#1a7a4a}
+        .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;flex-wrap:wrap;gap:10px}
+        .score-show{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+        .next-btn{background:#1a7a4a;color:white;border:none;padding:0.6rem 1.4rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:0.9rem;cursor:pointer}
+        .next-btn:hover{background:#2aad68}
+        .next-btn:disabled{background:#c5dccb;cursor:default}
+        
+        .result-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb;display:none}
+        .result-wrap.show{display:block}
+        .result-icon{font-size:3rem;margin-bottom:0.5rem}
+        .result-score{font-size:3.5rem;font-weight:800;color:#1a7a4a}
+        .result-total{font-size:1rem;color:#5a7a66;margin-bottom:0.5rem;font-family:'Tiro Bangla',serif}
+        .result-grade{font-size:1.2rem;font-weight:600;color:#1c2e24;margin-bottom:1.5rem;font-family:'Tiro Bangla',serif}
+        .result-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+        .result-bar{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+        .rb-num{font-size:1.4rem;font-weight:800}
+        .rb-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66;margin-top:0.2rem}
+        .action-btns{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap}
+        .retry-btn{background:#1a7a4a;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .review-btn{background:white;color:#1a7a4a;border:1.5px solid #1a7a4a;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .back-btn{background:white;color:#5a7a66;border:1.5px solid #c5dccb;padding:0.6rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-top:0.6rem}
+        
+        .hidden{display:none !important}
+        .text-center{text-align:center}
+        
+        @media(max-width:600px){
+            .set-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+            .result-bars{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="top-logo" onclick="window.location.href='../../index.html'">Test <span>Bazar</span></div>
+    <div class="top-right">
+        <span class="user-info hidden" id="userInfo">👤 <span id="userNameDisplay"></span></span>
+        <button class="logout-btn hidden" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        <div class="timer-box hidden" id="timerBox">⏱ <span id="timerDisplay">10:00</span></div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2>🔐 Login Required</h2>
+            <p>সেটটি আনলক করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+            <input type="text" id="loginUser" placeholder="Username">
+            <input type="password" id="loginPass" placeholder="Password">
+            <div class="error-msg" id="loginError">❌ ইউজারনেম বা পাসওয়ার্ড ভুল!</div>
+            <button class="btn-primary" onclick="verifyLogin()">লগইন</button>
+            <button class="btn-danger" onclick="closeLogin()">বাতিল</button>
+        </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div class="start-wrap" id="startScreen">
+        <div style="font-size:2.5rem;margin-bottom:0.8rem">🌍</div>
+        <h2>ভূগোল — Chapter 1</h2>
+        <p style="font-size:0.9rem;color:#5a7a66;">বহির্জাত প্রক্রিয়া ও তাদের দ্বারা সৃষ্ট ভূমিরূপ</p>
+        <p style="font-size:0.8rem;color:#5a7a66;margin-bottom:1rem;">৬টি সেট | প্রতিটি সেটে ১৫টি প্রশ্ন | সময়: ১০ মিনিট | Attempt: ১০ বার</p>
+        
+        <div class="set-grid" id="setGrid"></div>
+        
+        <button class="back-btn" onclick="window.location.href='../../index.html'" style="margin-top:1.5rem;">← Home এ ফিরে যাও</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+        <div class="quiz-info">
+            <div class="info-item">🌍 <strong id="setTitle">Set 1</strong></div>
+            <div class="info-item">📝 Class 10 | ভূগোল Chapter 1</div>
+            <div class="info-item" style="margin-left:auto;">🔄 Attempt: <span id="attemptCount">1</span>/10</div>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="q-card" id="qCard">
+            <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+            <div class="q-text" id="qText"></div>
+            <div class="opts" id="qOpts"></div>
+            <div class="explanation" id="explanation"><p id="explanationText"></p></div>
+            <div class="nav-row">
+                <div class="score-show" id="scoreShow">✅ সঠিক: ০ | ❌ ভুল: ০</div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>পরবর্তী →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="result-wrap" id="resultWrap">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-score" id="finalScore"></div>
+        <div class="result-total">/ ১৫</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="result-bars">
+            <div class="result-bar"><div class="rb-num" id="rbCorrect" style="color:#1a7a4a"></div><div class="rb-label">সঠিক</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbWrong" style="color:#dc3545"></div><div class="rb-label">ভুল</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbPct" style="color:#e8730a"></div><div class="rb-label">স্কোর</div></div>
+        </div>
+        <div class="action-btns">
+            <button class="retry-btn" onclick="retrySet()">আবার চেষ্টা করো</button>
+            <button class="review-btn" onclick="showReview()">উত্তর দেখো</button>
+        </div>
+        <button class="back-btn" onclick="showSetSelection()">← সেট লিস্টে ফিরে যাও</button>
+    </div>
+
+</div>
+
+<script>
+// ====================================================================
+//  ALL QUESTIONS - 6 SETS (15 Questions Each) = 90 Questions
+// ====================================================================
+
+const ALL_SETS = [
+    // ===================== SET 1: বহির্জাত প্রক্রিয়া এবং নদীর কাজ (পর্ব ১) =====================
+    [
+        {q:"যে প্রক্রিয়ায় অসমতল বন্ধুরভূমি অপসারিত হয়ে সমতল বা প্রায় সমতলে পরিণত হয়, তাকে কী বলে?", opts:["নগ্নীভবন","আরোহণ","পর্যায়ন","অবরোহণ"], ans:2, exp:"বহির্জাত প্রক্রিয়াসমূহ উঁচুনীচু ভূমিকে ক্ষয়, বহন ও সঞ্চয়কাজের মাধ্যমে সমতল করে তোলে। এই সমতলীকরণ প্রক্রিয়াকেই পর্যায়ন (Gradation) বলে।"},
+        {q:"নিচের কোনটি একটি বহির্জাত প্রক্রিয়ার উদাহরণ?", opts:["ভূমিকম্প","অগ্ন্যুৎপাত","পাত সঞ্চালন","নদীর কাজ"], ans:3, exp:"নদী, হিমবাহ, বায়ুপ্রবাহ প্রভৃতি ভূপৃষ্ঠের বাইরে ক্রিয়াশীল থেকে ভূমিরূপের পরিবর্তন ঘটায়, তাই এগুলি বহির্জাত প্রক্রিয়ার উদাহরণ।"},
+        {q:"সমস্ত বহির্জাত প্রক্রিয়ার মূল শক্তির উৎস কী?", opts:["নদী","হিমবাহ","বায়ু","সূর্য"], ans:3, exp:"বহির্জাত প্রক্রিয়াকে সচল রাখে যেসব প্রাকৃতিক শক্তি (তাপমাত্রা, বৃষ্টিপাত, বায়ুপ্রবাহ ইত্যাদি), তার সবকটিরই মূল উৎস হলো সূর্য।"},
+        {q:"যে প্রক্রিয়ায় প্রাকৃতিক শক্তির দ্বারা ভূপৃষ্ঠের নিচু অংশের উচ্চতা বৃদ্ধি পায়, তাকে কী বলে?", opts:["অবরোহণ","আরোহণ","পুঞ্জিত ক্ষয়","আবহবিকার"], ans:1, exp:"নদী বা বায়ুর দ্বারা পরিবাহিত পলি, বালি প্রভৃতি নিচু স্থানে সঞ্চিত হয়ে ভূমির উচ্চতা বৃদ্ধি করার প্রক্রিয়াকে আরোহণ বা স্তূপীকরণ বলে।"},
+        {q:"অবরোহণ প্রক্রিয়ায় প্রাকৃতিক শক্তির ক্ষয়ের শেষ সীমা কোনটি?", opts:["পর্বত","মালভূমি","সমুদ্রপৃষ্ঠ","সমভূমি"], ans:2, exp:"প্রাকৃতিক শক্তিগুলি ভূমিকে একটি নির্দিষ্ট সীমা পর্যন্ত ক্ষয় করে সমতল করতে পারে। এই সর্বনিম্ন ক্ষয়ের সীমাকে ক্ষয়ের শেষ সীমা বা সমুদ্রপৃষ্ঠ বলা হয়।"},
+        {q:"ভূমিরূপবিদ্যায় 'পর্যায়ন' (Grade) কথাটি প্রথম কে ব্যবহার করেন?", opts:["গিলবার্ট","পাওয়েল","ডেভিস","পেঙ্ক"], ans:0, exp:"ভূবিজ্ঞানী গ্রোভ কার্ল গিলবার্ট সর্বপ্রথম পর্যায়ন শব্দটি ব্যবহার করেন।"},
+        {q:"'ক্ষয়ের শেষ সীমা' (Base level of erosion) ধারণার প্রবর্তক কে?", opts:["চেম্বারলিন","সালিসবেরি","জে. ডব্লিউ. পাওয়েল","হপকিন্স"], ans:2, exp:"জে. ডব্লিউ. পাওয়েল সর্বপ্রথম ক্ষয়ের শেষ সীমার ধারণাটি প্রবর্তন করেন।"},
+        {q:"ভূপৃষ্ঠে শিলাস্তর বিচূর্ণ ও বিয়োজিত হয়ে স্বস্থানে পড়ে থাকার প্রক্রিয়াকে কী বলে?", opts:["ক্ষয়ীভবন","আবহবিকার","পুঞ্জিত ক্ষয়","নগ্নীভবন"], ans:1, exp:"আবহাওয়ার বিভিন্ন উপাদানের দ্বারা শিলা চূর্ণবিচূর্ণ হয়ে নিজ স্থানে পড়ে থাকার প্রক্রিয়াই হলো আবহবিকার (Weathering)।"},
+        {q:"যে প্রক্রিয়ায় মাটি ও শিলাস্তর অভিকর্ষের টানে উচ্চভূমির ঢাল বরাবর নীচে নেমে আসে, তাকে কী বলে?", opts:["পর্যায়ন","নগ্নীভবন","পুঞ্জিত ক্ষয়","আরোহণ"], ans:2, exp:"মাধ্যাকর্ষণ শক্তির প্রভাবে আবহবিকারজাত পদার্থ পর্বতগাত্র বরাবর নীচে নেমে আসাকে পুঞ্জিত ক্ষয় (Mass wasting) বলে।"},
+        {q:"প্রধান নদী, উপনদী ও শাখানদী বিধৌত সমগ্র অঞ্চলকে একত্রে কী বলে?", opts:["নদী উপত্যকা","জলবিভাজিকা","ধারণ অববাহিকা","নদী অববাহিকা"], ans:3, exp:"কোনো নদী এবং তার সব উপনদী ও শাখানদী মিলে যে বিস্তৃত অঞ্চলের ওপর দিয়ে প্রবাহিত হয়, তাকে নদী অববাহিকা বলে।"},
+        {q:"নদী অববাহিকার আয়তন ও জলপ্রবাহের পরিমাণ অনুসারে পৃথিবীর বৃহত্তম অববাহিকা কোনটি?", opts:["গঙ্গা অববাহিকা","নীল অববাহিকা","আমাজন অববাহিকা","ইয়াংসিকিয়াং অববাহিকা"], ans:2, exp:"দক্ষিণ আমেরিকার আমাজন অববাহিকা হলো আয়তন ও জলপ্রবাহের বিচারে পৃথিবীর বৃহত্তম নদী অববাহিকা।"},
+        {q:"দুটি নদী অববাহিকার মধ্যবর্তী উচ্চভূমিকে কী বলে?", opts:["দোয়াব","জলবিভাজিকা","নদীমঞ্চ","বদ্বীপ"], ans:1, exp:"যে উচ্চভূমি দুই বা তার বেশি নদী ব্যবস্থাকে পৃথক করে তাকে জলবিভাজিকা বলে (যেমন- বিন্ধ্য পর্বত)।"},
+        {q:"নদীর তলদেশে অবঘর্ষ প্রক্রিয়ায় সৃষ্ট গোলাকার গর্তগুলিকে কী বলে?", opts:["প্রপাত কূপ","মন্থকূপ","পলল শঙ্কু","খাড়ি"], ans:1, exp:"নদীর স্রোতের সাথে বাহিত বড়ো বড়ো পাথরের ঘর্ষণে নদীখাতে যে গোলাকার গর্ত তৈরি হয়, তাকে মন্থকূপ বা Pothole বলে।"},
+        {q:"নদীর গতিবেগের সাথে তার বহন ক্ষমতার সম্পর্কটি কে প্রবর্তন করেন?", opts:["পাওয়েল","গিলবার্ট","ডব্লিউ. হপকিন্স","পেঙ্ক"], ans:2, exp:"ডব্লিউ. হপকিন্স-এর 'ষষ্ঠ ঘাতের সূত্র' অনুযায়ী নদীর স্রোতের বেগ দ্বিগুণ হলে তার বহন ক্ষমতা ৬৪ গুণ বৃদ্ধি পায়।"},
+        {q:"ভারতের বৃহত্তম নদী-দ্বীপ কোনটি?", opts:["মাজুলি","সাগরদ্বীপ","ঘোড়ামারা","নিউমুর"], ans:0, exp:"অসমের ব্রহ্মপুত্র নদের গতিপথে পলি সঞ্চিত হয়ে মাজুলি নামক পৃথিবীর অন্যতম বৃহৎ এবং ভারতের বৃহত্তম নদী-দ্বীপ গঠিত হয়েছে।"}
+    ],
+    // ===================== SET 2: নদীর কাজ (পর্ব ২) এবং হিমবাহের কাজ (পর্ব ১) =====================
+    [
+        {q:"সমভূমিতে নদীর বাঁকগুলিকে কী বলা হয়?", opts:["খরস্রোত","শৃঙ্খলিত শৈলশিরা","মিয়েন্ডার","ক্যানিয়ন"], ans:2, exp:"সমভূমিতে নদীর গতিবেগ কমে যাওয়ায় বাধা এড়ানোর জন্য নদী খুব বেশি এঁকেবেঁকে প্রবাহিত হয়, যাকে মিয়েন্ডার বা নদী বাঁক বলে।"},
+        {q:"পলল ব্যজনী নদীর কোন গতিতে বা কোথায় সৃষ্টি হয়?", opts:["নদীর মোহানায়","উচ্চ ও মধ্য গতির সংযোগস্থলে","নদীর উৎসস্থলে","বদ্বীপ প্রবাহে"], ans:1, exp:"নদী পার্বত্য অঞ্চল ছেড়ে সমভূমিতে প্রবেশের সময় গতিবেগ কমে যাওয়ায় পর্বতের পাদদেশে হাতপাখার মতো পলল ব্যজনী গঠিত হয়।"},
+        {q:"নদীর বাঁকের উত্তল অংশে পলি সঞ্চয়কে কী বলা হয়?", opts:["বিন্দুবার","মন্থকূপ","প্লাবনভূমি","স্বাভাবিক বাঁধ"], ans:0, exp:"নদীর বাঁকের ভেতরের দিকে বা উত্তল অংশে স্রোতের বেগ কম থাকায় সেখানে বালি ও পলি সঞ্চিত হয়ে বিন্দুবার (Point bar) গঠন করে।"},
+        {q:"পাখির পায়ের মতো বদ্বীপ কোন নদীর মোহানায় দেখা যায়?", opts:["গঙ্গা-ব্রহ্মপুত্র","হোয়াংহো","মিসিসিপি-মিসৌরি","নীল নদ"], ans:2, exp:"আমেরিকা যুক্তরাষ্ট্রের মিসিসিপি-মিসৌরি নদীর মোহানায় পাখির পায়ের মতো (Bird-foot delta) বদ্বীপ গঠিত হয়েছে।"},
+        {q:"ভারতের পশ্চিমবাহিনী নদীগুলির (যেমন নর্মদা ও তাপ্তী) মোহানায় বদ্বীপ গঠিত হয়নি কেন?", opts:["নদীর দৈর্ঘ্য বেশি বলে","প্রচুর পলি থাকে বলে","মোহানায় মহীসোপান খাড়া ও নদীর বেগ তীব্র বলে","মোহানায় জোয়ারভাটা কম বলে"], ans:2, exp:"এই নদীগুলির মোহানায় মহীসোপান খাড়া হওয়ায় এবং স্রোতের বেগ তীব্র থাকায় নদী-বাহিত পলি গভীর সমুদ্রে ভেসে যায়, তাই বদ্বীপ গড়ে ওঠে না।"},
+        {q:"শুষ্ক অঞ্চলের গভীর ও সংকীর্ণ গিরিখাতকে কী বলা হয়?", opts:["ক্যানিয়ন","'V' আকৃতির উপত্যকা","মন্থকূপ","ধান্দ"], ans:0, exp:"শুষ্ক অঞ্চলে বৃষ্টির অভাবে পার্শ্বক্ষয় কম হয় কিন্তু নদীর নিম্নক্ষয় বেশি হয়, যার ফলে উপত্যকা অত্যন্ত গভীর ও সংকীর্ণ 'I' আকৃতির হয়ে ক্যানিয়ন তৈরি করে।"},
+        {q:"ভারতের 'নায়াগ্রা' কোন জলপ্রপাতকে বলা হয়?", opts:["শিবসমুদ্রম","কুঞ্চিকল","যোগ","চিত্রকূট"], ans:3, exp:"ভারতের চিত্রকূট জলপ্রপাতকে এর বিশাল প্রশস্ততার জন্য ভারতের নায়াগ্রা বলা হয়।"},
+        {q:"হিমবাহ ও পর্বতগাত্রের মধ্যে সৃষ্ট সংকীর্ণ ও গভীর ফাটলকে কী বলে?", opts:["ক্রেভাস","বার্গস্রুন্ড","অ্যারেট","সার্ক"], ans:1, exp:"উপত্যকা হিমবাহ নীচের দিকে নামার সময় হিমবাহের চলনশীল অংশ এবং পর্বতের খাড়া গাত্রের মধ্যে যে গভীর ফাটল তৈরি হয়, তাকে বার্গস্রুন্ড বলে।"},
+        {q:"পার্বত্য হিমবাহের পৃষ্ঠদেশে সৃষ্ট আড়াআড়ি ও সমান্তরাল ফাটলগুলিকে কী বলে?", opts:["নুনাটাক","রসে মতানে","ক্রেভাস","ফিয়ার্ড"], ans:2, exp:"হিমবাহের বৈষম্যমূলক প্রবাহ এবং অসমতলের ওপর দিয়ে যাওয়ার জন্য এর উপরিভাগে যে ফাটল সৃষ্টি হয়, তাকে ক্রেভাস বলে।"},
+        {q:"সদ্য পতিত হালকা পেঁজা তুলোর মতো আলগা তুষারকে কী বলে?", opts:["নেভে","ফির্ণ","বরফ","হিমশৈল"], ans:0, exp:"শীতপ্রধান অঞ্চলে সদ্য পতিত হালকা ও আলগা তুষারকে নেভে বলে, যা পরে জমাট বেঁধে ফির্ণে পরিণত হয়।"},
+        {q:"হিমবাহ উপত্যকার আকৃতি কীরূপ হয়?", opts:["সংকীর্ণ V-আকৃতির","প্রশস্ত V-আকৃতির","I-আকৃতির","ইংরেজি U-আকৃতির"], ans:3, exp:"হিমবাহের পার্শ্বক্ষয় ও নিম্নক্ষয় প্রায় সমানভাবে হয় বলে হিমদ্রোণী বা হিমবাহ উপত্যকা U-আকৃতির হয়ে থাকে।"},
+        {q:"হিমালয়ের নীলকণ্ঠ শৃঙ্গটি কোন ভূমিরূপের উদাহরণ?", opts:["ড্রামলিন","পিরামিড চূড়া","প্লায়া","করি হ্রদ"], ans:1, exp:"একটি পর্বতের বিভিন্ন দিকে তিন-চারটি সার্ক সৃষ্টি হলে মাঝের শৃঙ্গটি তীক্ষ্ণ পিরামিডের আকার ধারণ করে, বদরীনাথের নীলকণ্ঠ শৃঙ্গ যার প্রকৃষ্ট উদাহরণ।"},
+        {q:"হিমবাহের অবঘর্ষ ও উৎপাটন ক্ষয়ের ফলে পর্বতের গায়ে সৃষ্ট হাতলওয়ালা ডেক চেয়ারের মতো ভূমিরূপকে কী বলে?", opts:["ড্রামলিন","সার্ক বা করি","কেম","রসে মতানে"], ans:1, exp:"পার্বত্য অঞ্চলে হিমবাহের ক্ষয়কার্যে মস্তক খাড়া এবং মাঝখানে গর্তযুক্ত ডেক চেয়ারের মতো উপত্যকা সৃষ্টি হলে তাকে করি বা সার্ক বলে।"},
+        {q:"দুটি করি পাশাপাশি অবস্থান করলে মাঝের সংকীর্ণ ও তীক্ষ্ণ শৈলশিরাকে কী বলে?", opts:["অ্যারেট বা এরিটি","হর্ন","কেটল","নব"], ans:0, exp:"একটি পর্বতের দু-পাশে দুটি করি বা সার্ক গঠিত হলে মাঝখানের অংশটি ক্ষয়ে তীক্ষ্ণ ছুরির ফলার মতো হয়ে যায়, যাকে অ্যারেট বলে।"},
+        {q:"হিমবাহের তলদেশ থেকে শিলাখণ্ড তুলে নেওয়ার প্রক্রিয়াকে কী বলে?", opts:["অবঘর্ষ","ঘর্ষণ","উৎপাটন বা Plucking","দ্রবণ"], ans:2, exp:"প্রবহমান হিমবাহের চাপে উপত্যকার মেঝে বা দেওয়াল থেকে পাথরখণ্ড খুলে আসার প্রক্রিয়াকে উৎপাটন বলে।"}
+    ],
+    // ===================== SET 3: হিমবাহের কাজ (পর্ব ২) এবং বায়ুর কাজ (পর্ব ১) =====================
+    [
+        {q:"হিমবাহের গতিপথে থাকা কঠিন শিলাস্তূপের হিমবাহ প্রবাহের দিকটি অবঘর্ষে মসৃণ এবং বিপরীত দিকটি উৎপাটনে অমসৃণ হলে তাকে কী বলে?", opts:["ড্রামলিন","রসে মতানে","ক্র্যাগ ও টেল","ইনসেলবার্জ"], ans:1, exp:"শিলাস্তূপের প্রতিবাত ঢাল মসৃণ এবং অনুবাত ঢাল অমসৃণ ও এবড়োখেবড়ো হলে তাকে রসে মতানে বলে।"},
+        {q:"পৃথিবীর বৃহত্তম উপত্যকা বা পার্বত্য হিমবাহ কোনটি?", opts:["সিয়াচেন","হুবার্ড","জেমু","ল্যাম্বার্ট"], ans:1, exp:"আলাস্কার হুবার্ড (Hubbard) হলো পৃথিবীর বৃহত্তম উপত্যকা বা পার্বত্য হিমবাহ।"},
+        {q:"'Basket of egg topography' বা ডিম ভরতি ঝুড়ির মতো ভূমিরূপ কাকে বলে?", opts:["বাজাদা","ড্রামলিন","ক্রেভাস","এসকার"], ans:1, exp:"বহিঃধৌত সমভূমিতে অসংখ্য ড্রামলিন পাশাপাশি অবস্থান করলে দূর থেকে তা উলটানো চামচ বা ডিম ভরতি ঝুড়ির মতো দেখায়।"},
+        {q:"নদী দ্বারা বিচ্ছিন্ন বহিঃধৌত সমভূমিকে কী বলা হয়?", opts:["কেম","এসকার","ভ্যালি ট্রেন","প্লাবনভূমি"], ans:2, exp:"হিমবাহ-বাহিত পদার্থ পর্বতের পাদদেশে সঞ্চিত হয়ে সৃষ্ট বহিঃধৌত সমভূমির ওপর দিয়ে নদী প্রবাহিত হলে তা ব্যবচ্ছিন্ন হয়ে ভ্যালি ট্রেনে পরিণত হয়।"},
+        {q:"করির মধ্যভাগের বেসিনে বরফগলা জলের হ্রদকে কী বলে?", opts:["প্যাটারনস্টার লেক","কেটল হ্রদ","টার্ন","প্লায়া"], ans:2, exp:"সার্ক বা করির মাঝখানের গর্তে বরফগলা জল জমে যে হ্রদ সৃষ্টি হয়, তাকে টার্ন হ্রদ বা করি হ্রদ বলে।"},
+        {q:"দুটি কেটলের মধ্যবর্তী উচ্চভূমি কী নামে পরিচিত?", opts:["নব","কেম","দোয়াব","ড্রামলিন"], ans:0, exp:"বহিঃধৌত সমভূমিতে অবস্থিত কেটল হ্রদগুলির মাঝখানে কোনো উঁচু স্থান বা টিলা থাকলে তাকে নব (Knob) বলে।"},
+        {q:"হিমবাহের সঞ্চয় কাজের ফলে সৃষ্ট বদ্বীপের মতো ত্রিকোণাকার ভূমিরূপকে কী বলে?", opts:["এসকার","কেম","ড্রামলিন","গ্রাবরেখা"], ans:1, exp:"হিমবাহের শেষ প্রান্তে কোনো হ্রদ বা জলাভূমিতে হিমবাহ-বাহিত নুড়ি, বালি স্তূপাকারে সঞ্চিত হয়ে ত্রিকোণাকার কেম গঠন করে।"},
+        {q:"হিমবাহের সঞ্চয় কার্যের ফলে সৃষ্ট দীর্ঘ ও এঁকেবেঁকে থাকা শৈলশিরাকে কী বলে?", opts:["গ্রাবরেখা","কেম সোপান","এসকার","রসে মতানে"], ans:2, exp:"হিমবাহ বাহিত নুড়ি, কাঁকর, বালি জলস্রোতের মাধ্যমে পরিবাহিত হয়ে পর্বতের পাদদেশে সর্পিল বা আঁকাবাঁকা শৈলশিরার মতো এসকার গঠন করে।"},
+        {q:"মরুভূমিতে বায়ু দ্বারা বালুকণা উত্থিত এবং অপসারিত হওয়ার প্রক্রিয়াকে কী বলে?", opts:["অবঘর্ষ","ঘর্ষণ","অপসারণ","লম্ফদান"], ans:2, exp:"প্রবল বায়ুপ্রবাহ মরুভূমির শিথিল বালিকণাকে এক স্থান থেকে অন্য স্থানে উড়িয়ে নিয়ে যায়, একে অপসারণ (Deflation) বলে।"},
+        {q:"শিলার ওপর বায়ুর অবঘর্ষ ক্ষয়ের ফলে ব্যাঙের ছাতার মতো ভূমিরূপকে কী বলে?", opts:["জিউগেন","ইয়ারদাং","গৌর বা গারা","ইনসেলবার্জ"], ans:2, exp:"কঠিন ও নরম শিলা অনুভূমিকভাবে থাকলে বায়ুর অবঘর্ষে নীচের নরম শিলা বেশি ক্ষয় পেয়ে ব্যাঙের ছাতার মতো গৌর সৃষ্টি করে।"},
+        {q:"বায়ুর ক্ষয়কার্যের ফলে সৃষ্ট সমতল চূড়াবিশিষ্ট বা টেবিলের মতো ভূমিরূপকে কী বলে?", opts:["জিউগেন","গৌর","ইয়ারদাং","মোনাডনক"], ans:0, exp:"অনুভূমিকভাবে থাকা কঠিন ও কোমল শিলাস্তর বায়ুর অবঘর্ষে ক্ষয়ে গিয়ে সমতল মাথাযুক্ত জিউগেন তৈরি করে।"},
+        {q:"কঠিন ও কোমল শিলা উল্লম্বভাবে বা পাশাপাশি অবস্থান করলে বায়ুর ক্ষয়ে কোন ভূমিরূপ সৃষ্টি হয়?", opts:["গৌর","জিউগেন","ইয়ারদাং","বার্খান"], ans:2, exp:"শিলাস্তর উল্লম্বভাবে থাকলে কোমল শিলা দ্রুত ক্ষয়ে গিয়ে সুড়ঙ্গ তৈরি করে এবং কঠিন শিলাগুলি খাড়া দেওয়ালের মতো ইয়ারদাং সৃষ্টি করে।"},
+        {q:"মরু অঞ্চলে বায়ুর অপসারণ কার্যের ফলে সৃষ্ট অবনত গর্তগুলিকে কী বলে?", opts:["প্লায়া","ব্লো-আউট বা অপসারণ গর্ত","ধান্দ","ওয়াদি"], ans:1, exp:"বায়ুর দ্বারা বালুকণা অপসারিত হয়ে বিশাল গর্তের সৃষ্টি হয়, যেমন মিশরের কাতারা অবনত ভূমি।"},
+        {q:"শিলাময় মরুভূমিকে সাহারায় কী বলে?", opts:["আর্গ","রেগ","হামাদা","কুম"], ans:2, exp:"মরুস্থলীর যে অংশে বালির বদলে শুধু পাথর বা উন্মুক্ত শিলাস্তর থাকে, তাকে সাহারায় হামাদা বলা হয়।"},
+        {q:"বালিময় মরুভূমি সাহারায় কী নামে পরিচিত?", opts:["হামাদা","আর্গ","রেগ","বাজাদা"], ans:1, exp:"বালি দ্বারা আবৃত বিস্তীর্ণ মরুভূমিকে সাহারায় আর্গ বলা হয়। আরবে একে রাব-আল-খালি বলে।"}
+    ],
+    // ===================== SET 4: বায়ুর কাজ (পর্ব ২) এবং বায়ু ও জলধারার মিলিত কাজ =====================
+    [
+        {q:"মরু সমপ্রায় ভূমিতে কঠিন শিলা দ্বারা গঠিত অনুচ্চ পাহাড়গুলিকে কী বলে?", opts:["ইয়ারদাং","ড্রামলিন","জিউগেন","ইনসেলবার্জ"], ans:3, exp:"মরু ক্ষয়ের শেষ পর্যায়ে কঠিন শিলা দিয়ে গঠিত অনুচ্চ, খাড়া ঢালবিশিষ্ট অবশিষ্টাংশ পাহাড়গুলিকে ইনসেলবার্জ (Inselberg) বা দ্বীপশৈল বলে।"},
+        {q:"ইনসেলবার্জ আরও ক্ষয়প্রাপ্ত হয়ে গোলাকার মাথা বিশিষ্ট ঢিবিতে পরিণত হলে তাকে কী বলে?", opts:["ক্যাসেলকপিজ","বোর্নহার্ট","বিউট","মেসা"], ans:1, exp:"মরু অঞ্চলে ইনসেলবার্জ ক্ষয়প্রাপ্ত হয়ে গম্বুজাকৃতি টিলা গঠন করলে তাকে বিজ্ঞানীর নামানুসারে বোর্নহার্ট বলে।"},
+        {q:"বায়ুর সঞ্চয়কার্যের ফলে গঠিত একটি ভূমিরূপ হলো-", opts:["করি","বার্খান বালিয়াড়ি","গিরিখাত","ড্রামলিন"], ans:1, exp:"বায়ুর গতিপথের সাথে আড়াআড়িভাবে গড়ে ওঠা আধখানা চাঁদের মতো বালিয়াড়িকে বার্খান বলে।"},
+        {q:"একাধিক বার্খান পরস্পর সংযুক্ত হয়ে কী তৈরি করে?", opts:["সিফ বালিয়াড়ি","নক্ষত্র বালিয়াড়ি","অ্যাক্লে","আর্গ বালিয়াড়ি"], ans:2, exp:"সমতল মরুভূমিতে একসঙ্গে অনেকগুলি বার্খান পরস্পর যুক্ত হয়ে যে জটিল ভূমিরূপ তৈরি করে, তাকে অ্যাক্লে (Akle) বলে।"},
+        {q:"রাজস্থানের মরুভূমিতে চলমান বালিয়াড়িগুলিকে কী বলে?", opts:["শটস","ধ্রিয়ান","ওয়াদি","প্লায়া"], ans:1, exp:"রাজস্থানের থর মরুভূমিতে বাতাসের দ্বারা স্থান পরিবর্তনকারী বা চলমান বালিয়াড়িগুলিকে ধ্রিয়ান বলে।"},
+        {q:"বায়ুর গতিপথের সমান্তরালে গঠিত বালিয়াড়িকে কী বলে?", opts:["সিফ বালিয়াড়ি","বার্খান","অ্যাক্লে","নক্ষত্র বালিয়াড়ি"], ans:0, exp:"যেসব বালিয়াড়ি বায়ুর গতিপথের সাথে সমান্তরালভাবে তরোয়ালের মতো দীর্ঘ ও সংকীর্ণভাবে গড়ে ওঠে, তাদের সিফ বা অনুদৈর্ঘ্য বালিয়াড়ি বলে।"},
+        {q:"দুটি সিফ বালিয়াড়ির মধ্যবর্তী বালুকাযুক্ত বা বালিবিহীন করিডরকে সাহারায় কী বলে?", opts:["ওয়াদি","প্লায়া","হামাদা","গাসি"], ans:3, exp:"দুটি সমান্তরাল সিফ বালিয়াড়ির মাঝে লম্বা ফালি অংশগুলি মরুযাত্রীদের যাতায়াতের পথ হিসেবে ব্যবহৃত হয়, সাহারায় একে গাসি (Gassi) বলে।"},
+        {q:"অতি সূক্ষ্ম বালুকণা বায়ুবাহিত হয়ে বহুদূরে সঞ্চিত হলে তাকে কী বলে?", opts:["বাজাদা","লোয়েস সমভূমি","পেডিমেন্ট","প্লাবনভূমি"], ans:1, exp:"মরুভূমির সূক্ষ্ম হলুদ রঙের বালিকণা বায়ুর দ্বারা বহুদূরে গিয়ে সঞ্চিত হয়ে লোয়েস সমভূমি গঠন করে (যেমন হোয়াংহো অববাহিকা)।"},
+        {q:"মরু অঞ্চলে পর্বতের পাদদেশে প্রস্তরময় ঈষৎ ঢালু সমভূমিকে কী বলা হয়?", opts:["ওয়াদি","বাজাদা","পেডিমেন্ট","লোয়েস"], ans:2, exp:"উচ্চভূমির পাদদেশে জলধারা ও বায়ুর মিলিত ক্ষয়কার্যে সৃষ্ট মৃদু ঢালু ভূমিভাগকে পেডিমেন্ট বলে।"},
+        {q:"শুষ্ক মরু অঞ্চলে বায়ু ও জলধারার মিলিত কার্যের ফলে গঠিত সঞ্চয়জাত ভূমিরূপ কোনটি?", opts:["পেডিমেন্ট","বাজাদা","ইয়ারদাং","ড্রামলিন"], ans:1, exp:"পেডিমেন্টের নীচে জলধারায় বাহিত নুড়ি, বালি সঞ্চিত হয়ে যে পলল সমভূমি সৃষ্টি হয়, তাকে বাজাদা বলে।"},
+        {q:"মরুভূমির শুষ্ক নদীখাতকে কী বলা হয়?", opts:["প্লায়া","হামাদা","মরূদ্যান","ওয়াদি"], ans:3, exp:"মরু অঞ্চলে মাঝে মাঝে প্রবল বৃষ্টিতে অস্থায়ী নদীর সৃষ্টি হয়। জল নেমে গেলে এই শুষ্ক নদীখাতগুলি ওয়াদি নামে পরিচিত।"},
+        {q:"চারপাশের উচ্চভূমি থেকে জলধারা নিচু উপত্যকায় জমে সৃষ্ট লবণাক্ত হ্রদকে কী বলে?", opts:["শটস","ওয়াদি","প্লায়া","বোলসন"], ans:2, exp:"মরু অঞ্চলে জলধারাগুলি নিম্নভূমিতে মিলিত হয়ে যে লবণাক্ত জলের অগভীর হ্রদ সৃষ্টি করে, তাকে প্লায়া বলে।"},
+        {q:"প্লায়া হ্রদ অতিরিক্ত লবণাক্ত হলে তাকে কী বলা হয়?", opts:["স্যালিনা","রান","শটস","ধান্দ"], ans:0, exp:"অতিরিক্ত বাষ্পীভবনের ফলে প্লায়া হ্রদ বেশি লবণাক্ত হয়ে পড়লে তাকে স্যালিনা বলা হয়।"},
+        {q:"সাহারা মরুভূমির লবণাক্ত হ্রদকে কী বলে?", opts:["ধান্দ","শটস","বোলসন","কয়াল"], ans:1, exp:"সাহারা মরুভূমির নিচু অংশে সৃষ্ট অগভীর লবণাক্ত হ্রদগুলিকে শটস (Chotts) বলা হয়।"},
+        {q:"'গ্রেট গ্রিন ওয়াল' প্রকল্পটি কোন বিষয়ের সাথে জড়িত?", opts:["মৃত্তিকা ক্ষয় রোধ","বন্যা প্রতিরোধ","মরুভূমির প্রসার রোধ","হিমবাহের গলন রোধ"], ans:2, exp:"সাহারা মরুভূমির দক্ষিণ সীমায় মরুভূমির প্রসার রোধ করার জন্য আট হাজার কিমি দীর্ঘ বৃক্ষপ্রাচীর তৈরি করা হচ্ছে, যাকে গ্রেট গ্রিন ওয়াল বলে।"}
+    ],
+    // ===================== SET 5: নদী, হিমবাহ ও বায়ুর কাজ (বিবিধ প্রশ্ন - পর্ব ১) =====================
+    [
+        {q:"নদীর উচ্চগতি বা পার্বত্য প্রবাহে নদীর প্রধান কাজ কী?", opts:["বহন","সঞ্চয়","ক্ষয়কার্য","কোনটিই নয়"], ans:2, exp:"পার্বত্য অঞ্চলে ভূমির ঢাল বেশি থাকায় নদীর গতিবেগ তীব্র হয়, ফলে নদী প্রধানত নিম্নক্ষয় করে উপত্যকাকে গভীর করে।"},
+        {q:"অবরোহণ প্রক্রিয়ার অপর নাম কী?", opts:["ক্ষয়সাধন বা ডিগ্রেডেশন","বহন","অবক্ষেপণ","মহীভাবক"], ans:0, exp:"যে প্রক্রিয়ায় ভূপৃষ্ঠের উঁচু জায়গাগুলি ধীরে ধীরে ক্ষয়ে গিয়ে ক্রমশ নিচু হয়ে আসে, তাকে অবরোহণ বা ডিগ্রেডেশন বলে।"},
+        {q:"জলপ্রপাতের জল প্রবল বেগে যেখানে পড়ে, সেখানে নদীর অবঘর্ষ ক্ষয়ে কী সৃষ্টি হয়?", opts:["মন্থকূপ","প্রপাত কূপ বা প্লাঞ্জ পুল","খরস্রোত","পলল ব্যজনী"], ans:1, exp:"জলপ্রপাতের জল ওপর থেকে সজোরে নীচে পড়লে সেখানে বিশাল গর্ত তৈরি হয়, যাকে প্রপাত কূপ বলে।"},
+        {q:"নদীর বাঁকের অবতল অংশে (বাইরের দিকে) কী ঘটে?", opts:["ক্ষয় কাজ","সঞ্চয় কাজ","জলপ্রপাত সৃষ্টি","পলল শঙ্কু সৃষ্টি"], ans:0, exp:"নদীর বাঁকের বাইরের দিকে বা অবতল অংশে স্রোতের বেগ বেশি থাকে বলে সেখানে পার্শ্বক্ষয় বেশি হয় এবং পাড় খাড়া হয়।"},
+        {q:"নদী মোহানায় ফানেল আকৃতির চওড়া অংশকে কী বলে?", opts:["বদ্বীপ","খাড়ি","প্লাবনভূমি","লেগুন"], ans:1, exp:"মোহানায় নদীর বেগ বেশি থাকলে বা প্রবল জোয়ারভাটা থাকলে বদ্বীপ গঠিত হতে পারে না, তখন মোহানাটি ফানেলের মতো চওড়া হয়ে খাঁড়ি গঠন করে।"},
+        {q:"হিমবাহ উপত্যকায় জলপ্রপাত গড়ে ওঠে কোথায়?", opts:["রসে মতানে","ঝুলন্ত উপত্যকায়","ফিয়র্ডে","হিমদ্রোণীতে"], ans:1, exp:"প্রধান হিমবাহ উপত্যকা গভীর হওয়ায় উপহিমবাহ উপত্যকাগুলি তার ওপর ঝুলন্ত অবস্থায় থাকে। বরফ গলে গেলে ওই ঝুলন্ত উপত্যকা থেকে নদী প্রবাহিত হয়ে জলপ্রপাতের সৃষ্টি হয়।"},
+        {q:"'হিমবাহ' (Glacier) কথাটির অর্থ কী?", opts:["বরফের স্তূপ","বরফের পাহাড়","বরফের নদী","বরফের চাদর"], ans:2, exp:"মাধ্যাকর্ষণ শক্তির প্রভাবে সুউচ্চ পর্বত বা মেরু অঞ্চলে বিশাল বরফের স্তূপ যখন ধীরগতিতে নীচে নামে, তখন তাকে হিমবাহ বা বরফের নদী বলে।"},
+        {q:"মহাদেশীয় হিমবাহ অঞ্চলে বরফমুক্ত পর্বতের শীর্ষদেশকে কী বলে?", opts:["অ্যারেট","হর্ন","নুনাটাক","ক্র্যাগ"], ans:2, exp:"মহাদেশীয় হিমবাহের মাঝে কোনো উচ্চভূমির শীর্ষদেশ বরফমুক্ত হয়ে টিলার মতো অবস্থান করলে তাকে নুনাটাক বলে।"},
+        {q:"উচ্চ অক্ষাংশে অনেক পার্বত্য হিমবাহ পর্বতের পাদদেশে এসে মিলিত হয়ে কী গঠন করে?", opts:["মহাদেশীয় হিমবাহ","উপত্যকা হিমবাহ","পাদদেশীয় বা পাইডমন্ট হিমবাহ","বরফের চাদর"], ans:2, exp:"উচ্চ অক্ষাংশে তীব্র ঠান্ডায় অসংখ্য পার্বত্য হিমবাহ পর্বতের পাদদেশে এসে মিলিত হয়ে পাদদেশীয় হিমবাহ সৃষ্টি করে, যেমন- আলাস্কার ম্যালাসপিনা।"},
+        {q:"রাজস্থানের শুষ্ক ও প্রায় শুষ্ক অঞ্চলের লবণাক্ত হ্রদকে স্থানীয় ভাষায় কী বলে?", opts:["প্লায়া","ধান্দ বা রান","শটস","বোলসন"], ans:1, exp:"রাজস্থানের মরু অঞ্চলে এরকম অগভীর লবণাক্ত হ্রদ বা খাদগুলিকে ধান্দ বলা হয় এবং বড়ো জলাভূমিগুলিকে রান বলা হয়।"},
+        {q:"নদীর পুনর্যৌবন লাভের ফলে সৃষ্ট পুরোনো মৃদু ঢাল এবং নতুন খাড়া ঢালের সংযোগস্থলকে কী বলে?", opts:["নদীমঞ্চ","নিক পয়েন্ট","প্রপাত কূপ","বিন্দুবার"], ans:1, exp:"পুনর্যৌবনপ্রাপ্ত নদীর গতিপথের যে বিন্দুতে পুরোনো মৃদু ঢালের সঙ্গে নতুন খাড়া ঢালের সংযোগ হয়, তাকে নিক পয়েন্ট বলে এবং এখানে জলপ্রপাতের সৃষ্টি হয়।"},
+        {q:"'V' আকৃতির নদী উপত্যকা যখন অত্যন্ত গভীর ও সংকীর্ণ হয়, তখন তাকে কী বলে?", opts:["গিরিখাত বা গর্জ","ক্যানিয়ন","ফিয়র্ড","ঝুলন্ত উপত্যকা"], ans:0, exp:"আর্দ্র পার্বত্য অঞ্চলে নদীর প্রবল নিম্নক্ষয়ের ফলে 'V' আকৃতির উপত্যকা অত্যন্ত সংকীর্ণ ও গভীর হয়ে গিরিখাতের রূপ নেয়।"},
+        {q:"ভারতের কোথায় 'শৃঙ্খলিত শৈলশিরা' দেখা যায়?", opts:["গঙ্গার নিম্নগতিতে","ব্রহ্মপুত্রের মোহানায়","গঙ্গার ঊর্ধ্বগতিতে বা মন্দাকিনী নদীর গতিপথে","নর্মদা নদীর গতিপথে"], ans:2, exp:"পাহাড়ি গতিপথে বাধা এড়াতে নদী শৈলশিরাগুলির পাদদেশ ক্ষয় করে এঁকেবেঁকে প্রবাহিত হলে শৃঙ্খলিত শৈলশিরার সৃষ্টি হয়।"},
+        {q:"গ্রাবরেখা কী প্রক্রিয়ায় সৃষ্টি হয়?", opts:["নদীর ক্ষয়কার্যে","হিমবাহের সঞ্চয়কার্যে","বায়ুর ক্ষয়কার্যে","বায়ুর সঞ্চয়কার্যে"], ans:1, exp:"পার্বত্য উপত্যকা দিয়ে হিমবাহ যাওয়ার সময় তার দু-পাশে ও তলদেশে ক্ষয়জাত পদার্থগুলি সঞ্চিত হয়ে গ্রাবরেখা গঠন করে।"},
+        {q:"ড্রামলিনের যেদিক থেকে হিমবাহ প্রবাহিত হয়ে আসে (প্রতিবাত দিক), সেই ঢালটি কীরূপ হয়?", opts:["মসৃণ ও ঢালু","অমসৃণ ও খাড়াই","সমতল","উল্লম্ব"], ans:1, exp:"ড্রামলিনের যেদিক থেকে হিমবাহ আসে সেদিকটি অমসৃণ ও খাড়াই হয় এবং বিপরীত দিকটি মসৃণ ও ঢালু হয়।"}
+    ],
+    // ===================== SET 6: নদী, হিমবাহ ও বায়ুর কাজ (বিবিধ প্রশ্ন - পর্ব ২) =====================
+    [
+        {q:"যান্ত্রিক আবহবিকারের প্রাধান্য কোন অঞ্চলে সবচেয়ে বেশি দেখা যায়?", opts:["নিরক্ষীয় অঞ্চলে","মেরু অঞ্চলে","ক্রান্তীয় মরু অঞ্চলে","মৌসুমী অঞ্চলে"], ans:2, exp:"মরু অঞ্চলে দিন ও রাতের তাপমাত্রার পার্থক্য খুব বেশি হওয়ার কারণে যান্ত্রিক আবহবিকার সবচেয়ে বেশি হয়, যা বালুকণা সৃষ্টিতে সাহায্য করে।"},
+        {q:"পৃথিবীর দীর্ঘতম মহাদেশীয় হিমবাহ কোনটি?", opts:["সিয়াচেন","হুবার্ড","ম্যালাসপিনা","ল্যাম্বার্ট"], ans:3, exp:"অ্যান্টার্কটিকার ল্যাম্বার্ট হিমবাহ হলো পৃথিবীর দীর্ঘতম এবং বৃহত্তম মহাদেশীয় হিমবাহ।"},
+        {q:"যে নির্দিষ্ট সীমার নীচে বরফ গলে জলে পরিণত হয়, তাকে কী বলে?", opts:["তুষাররেখা","হিমরেখা","বরফসীমা","হিমপ্রাচীর"], ans:1, exp:"সুউচ্চ পার্বত্য বা মেরু অঞ্চলে যে উচ্চতার ওপরে সারাবছর বরফ জমে থাকে এবং যার নীচে বরফ গলে যায়, তাকে হিমরেখা বলে।"},
+        {q:"সমুদ্রে ভাসমান বরফের স্তূপ বা হিমশৈলের কত ভাগ জলের ওপরে ভেসে থাকে?", opts:["১/৩ ভাগ","১/৬ ভাগ","১/৯ ভাগ","অর্ধেক"], ans:2, exp:"হিমশৈলের মোট আয়তনের ৯ ভাগের মাত্র ১ ভাগ জলের ওপরে দৃশ্যমান থাকে এবং বাকি ৮ ভাগ জলের নীচে থাকে।"},
+        {q:"ড্রামলিন ও রসে মতানে ভূমিরূপ কোন প্রাকৃতিক শক্তির কার্যে সৃষ্টি হয়?", opts:["নদী","বায়ু","সমুদ্রতরঙ্গ","হিমবাহ"], ans:3, exp:"রসে মতানে হিমবাহের ক্ষয়কার্যে এবং ড্রামলিন হিমবাহের সঞ্চয়কার্যে সৃষ্ট ভূমিরূপ।"},
+        {q:"কোন নদীর মোহানায় পৃথিবীর বৃহত্তম খাঁড়ি সৃষ্টি হয়েছে?", opts:["গঙ্গা","আমাজন","ওব নদী","মিসিসিপি"], ans:2, exp:"রাশিয়ার ওব নদীর মোহানায় প্রবল স্রোত ও জোয়ারভাটার কারণে বদ্বীপের বদলে পৃথিবীর বৃহত্তম খাঁড়ি সৃষ্টি হয়েছে।"},
+        {q:"বদ্বীপ গঠনের জন্য সমুদ্রের জলে লবণের পরিমাণ কেমন হওয়া প্রয়োজন?", opts:["খুব কম","মাঝারি","বেশি লবণাক্ত","লবণহীন"], ans:2, exp:"সমুদ্রের জলে লবণতা বেশি হলে নদীর বাহিত সূক্ষ্ম পলিকণা দ্রুত জোটবদ্ধ ও ভারী হয়ে থিতিয়ে পড়ে, যা বদ্বীপ গঠনে সাহায্য করে।"},
+        {q:"নদীর মধ্য ও নিম্নগতিতে বর্ষার সময় নদীর জল দুকূল ছাপিয়ে পলি সঞ্চয়ের ফলে কী সৃষ্টি করে?", opts:["পলল ব্যজনী","বদ্বীপ","প্লাবনভূমি","স্বাভাবিক বাঁধ"], ans:2, exp:"মধ্য ও নিম্নগতিতে বর্ষার সময় নদীর জল দুকূল ছাপিয়ে উপত্যকায় ছড়িয়ে পড়ে এবং পলি সঞ্চয় করে প্লাবনভূমির সৃষ্টি করে।"},
+        {q:"প্রাকৃতিক উপায়ে প্লাবনের সময় নদীর দু-পাড়ে পলি জমে যে বাঁধ তৈরি হয়, তাকে কী বলে?", opts:["পলল শঙ্কু","বদ্বীপ","স্বাভাবিক বাঁধ (Levee)","খাড়ি"], ans:2, exp:"প্লাবনের সময় নদীর পাড়ে সবচেয়ে বেশি পলি সঞ্চিত হয়ে উঁচু বাঁধের মতো আকার ধারণ করে, যাকে স্বাভাবিক বাঁধ বা Levee বলে।"},
+        {q:"একটি ধনুকাকৃতি বদ্বীপের উদাহরণ দাও।", opts:["মিসিসিপি-মিসৌরি","গঙ্গা-ব্রহ্মপুত্র নদীর বদ্বীপ","এপ্রো","তাইবার"], ans:1, exp:"গঙ্গা-ব্রহ্মপুত্র, নাইজার প্রভৃতি নদীর মোহানায় সৃষ্ট বদ্বীপগুলি সমুদ্রের দিকে ধনুকের মতো বেঁকে থাকে, তাই এগুলি ধনুকাকৃতি বদ্বীপ।"},
+        {q:"ডব্লিউ. হপকিন্স-এর ষষ্ঠ ঘাতের সূত্র অনুযায়ী নদীর স্রোতের বেগ দ্বিগুণ হলে তার বহন ক্ষমতা কত গুণ বাড়ে?", opts:["২ গুণ","১৬ গুণ","৩২ গুণ","৬৪ গুণ"], ans:3, exp:"ষষ্ঠ ঘাতের সূত্র অনুযায়ী নদীর গতিবেগ দ্বিগুণ হলে তার বহন করার ক্ষমতা ২^৬ বা ৬৪ গুণ বৃদ্ধি পায়।"},
+        {q:"কেরালার মালাবার উপকূলের বালিয়াড়িগুলিকে স্থানীয় ভাষায় কী বলে?", opts:["কয়াল","টেরিস বা থেরিস","লেগুন","ধান্দ"], ans:1, exp:"মালাবার উপকূলে সমুদ্রের তরঙ্গে ও বায়ুর সাহায্যে সৃষ্ট বালিয়াড়িগুলিকে স্থানীয় ভাষায় টেরিস বা থেরিস বলা হয়।"},
+        {q:"হিমবাহ প্রবাহের দিক মসৃণ এবং বিপরীত দিক অমসৃণ হলে তাকে কী বলে?", opts:["ড্রামলিন","ক্রেভাস","রসে মতানে","কেম"], ans:2, exp:"হিমবাহের গতিপথে কঠিন শিলাস্তূপ থাকলে অবঘর্ষ প্রক্রিয়ায় হিমবাহ প্রবাহের দিকটি মসৃণ এবং বিপরীত দিকটি উৎপাটন প্রক্রিয়ায় অমসৃণ হয়। একে রসে মতানে বলে।"},
+        {q:"নদী খাতের মধ্য দিয়ে বাহিত পাথরখণ্ড যখন নদীর তলদেশে আঘাত করে ক্ষয় করে, তখন তাকে কী বলে?", opts:["দ্রবণ ক্ষয়","অবঘর্ষ ক্ষয়","ঘর্ষণ ক্ষয়","জলপ্রবাহ ক্ষয়"], ans:1, exp:"নদীবাহিত পাথরগুলির সঙ্গে নদীখাতের তলদেশের সংঘর্ষের ফলে নদীখাত ক্ষয়প্রাপ্ত হয়, একে অবঘর্ষ ক্ষয় বলে।"},
+        {q:"কোন নদীর মোহানায় বদ্বীপ দেখতে পাওয়া যায় না?", opts:["মহানদী","গোদাবরী","নর্মদা","কাবেরী"], ans:2, exp:"পশ্চিমবাহিনী নদী নর্মদা গ্রস্ত উপত্যকার মধ্য দিয়ে প্রবল বেগে প্রবাহিত হওয়ায় এবং মোহানায় খাড়া মহীসোপান থাকায় বদ্বীপ গঠিত হয়নি।"}
+    ]
+];
+
+// ====================================================================
+//  APP STATE
+// ====================================================================
+
+const SET_NAMES = [
+    'বহির্জাত প্রক্রিয়া এবং নদীর কাজ (পর্ব ১)',
+    'নদীর কাজ (পর্ব ২) এবং হিমবাহের কাজ (পর্ব ১)',
+    'হিমবাহের কাজ (পর্ব ২) এবং বায়ুর কাজ (পর্ব ১)',
+    'বায়ুর কাজ (পর্ব ২) এবং বায়ু ও জলধারার মিলিত কাজ',
+    'নদী, হিমবাহ ও বায়ুর কাজ (বিবিধ - পর্ব ১)',
+    'নদী, হিমবাহ ও বায়ুর কাজ (বিবিধ - পর্ব ২)'
+];
+
+const SET_ICONS = ['🌊','🏔️','🏜️','🌪️','🌍','🔬'];
+const MAX_ATTEMPTS = 10;
+const STORAGE_KEY = 'testbazar_geography_ch1';
+
+// ====================================================================
+//  QUIZ ENGINE
+// ====================================================================
+
+let currentSet = 0;
+let currentQ = 0;
+let score = 0;
+let wrong = 0;
+let answered = false;
+let timerInterval;
+let timeLeft = 600;
+let userAnswers = [];
+let loggedInUser = null;
+let pendingSet = -1;
+let attemptData = {};
+
+function loadAttemptData() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+        attemptData = JSON.parse(data);
+    } else {
+        attemptData = {};
+    }
+}
+
+function saveAttemptData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(attemptData));
+}
+
+function getAttempts(setIndex) {
+    const key = 'set_' + setIndex;
+    if (!attemptData[key]) {
+        attemptData[key] = { count: 0, scores: [] };
+    }
+    return attemptData[key];
+}
+
+function canAttempt(setIndex) {
+    const data = getAttempts(setIndex);
+    return data.count < MAX_ATTEMPTS;
+}
+
+function addAttempt(setIndex, scoreVal) {
+    const data = getAttempts(setIndex);
+    data.count++;
+    data.scores.push(scoreVal);
+    saveAttemptData();
+}
+
+function initSetGrid() {
+    const grid = document.getElementById('setGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < ALL_SETS.length; i++) {
+        const card = document.createElement('div');
+        card.className = 'set-card';
+        const attempts = getAttempts(i);
+        const remaining = MAX_ATTEMPTS - attempts.count;
+        const locked = remaining <= 0;
+        
+        if (locked) card.classList.add('locked');
+        
+        card.innerHTML = `
+            <div class="set-icon">${SET_ICONS[i] || '📝'}</div>
+            <div class="set-title">Set ${i + 1}</div>
+            <div class="set-sub">${SET_NAMES[i] || 'সেট ' + (i+1)}</div>
+            <span class="set-badge">১৫ প্রশ্ন</span>
+            <div class="attempts-left">🔄 বাকি: ${remaining} বার</div>
+            ${locked ? '<div class="lock-icon">🔒</div>' : ''}
+        `;
+        
+        if (!locked) {
+            card.onclick = () => {
+                pendingSet = i;
+                showLogin();
+            };
+        }
+        grid.appendChild(card);
+    }
+}
+
+function showSetSelection() {
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('timerBox').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('userInfo').classList.add('hidden');
+    loadAttemptData();
+    initSetGrid();
+}
+
+function showLogin() {
+    document.getElementById('loginModal').classList.add('show');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginUser').focus();
+}
+
+function closeLogin() {
+    document.getElementById('loginModal').classList.remove('show');
+    pendingSet = -1;
+}
+
+function verifyLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    const errorEl = document.getElementById('loginError');
+    
+    if (!user || !pass) {
+        errorEl.textContent = '❌ ইউজারনেম ও পাসওয়ার্ড দিন!';
+        errorEl.style.display = 'block';
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('testbazar_users') || '{}');
+    
+    if (users[user] && users[user].pass === pass) {
+        loggedInUser = user;
+        document.getElementById('loginModal').classList.remove('show');
+        document.getElementById('userInfo').classList.remove('hidden');
+        document.getElementById('userNameDisplay').textContent = user;
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        
+        if (pendingSet >= 0) {
+            startSet(pendingSet);
+            pendingSet = -1;
+        }
+    } else {
+        errorEl.textContent = '❌ ইউজারনেম বা পাসওয়ার্ড ভুল!';
+        errorEl.style.display = 'block';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+    }
+}
+
+function logoutUser() {
+    loggedInUser = null;
+    document.getElementById('userInfo').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    showSetSelection();
+    alert('✅ সফলভাবে লগআউট হয়েছে!');
+}
+
+function startSet(setIndex) {
+    if (!canAttempt(setIndex)) {
+        alert('⚠️ আপনি এই সেটটি সর্বোচ্চ ' + MAX_ATTEMPTS + ' বার দেওয়ার অনুমতি পেয়েছেন। দয়া করে অন্য সেট নির্বাচন করুন।');
+        return;
+    }
+    
+    currentSet = setIndex;
+    currentQ = 0;
+    score = 0;
+    wrong = 0;
+    answered = false;
+    userAnswers = [];
+    timeLeft = 600;
+
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('danger');
+    document.getElementById('setTitle').textContent = 'Set ' + (setIndex + 1) + ' — ' + (SET_NAMES[setIndex] || '');
+    document.getElementById('attemptCount').textContent = getAttempts(setIndex).count + 1;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(tick, 1000);
+    loadQuestion();
+}
+
+function tick() {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (timeLeft <= 60) document.getElementById('timerBox').classList.add('danger');
+    if (timeLeft <= 0) { clearInterval(timerInterval); showResult(); }
+}
+
+function loadQuestion() {
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    answered = false;
+
+    document.getElementById('qNum').textContent = 'প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'ফলাফল দেখো' : 'পরবর্তী →';
+    document.getElementById('explanation').classList.remove('show');
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt';
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        btn.onclick = () => selectAnswer(i);
+        opts.appendChild(btn);
+    });
+}
+
+function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    userAnswers[currentQ] = idx;
+
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b => b.classList.add('disabled'));
+    btns[q.ans].classList.add('correct');
+    if (idx !== q.ans) {
+        btns[idx].classList.add('wrong');
+        wrong++;
+    } else {
+        score++;
+    }
+
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+    document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+    const qs = ALL_SETS[currentSet];
+    currentQ++;
+    if (currentQ >= qs.length) {
+        clearInterval(timerInterval);
+        showResult();
+        return;
+    }
+    loadQuestion();
+}
+
+function showResult() {
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.add('show');
+    document.getElementById('timerBox').classList.add('hidden');
+
+    addAttempt(currentSet, score);
+
+    const total = ALL_SETS[currentSet].length;
+    const pct = Math.round(score / total * 100);
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('rbCorrect').textContent = score;
+    document.getElementById('rbWrong').textContent = wrong;
+    document.getElementById('rbPct').textContent = pct + '%';
+
+    let icon, grade;
+    if (pct >= 90) { icon = '🌟'; grade = 'অসাধারণ! তুমি দুর্দান্ত!'; }
+    else if (pct >= 70) { icon = '👍'; grade = 'খুব ভালো! আরও একটু practice করো।'; }
+    else if (pct >= 50) { icon = '📚'; grade = 'ভালো চেষ্টা! পরের সেট চেষ্টা করো।'; }
+    else { icon = '💪'; grade = 'চেষ্টা চালিয়ে যাও! নোটস পড়ে আবার দাও।'; }
+
+    document.getElementById('resultIcon').textContent = icon;
+    document.getElementById('resultGrade').textContent = grade;
+    initSetGrid();
+}
+
+function retrySet() {
+    document.getElementById('resultWrap').classList.remove('show');
+    startSet(currentSet);
+}
+
+function showReview() {
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    currentQ = 0;
+    loadReview();
+}
+
+function loadReview() {
+    const qs = ALL_SETS[currentSet];
+    if (currentQ >= qs.length) {
+        document.getElementById('quizScreen').classList.add('hidden');
+        document.getElementById('resultWrap').classList.add('show');
+        return;
+    }
+    const q = qs[currentQ];
+    document.getElementById('qNum').textContent = 'Review — প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'শেষ করো' : 'পরবর্তী →';
+    document.getElementById('nextBtn').onclick = () => { currentQ++; loadReview(); };
+    document.getElementById('scoreShow').textContent = '🟢 সবুজ = সঠিক উত্তর';
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt disabled';
+        if (i === q.ans) btn.classList.add('correct');
+        else if (userAnswers[currentQ] === i) btn.classList.add('wrong');
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        opts.appendChild(btn);
+    });
+
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+}
+
+// ====================================================================
+//  KEYBOARD SUPPORT
+// ====================================================================
+
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') verifyLogin();
+});
+
+document.getElementById('loginUser').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('loginPass').focus();
+});
+
+// ====================================================================
+//  INIT
+// ====================================================================
+
+showSetSelection();
+console.log('✅ Class 10 — ভূগোল Chapter 1 Loaded!');
+console.log('📚 মোট সেট: ' + ALL_SETS.length);
+console.log('📝 মোট প্রশ্ন: ' + (ALL_SETS.length * 15));
+console.log('🔄 প্রতি সেটে Attempt Limit: ' + MAX_ATTEMPTS);
+console.log('🔑 ইউজারনেম ও পাসওয়ার্ড Admin Panel থেকে নিতে হবে');
+</script>
+</body>
+</html>
