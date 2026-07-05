@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Bazar - Complete Platform</title>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
-
     <style>
-        /* ================= COLOR SCHEME & VARIABLES ================= */
         :root {
             --primary: #1a7a4a;
             --primary-hover: #2aad68;
@@ -27,7 +23,6 @@
         body { font-family: 'Tiro Bangla', serif; background-color: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; line-height: 1.6; }
         .en-font { font-family: 'Syne', sans-serif; }
 
-        /* ================= TOP BAR ================= */
         .top-bar {
             position: sticky; top: 0; z-index: 100;
             background-color: var(--bg-card);
@@ -40,49 +35,89 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            cursor: pointer;
-            color: var(--text-main);
-        }
+        .logo { font-size: 1.5rem; font-weight: 800; cursor: pointer; color: var(--text-main); }
         .logo span { color: var(--accent); }
-        .nav-menu {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .nav-menu { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         .nav-btn {
-            background: none;
-            color: var(--text-main);
+            background: none; color: var(--text-main);
             border: 1.5px solid transparent;
-            padding: 0.4rem 1rem;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
+            padding: 0.4rem 1rem; border-radius: 8px;
+            font-weight: 700; cursor: pointer;
             font-family: 'Syne', sans-serif;
-            transition: 0.3s;
-            font-size: 0.9rem;
+            transition: 0.3s; font-size: 0.9rem;
         }
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--bg-main);
-            color: var(--primary);
+        .nav-btn:hover, .nav-btn.active { background: var(--bg-main); color: var(--primary); }
+        .logout-btn { background: var(--danger); color: white; border: none; padding: 5px 12px; font-size: 0.85rem; border-radius: 8px; cursor: pointer; }
+        .logout-btn:hover { background: #c82333; }
+
+        .main-container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+        /* ========== HOME ========== */
+        .hero-section { text-align: center; margin-bottom: 2rem; }
+        .hero-section h1 { font-size: 2rem; color: var(--primary); margin-bottom: 5px; }
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            font-size: 0.85rem;
-            border-radius: 8px;
+        .class-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.8rem;
             cursor: pointer;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(26,122,74,0.05);
         }
-        .logout-btn:hover { background: #c82333; color: white; }
+        .class-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(26,122,74,0.15);
+        }
+        .class-icon { font-size: 3rem; margin-bottom: 10px; }
+        .class-title { font-size: 1.3rem; font-weight: 700; color: var(--primary); font-family: 'Syne', sans-serif; }
 
-        .main-container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+        /* ========== SUBJECT CARDS ========== */
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .subject-card {
+            background: var(--bg-card);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            cursor: pointer;
+            text-align: center;
+            transition: 0.3s;
+            text-decoration: none;
+            color: var(--text-main);
+            display: block;
+        }
+        .subject-card:hover {
+            border-color: var(--primary);
+            background: var(--bg-main);
+            transform: translateY(-3px);
+        }
+        .subject-icon { font-size: 2rem; display: block; margin-bottom: 5px; }
+        .subject-name { font-family: 'Tiro Bangla', serif; font-weight: 700; font-size: 1rem; }
+        .subject-chapters { font-size: 0.8rem; color: var(--text-meta); }
 
-        /* ================= WHATSAPP BOX ================= */
+        .back-btn {
+            background: none; border: none;
+            color: var(--text-meta); font-size: 1rem;
+            cursor: pointer; font-weight: 600;
+            font-family: 'Tiro Bangla', serif;
+            margin-bottom: 1rem; padding: 0;
+        }
+        .back-btn:hover { color: var(--primary); }
+
+        .hidden { display: none !important; }
+
+        /* ========== WHATSAPP BOX ========== */
         .wa-contact-box {
             background: #e8f7ef;
             border: 1.5px dashed var(--primary);
@@ -91,12 +126,7 @@
             margin-bottom: 2rem;
             text-align: center;
         }
-        .wa-contact-box p {
-            margin: 0 0 10px 0;
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
+        .wa-contact-box p { margin: 0 0 10px 0; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
         .wa-btn {
             background: var(--wa-color);
             color: white;
@@ -111,205 +141,18 @@
             box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
         }
 
-        /* ================= HOME & CLASS CARDS ================= */
-        .hero-section { text-align: center; margin-bottom: 2rem; }
-        .hero-section h1 { font-size: 2rem; color: var(--primary); margin-bottom: 5px; }
-        .class-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        .class-card {
-            background: var(--bg-card);
-            border: 1.5px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(26,122,74,0.05);
-        }
-        .class-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: 0 8px 25px rgba(26,122,74,0.15);
-        }
-        .class-icon { font-size: 3.5rem; margin-bottom: 10px; }
-        .class-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            font-family: 'Syne', sans-serif;
-        }
-
-        /* ================= SUBJECT GRID ================= */
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--text-meta);
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'Tiro Bangla', serif;
-            margin-bottom: 1rem;
-            padding: 0;
-        }
-        .back-btn:hover { color: var(--primary); }
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.2rem;
-        }
-        .subject-card {
-            background: var(--bg-card);
-            padding: 1.2rem;
-            border-radius: 12px;
-            border: 1.5px solid var(--border-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: 0.2s;
-        }
-        .subject-card:hover {
-            border-color: var(--primary);
-            background: var(--bg-main);
-        }
-        .sub-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-        .demo-card {
-            border-color: #f9a825;
-            background: #fffdf5;
-        }
-        .demo-card:hover {
-            background: #fff8e1;
-            border-color: #f9a825;
-        }
-
-        /* ================= QUIZ UI ================= */
-        .quiz-card {
-            background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .q-num {
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-        .q-text {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .option-btn {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1.5px solid var(--border-color);
-            padding: 0.9rem;
-            border-radius: 10px;
-            font-size: 1.05rem;
-            font-family: 'Tiro Bangla', serif;
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            transition: 0.2s;
-        }
-        .option-btn:hover:not(:disabled) {
-            background: var(--bg-main);
-            border-color: var(--primary);
-        }
-        .opt-circle {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            border-radius: 50%;
-            border: 1.5px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 700;
-            font-family: 'Syne', sans-serif;
-            font-size: 13px;
-        }
-        .opt-correct {
-            border-color: var(--primary) !important;
-            background: #e8f7ef !important;
-        }
-        .opt-correct .opt-circle {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        .opt-wrong {
-            border-color: var(--danger) !important;
-            background: #fdf0f0 !important;
-        }
-        .opt-wrong .opt-circle {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-        .exp-box {
-            display: none;
-            background: #f0faf4;
-            border-left: 4px solid var(--primary);
-            padding: 1rem;
-            margin-top: 15px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        /* ================= RESULT UI ================= */
-        .score-display {
-            font-size: 4rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin: 10px 0;
-            font-family: 'Syne', sans-serif;
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 20px;
-        }
-        .stat-box {
-            padding: 1rem;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        /* ================= MODALS & FORMS ================= */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        /* ========== ADMIN ========== */
         .login-box {
             background: var(--bg-card);
             padding: 2.5rem;
             border-radius: 14px;
             width: 90%;
             max-width: 400px;
+            margin: 3rem auto;
             text-align: center;
+            border: 1.5px solid var(--border-color);
         }
-        .login-box input, .login-box select {
+        .login-box input {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
@@ -336,26 +179,32 @@
         .btn-danger { background: var(--danger); }
         .btn-danger:hover { background: #c82333; }
 
-        /* ================= ADMIN ================= */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .card {
+        .admin-panel {
             background: var(--bg-card);
             padding: 1.5rem;
             border-radius: 12px;
             border: 1.5px solid var(--border-color);
+            margin-top: 1.5rem;
         }
-        .card textarea { height: 100px; resize: vertical; width: 100%; }
+        .admin-panel h3 { color: var(--primary); margin-top: 0; }
+        .admin-panel input, .admin-panel select, .admin-panel textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9rem;
+        }
+        .admin-panel textarea { height: 100px; resize: vertical; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        @media(max-width:600px){ .admin-grid { grid-template-columns: 1fr; } }
         .student-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
             font-family: 'Syne', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .student-table th, .student-table td {
             padding: 10px;
@@ -366,13 +215,10 @@
             background: var(--danger);
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 4px 10px;
             border-radius: 4px;
             cursor: pointer;
         }
-
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
 
         @media (max-width: 600px) {
             .top-bar { padding: 0.8rem 1rem; }
@@ -385,33 +231,18 @@
 
     <!-- TOP BAR -->
     <header class="top-bar">
-        <div class="logo en-font" onclick="switchTab('home')">Test<span>Bazar</span></div>
+        <div class="logo en-font" onclick="location.reload()">Test<span>Bazar</span></div>
         <div class="nav-menu">
             <span id="studentNavInfo" class="hidden" style="font-weight:bold; color:var(--primary); font-size:0.9rem;">👤 Student</span>
-            <button class="nav-btn active" id="tabHome" onclick="switchTab('home')">Home</button>
-            <button class="nav-btn" id="tabAdmin" onclick="switchTab('admin')">Admin</button>
+            <button class="nav-btn active" id="tabHome" onclick="showView('home')">Home</button>
+            <button class="nav-btn" id="tabAdmin" onclick="showView('admin')">Admin</button>
             <button class="nav-btn logout-btn hidden" id="btnLogout" onclick="logoutSession()">Logout</button>
         </div>
     </header>
 
-    <!-- STUDENT LOGIN MODAL -->
-    <div id="studentLoginModal" class="modal-overlay hidden">
-        <div class="login-box">
-            <h2 id="studentLoginTitle" class="en-font" style="color: var(--primary); margin-top:0;">Student Login</h2>
-            <p style="color: var(--text-meta);">বিষয়টি আনলক করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
-            <input type="text" id="studentUser" class="en-font" placeholder="Username">
-            <input type="password" id="studentPass" class="en-font" placeholder="Password">
-            <div id="studentLoginError" class="hidden" style="color: var(--danger); margin: 10px 0; font-weight:bold;"></div>
-            <div style="display: flex; gap: 10px; margin-top:15px;">
-                <button class="btn-primary" onclick="verifyStudentLogin()">লগইন</button>
-                <button class="btn-primary btn-danger" onclick="closeStudentLogin()">বাতিল</button>
-            </div>
-        </div>
-    </div>
-
     <div class="main-container">
 
-        <!-- ================= HOME / CLASS SELECTION ================= -->
+        <!-- ================= HOME ================= -->
         <div id="viewHome">
             <div class="wa-contact-box">
                 <p>লগইন আইডি (Username) এবং পাসওয়ার্ড পেতে অ্যাডমিনের সাথে যোগাযোগ করুন</p>
@@ -419,22 +250,22 @@
             </div>
 
             <div class="hero-section">
-                <h1>Class নির্বাচন করুন</h1>
-                <p>আপনার ক্লাস বেছে নিয়ে ফ্রি ডেমো টেস্ট বা ফুল টেস্ট দেওয়া শুরু করুন।</p>
+                <h1>📚 Class নির্বাচন করুন</h1>
+                <p>আপনার ক্লাস বেছে নিয়ে সাবজেক্ট ও চ্যাপ্টার নির্বাচন করুন</p>
             </div>
 
             <div class="class-grid">
-                <div class="class-card" onclick="openStreamSelection('Class 10')">
+                <div class="class-card" onclick="showSubjects('class10')">
                     <div class="class-icon">📖</div>
                     <div class="class-title">Class 10</div>
-                    <div style="color: var(--text-meta); margin-top: 5px;">Demo + 7 Subjects</div>
+                    <div style="color: var(--text-meta); margin-top: 5px;">৭টি সাবজেক্ট</div>
                 </div>
-                <div class="class-card" onclick="openStreamSelection('Class 11')">
+                <div class="class-card" onclick="showSubjects('class11')">
                     <div class="class-icon">🎓</div>
                     <div class="class-title">Class 11</div>
                     <div style="color: var(--text-meta); margin-top: 5px;">Arts & Science Streams</div>
                 </div>
-                <div class="class-card" onclick="openStreamSelection('Class 12')">
+                <div class="class-card" onclick="showSubjects('class12')">
                     <div class="class-icon">🎯</div>
                     <div class="class-title">Class 12</div>
                     <div style="color: var(--text-meta); margin-top: 5px;">Arts & Science Streams</div>
@@ -442,71 +273,30 @@
             </div>
         </div>
 
-        <!-- ================= STREAM SELECTION (ARTS/SCIENCE) ================= -->
-        <div id="viewStreamSelection" class="hidden">
-            <button class="back-btn" style="margin:0;" onclick="showHomeView()">← ক্লাসের লিস্টে ফিরে যান</button>
-            <div class="hero-section" style="margin-top: 2rem;">
-                <h1 id="streamClassTitle" class="en-font">Class 11</h1>
-                <p style="color: var(--text-meta);">আপনার নির্দিষ্ট বিভাগ (Stream) নির্বাচন করুন</p>
-            </div>
-            <div class="class-grid" style="max-width: 600px; margin: 0 auto;">
-                <div class="class-card" id="artsStreamBtn">
-                    <div class="class-icon">🎨</div>
-                    <div class="class-title">Arts</div>
-                    <div style="color: var(--text-meta); margin-top: 5px;">কলা বিভাগ</div>
-                </div>
-                <div class="class-card" id="scienceStreamBtn">
-                    <div class="class-icon">🔬</div>
-                    <div class="class-title">Science</div>
-                    <div style="color: var(--text-meta); margin-top: 5px;">বিজ্ঞান বিভাগ</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= SUBJECT SELECTION ================= -->
-        <div id="viewSubjectSelection" class="hidden">
-            <button class="back-btn" style="margin:0;" onclick="goBackFromSubjects()">← ফিরে যান</button>
-
-            <div style="margin-top: 1.5rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
-                <h2 style="color: var(--primary); margin: 0; font-size: 1.8rem;" id="selectedClassTitle" class="en-font">Class 10</h2>
-                <p style="color: var(--text-meta); margin: 5px 0 0 0;">কোন বিষয়ের পরীক্ষা দেবেন তা বেছে নিন</p>
+        <!-- ================= SUBJECTS ================= -->
+        <div id="viewSubjects" class="hidden">
+            <button class="back-btn" onclick="showView('home')">← ক্লাসের লিস্টে ফিরে যান</button>
+            <div class="hero-section" style="margin-top: 1.5rem;">
+                <h1 id="subjectClassTitle">Class 10</h1>
+                <p id="subjectClassSub">আপনার সাবজেক্ট নির্বাচন করুন</p>
             </div>
             <div class="subject-grid" id="subjectGrid"></div>
         </div>
 
-        <!-- ================= QUIZ VIEW ================= -->
-        <div id="viewQuiz" class="hidden">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
-                <button class="back-btn" style="margin:0;" onclick="exitQuiz()">← কুইজ বন্ধ করুন</button>
-                <div id="quizSubjectTitle" style="font-weight:bold; color:var(--primary); font-size:1.1rem;"></div>
+        <!-- ================= CHAPTERS ================= -->
+        <div id="viewChapters" class="hidden">
+            <button class="back-btn" onclick="showSubjects(currentClass)">← সাবজেক্টে ফিরে যান</button>
+            <div class="hero-section" style="margin-top: 1.5rem;">
+                <h1 id="chapterSubjectTitle">ইতিহাস</h1>
+                <p id="chapterClassInfo">Class 10</p>
             </div>
-
-            <div class="quiz-card">
-                <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
-                <div class="q-text" id="qText">Question?</div>
-                <div id="optionsBox"></div>
-                <div class="exp-box" id="expBox"></div>
-                <button class="btn-primary hidden" id="nextBtn" style="margin-top: 20px;" onclick="nextQuestion()">পরবর্তী প্রশ্ন</button>
-                <button class="btn-primary hidden" id="submitBtn" style="margin-top: 20px;" onclick="showResult()">ফলাফল দেখুন</button>
-            </div>
-        </div>
-
-        <div id="viewResult" class="hidden text-center">
-            <div class="quiz-card">
-                <h2>আপনার ফলাফল</h2>
-                <div class="score-display" id="finalScoreText">100%</div>
-                <div class="stat-grid">
-                    <div class="stat-box" style="color: var(--primary); border: 1.5px solid var(--primary); background: #e8f7ef;">সঠিক: <span id="correctCount">0</span></div>
-                    <div class="stat-box" style="color: var(--danger); border: 1.5px solid var(--danger); background: #fdf0f0;">ভুল: <span id="wrongCount">0</span></div>
-                </div>
-                <button class="btn-primary" onclick="exitQuiz()">ফিরে যান</button>
-            </div>
+            <div class="subject-grid" id="chapterGrid"></div>
         </div>
 
         <!-- ================= ADMIN LOGIN ================= -->
         <div id="viewAdminLogin" class="hidden">
-            <div class="login-box" style="margin: 3rem auto;">
-                <h2 style="color: var(--primary); margin-top:0;">Admin Access</h2>
+            <div class="login-box">
+                <h2 style="color: var(--primary); margin-top:0;">🔐 Admin Access</h2>
                 <p style="color: var(--text-meta);">Admin Panel এ প্রবেশ করতে password দিন</p>
                 <input type="password" id="adminPass" placeholder="Admin Password">
                 <button class="btn-primary" onclick="verifyAdmin()">প্রবেশ করুন</button>
@@ -517,44 +307,44 @@
         <!-- ================= ADMIN DASHBOARD ================= -->
         <div id="viewAdminDashboard" class="hidden">
             <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <h2 style="color: var(--primary); margin: 0;">Master Control Panel</h2>
+                <h2 style="color: var(--primary); margin: 0;">🛠️ Admin Panel</h2>
                 <span class="en-font" style="background: var(--primary); color: #fff; padding: 5px 12px; border-radius: 20px; font-weight: bold;"><span id="totalStudentsCount">0</span> Students</span>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h3 style="margin-top:0; color:var(--primary);">+ নতুন Student যোগ করুন</h3>
-                    <select id="singleClass" class="en-font">
+            <div class="admin-grid">
+                <div class="admin-panel">
+                    <h3>➕ নতুন Student যোগ করুন</h3>
+                    <select id="singleClass">
                         <option value="Class 10">Class 10</option>
                         <option value="Class 11 - Arts">Class 11 - Arts</option>
                         <option value="Class 11 - Science">Class 11 - Science</option>
                         <option value="Class 12 - Arts">Class 12 - Arts</option>
                         <option value="Class 12 - Science">Class 12 - Science</option>
                     </select>
-                    <input type="text" id="singleUser" class="en-font" placeholder="Username">
-                    <input type="text" id="singlePass" class="en-font" placeholder="Password">
+                    <input type="text" id="singleUser" placeholder="Username">
+                    <input type="text" id="singlePass" placeholder="Password">
                     <button class="btn-primary" onclick="addSingleStudent()">Add Student</button>
                 </div>
 
-                <div class="card">
-                    <h3 style="margin-top:0; color:var(--primary);">একসাথে অনেক Student যোগ করুন</h3>
-                    <select id="bulkClass" class="en-font">
+                <div class="admin-panel">
+                    <h3>📋 একসাথে অনেক Student যোগ করুন</h3>
+                    <select id="bulkClass">
                         <option value="Class 10">Class 10</option>
                         <option value="Class 11 - Arts">Class 11 - Arts</option>
                         <option value="Class 11 - Science">Class 11 - Science</option>
                         <option value="Class 12 - Arts">Class 12 - Arts</option>
                         <option value="Class 12 - Science">Class 12 - Science</option>
                     </select>
-                    <textarea id="bulkData" class="en-font" placeholder="user1, pass1&#10;user2, pass2"></textarea>
-                    <button class="btn-primary" onclick="addBulkStudents()">সবাইকে Add করুন</button>
+                    <textarea id="bulkData" placeholder="user1, pass1&#10;user2, pass2"></textarea>
+                    <button class="btn-primary" onclick="addBulkStudents()">Bulk Add</button>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="admin-panel">
                 <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <button class="btn-primary" style="background: var(--danger);" onclick="clearAllUsers()">⚠️ সব Delete করুন</button>
                 </div>
-                <table class="student-table" id="studentTable">
+                <table class="student-table">
                     <thead><tr><th>Username</th><th>Password</th><th>Class/Stream</th><th style="text-align: right;">Action</th></tr></thead>
                     <tbody id="studentListBody"></tbody>
                 </table>
@@ -564,510 +354,321 @@
     </div>
 
 <script>
-    // ================== ALL SUBJECT CONFIGURATION ==================
-    const ALL_SUBJECTS = {
-        "Class 10": [
-            { id: "bengali", name: "বাংলা", icon: "✒️" },
-            { id: "english", name: "ইংরেজি", icon: "🔠" },
-            { id: "history", name: "ইতিহাস", icon: "📜" },
-            { id: "geography", name: "ভূগোল", icon: "🌍" },
-            { id: "life_science", name: "জীবনবিজ্ঞান", icon: "🧬" },
-            { id: "physical_science", name: "ভৌতবিজ্ঞান", icon: "⚛️" },
-            { id: "math", name: "গণিত", icon: "📐" }
-        ],
-        "Class 11 - Arts": [
-            { id: "bengali", name: "বাংলা", icon: "✒️" },
-            { id: "english", name: "ইংরেজি", icon: "🔠" },
-            { id: "history", name: "ইতিহাস", icon: "🏛️" },
-            { id: "geography", name: "ভূগোল", icon: "🗺️" },
-            { id: "political_science", name: "রাষ্ট্রবিজ্ঞান", icon: "⚖️" },
-            { id: "education", name: "শিক্ষাবিজ্ঞান", icon: "📚" }
-        ],
-        "Class 11 - Science": [
-            { id: "bengali", name: "বাংলা", icon: "✒️" },
-            { id: "english", name: "ইংরেজি", icon: "🔠" },
-            { id: "physics", name: "পদার্থবিদ্যা", icon: "⚡" },
-            { id: "chemistry", name: "রসায়ন", icon: "🧪" },
-            { id: "math", name: "গণিত", icon: "🔢" },
-            { id: "biology", name: "জীববিদ্যা", icon: "🌿" }
-        ],
-        "Class 12 - Arts": [
-            { id: "bengali", name: "বাংলা", icon: "✒️" },
-            { id: "english", name: "ইংরেজি", icon: "🔠" },
-            { id: "history", name: "ইতিহাস", icon: "🏛️" },
-            { id: "geography", name: "ভূগোল", icon: "🗺️" },
-            { id: "education", name: "শিক্ষাবিজ্ঞান", icon: "📚" },
-            { id: "political_science", name: "রাষ্ট্রবিজ্ঞান", icon: "⚖️" }
-        ],
-        "Class 12 - Science": [
-            { id: "bengali", name: "বাংলা", icon: "✒️" },
-            { id: "english", name: "ইংরেজি", icon: "🔠" },
-            { id: "physics", name: "পদার্থবিদ্যা", icon: "⚡" },
-            { id: "chemistry", name: "রসায়ন", icon: "🧪" },
-            { id: "math", name: "গণিত", icon: "🔢" },
-            { id: "biology", name: "জীববিদ্যা", icon: "🌿" }
-        ]
-    };
-
-    // ================== SAMPLE QUESTIONS ==================
-    // (Keeping it shorter for brevity - full questions are in the previous version)
-    // For this version, I'll use a simplified set of 5 questions per subject to keep the code clean
-    // But you can replace with your own 15 questions
-
-    function generateQuestions(subject, count) {
-        let qs = [];
-        for(let i = 1; i <= count; i++) {
-            qs.push({
-                q: `${i}. ${subject} এর ${i}তম প্রশ্ন?`,
-                opts: ["অপশন ক", "অপশন খ", "অপশন গ", "অপশন ঘ"],
-                ans: i % 4,
-                exp: `${subject} এর ${i}তম প্রশ্নের ব্যাখ্যা।`
-            });
-        }
-        return qs;
-    }
-
-    // Generate question banks for all subjects
-    const class10_bengali_qs = generateQuestions("বাংলা", 15);
-    const class10_english_qs = generateQuestions("ইংরেজি", 15);
-    const class10_history_qs = generateQuestions("ইতিহাস", 15);
-    const class10_geography_qs = generateQuestions("ভূগোল", 15);
-    const class10_life_science_qs = generateQuestions("জীবনবিজ্ঞান", 15);
-    const class10_physical_science_qs = generateQuestions("ভৌতবিজ্ঞান", 15);
-    const class10_math_qs = generateQuestions("গণিত", 15);
-
-    const class11_arts_bengali_qs = generateQuestions("বাংলা (Arts)", 15);
-    const class11_arts_english_qs = generateQuestions("ইংরেজি (Arts)", 15);
-    const class11_arts_history_qs = generateQuestions("ইতিহাস (Arts)", 15);
-    const class11_arts_geography_qs = generateQuestions("ভূগোল (Arts)", 15);
-    const class11_arts_political_science_qs = generateQuestions("রাষ্ট্রবিজ্ঞান", 15);
-    const class11_arts_education_qs = generateQuestions("শিক্ষাবিজ্ঞান", 15);
-
-    const class11_science_bengali_qs = generateQuestions("বাংলা (Science)", 15);
-    const class11_science_english_qs = generateQuestions("ইংরেজি (Science)", 15);
-    const class11_science_physics_qs = generateQuestions("পদার্থবিদ্যা", 15);
-    const class11_science_chemistry_qs = generateQuestions("রসায়ন", 15);
-    const class11_science_math_qs = generateQuestions("গণিত (Science)", 15);
-    const class11_science_biology_qs = generateQuestions("জীববিদ্যা", 15);
-
-    // Class 12 uses same as Class 11 for now
-    const class12_arts_bengali_qs = class11_arts_bengali_qs;
-    const class12_arts_english_qs = class11_arts_english_qs;
-    const class12_arts_history_qs = class11_arts_history_qs;
-    const class12_arts_geography_qs = class11_arts_geography_qs;
-    const class12_arts_education_qs = class11_arts_education_qs;
-    const class12_arts_political_science_qs = class11_arts_political_science_qs;
-
-    const class12_science_bengali_qs = class11_science_bengali_qs;
-    const class12_science_english_qs = class11_science_english_qs;
-    const class12_science_physics_qs = class11_science_physics_qs;
-    const class12_science_chemistry_qs = class11_science_chemistry_qs;
-    const class12_science_math_qs = class11_science_math_qs;
-    const class12_science_biology_qs = class11_science_biology_qs;
-
-    // ================== COMPLETE DATABASE ==================
-    const TEST_DATABASE = {
-        "Class 10": {
-            "demo": class10_life_science_qs,
-            "bengali": class10_bengali_qs,
-            "english": class10_english_qs,
-            "history": class10_history_qs,
-            "geography": class10_geography_qs,
-            "life_science": class10_life_science_qs,
-            "physical_science": class10_physical_science_qs,
-            "math": class10_math_qs
+    // ======================== SUBJECT & CHAPTER CONFIG ========================
+    const SUBJECTS = {
+        class10: {
+            title: 'Class 10',
+            subjects: [
+                { id: 'history', name: 'ইতিহাস', icon: '📜', chapters: 7 },
+                { id: 'geography', name: 'ভূগোল', icon: '🌍', chapters: 5 },
+                { id: 'life_science', name: 'জীবনবিজ্ঞান', icon: '🧬', chapters: 4 },
+                { id: 'physical_science', name: 'ভৌতবিজ্ঞান', icon: '⚛️', chapters: 4 },
+                { id: 'bengali', name: 'বাংলা', icon: '✒️', chapters: 3 },
+                { id: 'english', name: 'ইংরেজি', icon: '🔠', chapters: 3 },
+                { id: 'math', name: 'গণিত', icon: '📐', chapters: 5 }
+            ]
         },
-        "Class 11 - Arts": {
-            "demo": class11_arts_history_qs,
-            "bengali": class11_arts_bengali_qs,
-            "english": class11_arts_english_qs,
-            "history": class11_arts_history_qs,
-            "geography": class11_arts_geography_qs,
-            "political_science": class11_arts_political_science_qs,
-            "education": class11_arts_education_qs
+        class11: {
+            title: 'Class 11',
+            streams: {
+                arts: {
+                    name: 'Arts (কলা)',
+                    subjects: [
+                        { id: 'history', name: 'ইতিহাস', icon: '🏛️', chapters: 3 },
+                        { id: 'geography', name: 'ভূগোল', icon: '🗺️', chapters: 3 },
+                        { id: 'political_science', name: 'রাষ্ট্রবিজ্ঞান', icon: '⚖️', chapters: 3 },
+                        { id: 'education', name: 'শিক্ষাবিজ্ঞান', icon: '📚', chapters: 3 },
+                        { id: 'bengali', name: 'বাংলা', icon: '✒️', chapters: 2 },
+                        { id: 'english', name: 'ইংরেজি', icon: '🔠', chapters: 2 }
+                    ]
+                },
+                science: {
+                    name: 'Science (বিজ্ঞান)',
+                    subjects: [
+                        { id: 'physics', name: 'পদার্থবিদ্যা', icon: '⚡', chapters: 4 },
+                        { id: 'chemistry', name: 'রসায়ন', icon: '🧪', chapters: 4 },
+                        { id: 'biology', name: 'জীববিদ্যা', icon: '🌿', chapters: 4 },
+                        { id: 'math', name: 'গণিত', icon: '🔢', chapters: 3 },
+                        { id: 'bengali', name: 'বাংলা', icon: '✒️', chapters: 2 },
+                        { id: 'english', name: 'ইংরেজি', icon: '🔠', chapters: 2 }
+                    ]
+                }
+            }
         },
-        "Class 11 - Science": {
-            "demo": class11_science_physics_qs,
-            "bengali": class11_science_bengali_qs,
-            "english": class11_science_english_qs,
-            "physics": class11_science_physics_qs,
-            "chemistry": class11_science_chemistry_qs,
-            "math": class11_science_math_qs,
-            "biology": class11_science_biology_qs
-        },
-        "Class 12 - Arts": {
-            "demo": class12_arts_history_qs,
-            "bengali": class12_arts_bengali_qs,
-            "english": class12_arts_english_qs,
-            "history": class12_arts_history_qs,
-            "geography": class12_arts_geography_qs,
-            "education": class12_arts_education_qs,
-            "political_science": class12_arts_political_science_qs
-        },
-        "Class 12 - Science": {
-            "demo": class12_science_physics_qs,
-            "bengali": class12_science_bengali_qs,
-            "english": class12_science_english_qs,
-            "physics": class12_science_physics_qs,
-            "chemistry": class12_science_chemistry_qs,
-            "math": class12_science_math_qs,
-            "biology": class12_science_biology_qs
+        class12: {
+            title: 'Class 12',
+            streams: {
+                arts: {
+                    name: 'Arts (কলা)',
+                    subjects: [
+                        { id: 'history', name: 'ইতিহাস', icon: '🏛️', chapters: 3 },
+                        { id: 'geography', name: 'ভূগোল', icon: '🗺️', chapters: 3 },
+                        { id: 'political_science', name: 'রাষ্ট্রবিজ্ঞান', icon: '⚖️', chapters: 3 },
+                        { id: 'education', name: 'শিক্ষাবিজ্ঞান', icon: '📚', chapters: 3 },
+                        { id: 'bengali', name: 'বাংলা', icon: '✒️', chapters: 2 },
+                        { id: 'english', name: 'ইংরেজি', icon: '🔠', chapters: 2 }
+                    ]
+                },
+                science: {
+                    name: 'Science (বিজ্ঞান)',
+                    subjects: [
+                        { id: 'physics', name: 'পদার্থবিদ্যা', icon: '⚡', chapters: 4 },
+                        { id: 'chemistry', name: 'রসায়ন', icon: '🧪', chapters: 4 },
+                        { id: 'biology', name: 'জীববিদ্যা', icon: '🌿', chapters: 4 },
+                        { id: 'math', name: 'গণিত', icon: '🔢', chapters: 3 },
+                        { id: 'bengali', name: 'বাংলা', icon: '✒️', chapters: 2 },
+                        { id: 'english', name: 'ইংরেজি', icon: '🔠', chapters: 2 }
+                    ]
+                }
+            }
         }
     };
 
-    // ================== APP LOGIC ==================
-    const STORAGE_KEY_USERS = "testBazarFinalDB_v3";
+    // ======================== APP STATE ========================
+    let currentClass = 'class10';
+    let currentStream = null;
     let isAdminLoggedIn = false;
-    let loggedInUser = null;
-    let pendingTest = {};
-    let activeTest = [];
-    let currentQIdx = 0;
-    let score = 0;
+    const STORAGE_KEY = "testbazar_users";
+    const ADMIN_PASS = "Ajay@725";
 
-    function switchTab(tabName) {
-        document.getElementById('tabHome').classList.remove('active');
-        document.getElementById('tabAdmin').classList.remove('active');
+    // ======================== NAVIGATION ========================
+    function showView(view) {
         document.getElementById('viewHome').classList.add('hidden');
-        document.getElementById('viewStreamSelection').classList.add('hidden');
-        document.getElementById('viewSubjectSelection').classList.add('hidden');
-        document.getElementById('viewQuiz').classList.add('hidden');
-        document.getElementById('viewResult').classList.add('hidden');
+        document.getElementById('viewSubjects').classList.add('hidden');
+        document.getElementById('viewChapters').classList.add('hidden');
         document.getElementById('viewAdminLogin').classList.add('hidden');
         document.getElementById('viewAdminDashboard').classList.add('hidden');
 
-        if(tabName === 'home') {
-            document.getElementById('tabHome').classList.add('active');
+        document.getElementById('tabHome').classList.remove('active');
+        document.getElementById('tabAdmin').classList.remove('active');
+
+        if (view === 'home') {
             document.getElementById('viewHome').classList.remove('hidden');
-            document.getElementById('btnLogout').classList.add('hidden');
-        } else if(tabName === 'admin') {
-            document.getElementById('tabAdmin').classList.add('active');
-            if(isAdminLoggedIn) {
+            document.getElementById('tabHome').classList.add('active');
+        } else if (view === 'subjects') {
+            document.getElementById('viewSubjects').classList.remove('hidden');
+        } else if (view === 'chapters') {
+            document.getElementById('viewChapters').classList.remove('hidden');
+        } else if (view === 'admin') {
+            if (isAdminLoggedIn) {
                 document.getElementById('viewAdminDashboard').classList.remove('hidden');
                 document.getElementById('btnLogout').classList.remove('hidden');
                 updateAdminUI();
             } else {
                 document.getElementById('viewAdminLogin').classList.remove('hidden');
             }
+            document.getElementById('tabAdmin').classList.add('active');
         }
     }
 
-    function showHomeView() {
-        document.getElementById('viewStreamSelection').classList.add('hidden');
-        document.getElementById('viewSubjectSelection').classList.add('hidden');
-        document.getElementById('viewResult').classList.add('hidden');
-        document.getElementById('viewHome').classList.remove('hidden');
-    }
-
-    // ================== STREAM & SUBJECT SELECTION ==================
-    function openStreamSelection(baseClass) {
-        if(baseClass === 'Class 10') {
-            openSubjectView('Class 10');
-            return;
-        }
-        document.getElementById('viewHome').classList.add('hidden');
-        document.getElementById('viewSubjectSelection').classList.add('hidden');
-        document.getElementById('viewStreamSelection').classList.remove('hidden');
-
-        document.getElementById('streamClassTitle').innerText = baseClass;
-
-        document.getElementById('artsStreamBtn').onclick = function() {
-            openSubjectView(baseClass + ' - Arts');
-        };
-        document.getElementById('scienceStreamBtn').onclick = function() {
-            openSubjectView(baseClass + ' - Science');
-        };
-    }
-
-    function goBackFromSubjects() {
-        let currentClass = document.getElementById('selectedClassTitle').innerText;
-        if(currentClass.includes('Class 11')) {
-            openStreamSelection('Class 11');
-        } else if(currentClass.includes('Class 12')) {
-            openStreamSelection('Class 12');
-        } else {
-            showHomeView();
-        }
-    }
-
-    function openSubjectView(className) {
-        document.getElementById('viewHome').classList.add('hidden');
-        document.getElementById('viewStreamSelection').classList.add('hidden');
-        document.getElementById('viewSubjectSelection').classList.remove('hidden');
-        document.getElementById('selectedClassTitle').innerText = className;
+    // ======================== SUBJECTS ========================
+    function showSubjects(classId) {
+        currentClass = classId;
+        const data = SUBJECTS[classId];
+        document.getElementById('subjectClassTitle').textContent = data.title;
+        document.getElementById('subjectClassSub').textContent = 'আপনার সাবজেক্ট নির্বাচন করুন';
 
         const grid = document.getElementById('subjectGrid');
         grid.innerHTML = '';
 
-        // 1. FREE DEMO CARD
-        const demoCard = document.createElement('div');
-        demoCard.className = 'subject-card demo-card';
-        demoCard.innerHTML = `<div style="font-size:2.2rem;">🎁</div> <div><div class="sub-title" style="color:#e8730a;">Free Demo Test</div><small style="color:var(--primary); font-weight:bold;">লগইন ছাড়া (১৫টি প্রশ্ন)</small></div>`;
-        demoCard.onclick = function() {
-            startTest(className, 'demo', 'Free Demo Test');
-        };
-        grid.appendChild(demoCard);
-
-        // 2. LOCKED SUBJECTS
-        if(ALL_SUBJECTS[className]) {
-            ALL_SUBJECTS[className].forEach(function(sub) {
+        if (data.streams) {
+            // For Class 11 & 12 - Show Streams first
+            const streamKeys = Object.keys(data.streams);
+            streamKeys.forEach(key => {
+                const stream = data.streams[key];
                 const card = document.createElement('div');
                 card.className = 'subject-card';
-                card.innerHTML = `<div style="font-size:2.2rem;">${sub.icon}</div> <div class="sub-title" style="display:flex; justify-content:space-between; width:100%;">${sub.name} <span style="font-size:0.9rem; color:#aaa;">🔒</span></div>`;
-                card.onclick = function() {
-                    handleSubjectClick(className, sub.id, sub.name);
-                };
+                card.innerHTML = `
+                    <span class="subject-icon">${key === 'arts' ? '🎨' : '🔬'}</span>
+                    <span class="subject-name">${stream.name}</span>
+                    <span class="subject-chapters">${stream.subjects.length} টি সাবজেক্ট</span>
+                `;
+                card.onclick = () => showStreamSubjects(classId, key);
+                grid.appendChild(card);
+            });
+        } else {
+            // For Class 10
+            data.subjects.forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `
+                    <span class="subject-icon">${sub.icon}</span>
+                    <span class="subject-name">${sub.name}</span>
+                    <span class="subject-chapters">${sub.chapters} টি অধ্যায়</span>
+                `;
+                card.onclick = () => showChapters(classId, sub.id, sub.name);
                 grid.appendChild(card);
             });
         }
+
+        showView('subjects');
     }
 
-    // ================== LOGIN VALIDATION ==================
-    function handleSubjectClick(className, subId, subName) {
-        if(loggedInUser) {
-            let users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
-            let userClass = users[loggedInUser] ? users[loggedInUser].className : '';
-            if(userClass !== className) {
-                alert('⚠️ অ্যাক্সেস ডিনাইড! আপনার আইডিটি শুধুমাত্র "' + userClass + '" এর জন্য তৈরি করা হয়েছে। আপনি "' + className + '"-এ প্রবেশ করতে পারবেন না।');
-                return;
-            }
-            startTest(className, subId, subName);
-        } else {
-            pendingTest = { className: className, subId: subId, subName: subName };
-            document.getElementById('studentLoginTitle').innerText = className + " Login";
-            document.getElementById('studentUser').value = '';
-            document.getElementById('studentPass').value = '';
-            document.getElementById('studentLoginError').classList.add('hidden');
-            document.getElementById('studentLoginModal').classList.remove('hidden');
-        }
-    }
+    function showStreamSubjects(classId, streamKey) {
+        currentStream = streamKey;
+        const data = SUBJECTS[classId];
+        const stream = data.streams[streamKey];
+        document.getElementById('subjectClassTitle').textContent = data.title + ' — ' + stream.name;
+        document.getElementById('subjectClassSub').textContent = 'আপনার সাবজেক্ট নির্বাচন করুন';
 
-    function closeStudentLogin() {
-        document.getElementById('studentLoginModal').classList.add('hidden');
-    }
+        const grid = document.getElementById('subjectGrid');
+        grid.innerHTML = '';
 
-    function verifyStudentLogin() {
-        var u = document.getElementById('studentUser').value.trim();
-        var p = document.getElementById('studentPass').value.trim();
-        var err = document.getElementById('studentLoginError');
-
-        if(!u || !p) {
-            err.innerText = "ইউজারনেম এবং পাসওয়ার্ড দিন!";
-            err.classList.remove('hidden');
-            return;
-        }
-
-        var users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
-
-        if(!users[u] || users[u].pass !== p) {
-            err.innerText = "ইউজারনেম বা পাসওয়ার্ড ভুল!";
-            err.classList.remove('hidden');
-            return;
-        }
-
-        if(users[u].className !== pendingTest.className) {
-            err.innerText = 'আপনি ' + pendingTest.className + ' এর স্টুডেন্ট নন! আপনার আইডি ' + users[u].className + ' এর জন্য বরাদ্দ।';
-            err.classList.remove('hidden');
-            return;
-        }
-
-        loggedInUser = u;
-        closeStudentLogin();
-
-        document.getElementById('studentNavInfo').innerText = '👤 ' + u;
-        document.getElementById('studentNavInfo').classList.remove('hidden');
-        document.getElementById('btnLogout').classList.remove('hidden');
-
-        startTest(pendingTest.className, pendingTest.subId, pendingTest.subName);
-    }
-
-    function logoutSession() {
-        if(isAdminLoggedIn) {
-            isAdminLoggedIn = false;
-            document.getElementById('btnLogout').classList.add('hidden');
-            switchTab('home');
-        } else if(loggedInUser) {
-            loggedInUser = null;
-            document.getElementById('studentNavInfo').classList.add('hidden');
-            document.getElementById('btnLogout').classList.add('hidden');
-            alert("সফলভাবে লগআউট হয়েছে!");
-            showHomeView();
-        }
-    }
-
-    // ================== QUIZ LOGIC ==================
-    function startTest(className, subId, subName) {
-        if(TEST_DATABASE[className] && TEST_DATABASE[className][subId]) {
-            activeTest = TEST_DATABASE[className][subId];
-            document.getElementById('viewSubjectSelection').classList.add('hidden');
-            document.getElementById('viewQuiz').classList.remove('hidden');
-            document.getElementById('quizSubjectTitle').innerText = className + ' - ' + subName;
-
-            currentQIdx = 0;
-            score = 0;
-            loadQuestion();
-        } else {
-            alert('"' + subName + '" বিষয়ের প্রশ্নপত্র খুব শীঘ্রই আপলোড করা হবে!');
-        }
-    }
-
-    function loadQuestion() {
-        var qData = activeTest[currentQIdx];
-        document.getElementById('qNum').innerText = 'প্রশ্ন ' + (currentQIdx + 1) + ' / ' + activeTest.length;
-        document.getElementById('qText').innerText = qData.q;
-
-        var optsBox = document.getElementById('optionsBox');
-        optsBox.innerHTML = '';
-        document.getElementById('expBox').style.display = 'none';
-        document.getElementById('nextBtn').classList.add('hidden');
-        document.getElementById('submitBtn').classList.add('hidden');
-
-        var optLetters = ['A', 'B', 'C', 'D'];
-        qData.opts.forEach(function(opt, idx) {
-            var btn = document.createElement("button");
-            btn.className = "option-btn";
-            btn.innerHTML = '<div class="opt-circle">' + optLetters[idx] + '</div> <span>' + opt + '</span>';
-            btn.onclick = function() {
-                selectOption(btn, idx, qData.ans, qData.exp);
-            };
-            optsBox.appendChild(btn);
+        stream.subjects.forEach(sub => {
+            const card = document.createElement('div');
+            card.className = 'subject-card';
+            card.innerHTML = `
+                <span class="subject-icon">${sub.icon}</span>
+                <span class="subject-name">${sub.name}</span>
+                <span class="subject-chapters">${sub.chapters} টি অধ্যায়</span>
+            `;
+            const path = classId + '/' + streamKey + '/' + sub.id;
+            card.onclick = () => showChapters(classId, sub.id, sub.name, streamKey);
+            grid.appendChild(card);
         });
+
+        showView('subjects');
     }
 
-    function selectOption(btn, selectedIdx, correctIdx, exp) {
-        var allBtns = document.getElementById("optionsBox").querySelectorAll("button");
-        allBtns.forEach(function(b) { b.disabled = true; });
+    // ======================== CHAPTERS ========================
+    function showChapters(classId, subjectId, subjectName, streamKey = null) {
+        document.getElementById('chapterSubjectTitle').textContent = subjectName;
+        let classLabel = SUBJECTS[classId].title;
+        if (streamKey) {
+            classLabel += ' — ' + SUBJECTS[classId].streams[streamKey].name;
+        }
+        document.getElementById('chapterClassInfo').textContent = classLabel;
 
-        if(selectedIdx === correctIdx) {
-            btn.classList.add("opt-correct");
-            score++;
+        const grid = document.getElementById('chapterGrid');
+        grid.innerHTML = '';
+
+        // Build file path
+        let basePath = '';
+        if (classId === 'class10') {
+            basePath = 'class10/' + subjectId + '/';
         } else {
-            btn.classList.add("opt-wrong");
-            allBtns[correctIdx].classList.add("opt-correct");
+            basePath = classId + '/' + streamKey + '/' + subjectId + '/';
         }
 
-        document.getElementById("expBox").innerHTML = '<b>ব্যাখ্যা:</b> ' + exp;
-        document.getElementById("expBox").style.display = "block";
-
-        if(currentQIdx < activeTest.length - 1) {
-            document.getElementById("nextBtn").classList.remove("hidden");
+        // Find chapters count
+        let chaptersCount = 3;
+        if (classId === 'class10') {
+            const sub = SUBJECTS[classId].subjects.find(s => s.id === subjectId);
+            if (sub) chaptersCount = sub.chapters;
         } else {
-            document.getElementById("submitBtn").classList.remove("hidden");
+            const stream = SUBJECTS[classId].streams[streamKey];
+            if (stream) {
+                const sub = stream.subjects.find(s => s.id === subjectId);
+                if (sub) chaptersCount = sub.chapters;
+            }
         }
+
+        for (let i = 1; i <= chaptersCount; i++) {
+            const card = document.createElement('div');
+            card.className = 'subject-card';
+            const chapterName = 'অধ্যায় ' + i;
+            card.innerHTML = `
+                <span class="subject-icon">📖</span>
+                <span class="subject-name">${chapterName}</span>
+                <span class="subject-chapters">${i} / ${chaptersCount}</span>
+            `;
+            // Link to individual chapter file
+            const fileName = basePath + 'chapter' + i + '.html';
+            card.onclick = () => {
+                window.location.href = fileName;
+            };
+            grid.appendChild(card);
+        }
+
+        showView('chapters');
     }
 
-    function nextQuestion() {
-        currentQIdx++;
-        loadQuestion();
-    }
-
-    function showResult() {
-        document.getElementById('viewQuiz').classList.add('hidden');
-        document.getElementById('viewResult').classList.remove('hidden');
-        var percent = Math.round((score / activeTest.length) * 100);
-        document.getElementById('finalScoreText').innerText = percent + "%";
-        document.getElementById('correctCount').innerText = score;
-        document.getElementById('wrongCount').innerText = activeTest.length - score;
-    }
-
-    function exitQuiz() {
-        document.getElementById('viewQuiz').classList.add('hidden');
-        document.getElementById('viewResult').classList.add('hidden');
-        document.getElementById('viewSubjectSelection').classList.remove('hidden');
-    }
-
-    // ================== ADMIN SYSTEM ==================
+    // ======================== ADMIN FUNCTIONS ========================
     function verifyAdmin() {
-        var pass = document.getElementById('adminPass').value;
-        if(pass === 'Ajay@725') {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === ADMIN_PASS) {
             isAdminLoggedIn = true;
             document.getElementById('adminPass').value = '';
             document.getElementById('loginError').style.display = 'none';
+            showView('admin');
             document.getElementById('btnLogout').classList.remove('hidden');
-            switchTab('admin');
         } else {
             document.getElementById('loginError').style.display = 'block';
         }
     }
 
-    function getUsers() {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)) || {};
-    }
-
-    function saveUsers(data) {
-        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(data));
-        updateAdminUI();
-    }
+    function getUsers() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    function saveUsers(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); updateAdminUI(); }
 
     function addSingleStudent() {
-        var c = document.getElementById("singleClass").value;
-        var u = document.getElementById("singleUser").value.trim();
-        var p = document.getElementById("singlePass").value.trim();
-        if(!u || !p) return;
-        var users = getUsers();
-        if(users[u]) {
-            alert("এই Username আগে থেকেই আছে!");
-            return;
-        }
+        const c = document.getElementById('singleClass').value;
+        const u = document.getElementById('singleUser').value.trim();
+        const p = document.getElementById('singlePass').value.trim();
+        if (!u || !p) return;
+        const users = getUsers();
+        if (users[u]) { alert('এই Username আগে থেকেই আছে!'); return; }
         users[u] = { pass: p, className: c };
         saveUsers(users);
-        document.getElementById("singleUser").value = "";
-        document.getElementById("singlePass").value = "";
-        alert("Student যোগ করা হয়েছে!");
+        document.getElementById('singleUser').value = '';
+        document.getElementById('singlePass').value = '';
+        alert('Student যোগ করা হয়েছে!');
     }
 
     function addBulkStudents() {
-        var c = document.getElementById("bulkClass").value;
-        var txt = document.getElementById("bulkData").value.trim();
-        if(!txt) return;
-        var users = getUsers();
-        var added = 0;
-        var lines = txt.split('\n');
-        for(var i = 0; i < lines.length; i++) {
-            var parts = lines[i].split(',').map(function(s) { return s.trim(); });
-            if(parts.length >= 2) {
-                var u = parts[0];
-                var p = parts[1];
-                if(u && p && !users[u]) {
-                    users[u] = { pass: p, className: c };
-                    added++;
-                }
+        const c = document.getElementById('bulkClass').value;
+        const txt = document.getElementById('bulkData').value.trim();
+        if (!txt) return;
+        const users = getUsers();
+        let added = 0;
+        txt.split('\n').forEach(line => {
+            const parts = line.split(',').map(s => s.trim());
+            if (parts.length >= 2) {
+                const u = parts[0], p = parts[1];
+                if (u && p && !users[u]) { users[u] = { pass: p, className: c }; added++; }
             }
-        }
+        });
         saveUsers(users);
-        document.getElementById("bulkData").value = "";
-        alert(added + " জন স্টুডেন্ট যোগ করা হয়েছে!");
+        document.getElementById('bulkData').value = '';
+        alert(added + ' জন স্টুডেন্ট যোগ করা হয়েছে!');
     }
 
     function deleteStudent(u) {
-        if(confirm("'" + u + "' কে Delete করতে চান?")) {
-            var users = getUsers();
-            delete users[u];
-            saveUsers(users);
-        }
+        if (!confirm("'" + u + "' কে Delete করতে চান?")) return;
+        const users = getUsers();
+        delete users[u];
+        saveUsers(users);
     }
 
     function clearAllUsers() {
-        if(confirm("সতর্কতা: সব ডাটা Delete হয়ে যাবে! নিশ্চিত?")) {
-            saveUsers({});
-        }
+        if (!confirm('সতর্কতা: সব ডাটা Delete হয়ে যাবে! নিশ্চিত?')) return;
+        saveUsers({});
     }
 
     function updateAdminUI() {
-        var users = getUsers();
-        var keys = Object.keys(users);
-        document.getElementById("totalStudentsCount").innerText = keys.length;
-        var tbody = document.getElementById("studentListBody");
-        tbody.innerHTML = "";
-        for(var i = 0; i < keys.length; i++) {
-            var u = keys[i];
-            tbody.innerHTML += '<tr><td>' + u + '</td><td>' + users[u].pass + '</td><td><span style="background:#e8f7ef; color:#1a7a4a; padding:2px 8px; border-radius:12px; font-weight:bold; font-size:0.8rem;">' + users[u].className + '</span></td><td style="text-align:right;"><button class="btn-sm-danger" onclick="deleteStudent(\'' + u + '\')">Del</button></td></tr>';
+        const users = getUsers();
+        const keys = Object.keys(users);
+        document.getElementById('totalStudentsCount').textContent = keys.length;
+        const tbody = document.getElementById('studentListBody');
+        tbody.innerHTML = '';
+        keys.forEach(u => {
+            tbody.innerHTML += '<tr><td>' + u + '</td><td>' + users[u].pass + '</td><td><span style="background:#e8f7ef;color:#1a7a4a;padding:2px 10px;border-radius:12px;font-size:0.8rem;font-weight:bold;">' + users[u].className + '</span></td><td><button class="btn-sm-danger" onclick="deleteStudent(\'' + u + '\')">Del</button></td></tr>';
+        });
+    }
+
+    function logoutSession() {
+        if (isAdminLoggedIn) {
+            isAdminLoggedIn = false;
+            document.getElementById('btnLogout').classList.add('hidden');
+            showView('home');
         }
     }
 
-    // ================== INIT ==================
-    console.log("✅ Test Bazar Platform Loaded Successfully!");
-    console.log("🔑 Admin Password: Ajay@725");
+    // ======================== INIT ========================
+    showView('home');
+    console.log('✅ Test Bazar Platform Loaded!');
+    console.log('📚 Classes: Class 10, 11, 12');
+    console.log('🔑 Admin Password: Ajay@725');
+    console.log('📁 File Structure: class10/history/chapter1.html');
 </script>
-
 </body>
 </html>
