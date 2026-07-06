@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জীবনবিজ্ঞান — Chapter 3 | Class 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c2e24}
+        
+        .top-bar{background:#1a7a4a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+        .top-logo{font-size:1.1rem;font-weight:800;color:white;cursor:pointer}
+        .top-logo span{color:#f9a825}
+        .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .user-info{color:#f9a825;font-weight:600;font-size:0.85rem}
+        .logout-btn{background:#dc3545;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-family:'Syne',sans-serif;font-size:0.75rem}
+        .logout-btn:hover{background:#c82333}
+        .timer-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:0.3rem 0.8rem;display:flex;align-items:center;gap:6px;font-size:0.9rem;font-weight:700;color:white}
+        .timer-box.danger{background:#dc3545}
+        
+        .main{max-width:800px;margin:0 auto;padding:1.5rem 1rem}
+        
+        .start-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb}
+        .start-wrap h2{font-family:'Tiro Bangla',serif;font-size:1.4rem;color:#1c2e24;margin-bottom:0.5rem}
+        .start-wrap p{font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#5a7a66;line-height:1.7;margin-bottom:1.2rem}
+        
+        .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+        .set-card{background:white;border-radius:12px;padding:1rem;border:1.5px solid #c5dccb;cursor:pointer;text-align:center;transition:0.3s;position:relative}
+        .set-card:hover{border-color:#1a7a4a;transform:translateY(-3px);box-shadow:0 4px 15px rgba(26,122,74,0.1)}
+        .set-card.locked{opacity:0.5;cursor:not-allowed}
+        .set-card.locked:hover{transform:none;box-shadow:none}
+        .set-icon{font-size:1.8rem;margin-bottom:0.2rem}
+        .set-title{font-family:'Tiro Bangla',serif;font-weight:700;font-size:0.95rem;color:#1c2e24}
+        .set-sub{font-family:'Tiro Bangla',serif;font-size:0.7rem;color:#5a7a66;margin-top:0.2rem}
+        .set-badge{display:inline-block;background:#e8f7ef;color:#1a7a4a;padding:0.1rem 0.6rem;border-radius:12px;font-size:0.6rem;font-weight:700;margin-top:0.3rem}
+        .attempts-left{font-size:0.7rem;color:#e8730a;font-weight:600;margin-top:0.3rem}
+        .lock-icon{position:absolute;top:5px;right:8px;font-size:1rem}
+        
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999;display:none;justify-content:center;align-items:center}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:white;padding:2rem;border-radius:14px;width:90%;max-width:400px;text-align:center}
+        .modal-box h2{color:#1a7a4a;margin-top:0}
+        .modal-box p{color:#5a7a66;font-size:0.9rem;margin-bottom:1rem}
+        .modal-box input{width:100%;padding:12px;margin:8px 0;border:1.5px solid #c5dccb;border-radius:8px;font-size:1rem;font-family:'Syne',sans-serif}
+        .modal-box .error-msg{color:#dc3545;font-weight:bold;margin:8px 0;display:none}
+        .modal-box .btn-primary{background:#1a7a4a;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-primary:hover{background:#2aad68}
+        .modal-box .btn-danger{background:#dc3545;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-danger:hover{background:#c82333}
+        
+        .quiz-info{background:white;border-radius:12px;padding:0.8rem 1.2rem;margin-bottom:1.2rem;border:1px solid #c5dccb;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+        .info-item{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66}
+        .info-item strong{color:#1a7a4a}
+        .progress-wrap{background:#c5dccb;border-radius:4px;height:6px;margin-bottom:1.2rem;overflow:hidden}
+        .progress-fill{height:100%;background:#1a7a4a;border-radius:4px;transition:width 0.3s}
+        .q-card{background:white;border-radius:14px;padding:1.4rem;margin-bottom:1rem;border:1px solid #c5dccb;box-shadow:0 2px 10px rgba(26,122,74,0.06)}
+        .q-num{font-size:0.75rem;font-weight:700;color:#e8730a;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+        .q-text{font-family:'Tiro Bangla',serif;font-size:1rem;color:#1c2e24;line-height:1.7;margin-bottom:1.1rem}
+        .opts{display:flex;flex-direction:column;gap:0.6rem}
+        .opt{display:flex;align-items:flex-start;gap:10px;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;width:100%}
+        .opt:hover:not(.disabled){border-color:#1a7a4a;background:#f0faf4}
+        .opt-circle{min-width:28px;height:28px;border-radius:50%;border:1.5px solid #c5dccb;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5a7a66;flex-shrink:0}
+        .opt-text{font-family:'Tiro Bangla',serif;font-size:0.92rem;color:#1c2e24;line-height:1.6;padding-top:2px}
+        .opt.correct{border-color:#1a7a4a;background:#e8f7ef}
+        .opt.correct .opt-circle{background:#1a7a4a;border-color:#1a7a4a;color:white}
+        .opt.wrong{border-color:#dc3545;background:#fdf0f0}
+        .opt.wrong .opt-circle{background:#dc3545;border-color:#dc3545;color:white}
+        .opt.disabled{cursor:default}
+        .explanation{background:#f0faf4;border-left:3px solid #1a7a4a;border-radius:0 8px 8px 0;padding:0.8rem 1rem;margin-top:0.8rem;display:none}
+        .explanation.show{display:block}
+        .explanation p{font-family:'Tiro Bangla',serif;font-size:0.88rem;color:#2c4035;line-height:1.7}
+        .explanation strong{color:#1a7a4a}
+        .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;flex-wrap:wrap;gap:10px}
+        .score-show{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+        .next-btn{background:#1a7a4a;color:white;border:none;padding:0.6rem 1.4rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:0.9rem;cursor:pointer}
+        .next-btn:hover{background:#2aad68}
+        .next-btn:disabled{background:#c5dccb;cursor:default}
+        
+        .result-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb;display:none}
+        .result-wrap.show{display:block}
+        .result-icon{font-size:3rem;margin-bottom:0.5rem}
+        .result-score{font-size:3.5rem;font-weight:800;color:#1a7a4a}
+        .result-total{font-size:1rem;color:#5a7a66;margin-bottom:0.5rem;font-family:'Tiro Bangla',serif}
+        .result-grade{font-size:1.2rem;font-weight:600;color:#1c2e24;margin-bottom:1.5rem;font-family:'Tiro Bangla',serif}
+        .result-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+        .result-bar{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+        .rb-num{font-size:1.4rem;font-weight:800}
+        .rb-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66;margin-top:0.2rem}
+        .action-btns{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap}
+        .retry-btn{background:#1a7a4a;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .review-btn{background:white;color:#1a7a4a;border:1.5px solid #1a7a4a;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .back-btn{background:white;color:#5a7a66;border:1.5px solid #c5dccb;padding:0.6rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-top:0.6rem}
+        
+        .hidden{display:none !important}
+        .text-center{text-align:center}
+        
+        @media(max-width:600px){
+            .set-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+            .result-bars{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="top-logo" onclick="window.location.href='../../index.html'">Test <span>Bazar</span></div>
+    <div class="top-right">
+        <span class="user-info hidden" id="userInfo">👤 <span id="userNameDisplay"></span></span>
+        <button class="logout-btn hidden" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        <div class="timer-box hidden" id="timerBox">⏱ <span id="timerDisplay">10:00</span></div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2>🔐 Login Required</h2>
+            <p>সেটটি আনলক করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+            <input type="text" id="loginUser" placeholder="Username">
+            <input type="password" id="loginPass" placeholder="Password">
+            <div class="error-msg" id="loginError">❌ ইউজারনেম বা পাসওয়ার্ড ভুল!</div>
+            <button class="btn-primary" onclick="verifyLogin()">লগইন</button>
+            <button class="btn-danger" onclick="closeLogin()">বাতিল</button>
+        </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div class="start-wrap" id="startScreen">
+        <div style="font-size:2.5rem;margin-bottom:0.8rem">🧬</div>
+        <h2>জীবনবিজ্ঞান — Chapter 3</h2>
+        <p style="font-size:0.9rem;color:#5a7a66;">বংশগতি ও কয়েকটি সাধারণ জিনগত রোগ</p>
+        <p style="font-size:0.8rem;color:#5a7a66;margin-bottom:1rem;">৫টি সেট | প্রতিটি সেটে ১৫টি প্রশ্ন | সময়: ১০ মিনিট | Attempt: ১০ বার</p>
+        
+        <div class="set-grid" id="setGrid"></div>
+        
+        <button class="back-btn" onclick="window.location.href='../../index.html'" style="margin-top:1.5rem;">← Home এ ফিরে যাও</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+        <div class="quiz-info">
+            <div class="info-item">🧬 <strong id="setTitle">Set 1</strong></div>
+            <div class="info-item">📝 Class 10 | জীববিজ্ঞান Chapter 3</div>
+            <div class="info-item" style="margin-left:auto;">🔄 Attempt: <span id="attemptCount">1</span>/10</div>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="q-card" id="qCard">
+            <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+            <div class="q-text" id="qText"></div>
+            <div class="opts" id="qOpts"></div>
+            <div class="explanation" id="explanation"><p id="explanationText"></p></div>
+            <div class="nav-row">
+                <div class="score-show" id="scoreShow">✅ সঠিক: ০ | ❌ ভুল: ০</div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>পরবর্তী →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="result-wrap" id="resultWrap">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-score" id="finalScore"></div>
+        <div class="result-total">/ ১৫</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="result-bars">
+            <div class="result-bar"><div class="rb-num" id="rbCorrect" style="color:#1a7a4a"></div><div class="rb-label">সঠিক</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbWrong" style="color:#dc3545"></div><div class="rb-label">ভুল</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbPct" style="color:#e8730a"></div><div class="rb-label">স্কোর</div></div>
+        </div>
+        <div class="action-btns">
+            <button class="retry-btn" onclick="retrySet()">আবার চেষ্টা করো</button>
+            <button class="review-btn" onclick="showReview()">উত্তর দেখো</button>
+        </div>
+        <button class="back-btn" onclick="showSetSelection()">← সেট লিস্টে ফিরে যাও</button>
+    </div>
+
+</div>
+
+<script>
+// ====================================================================
+//  ALL QUESTIONS - 5 SETS (15 Questions Each) = 75 Questions
+// ====================================================================
+
+const ALL_SETS = [
+    // ===================== SET 1: বংশগতি, জিনতত্ত্ব এবং প্রকরণ =====================
+    [
+        {q:"বংশগতির গঠনগত ও কার্যগত একক কোনটি?", opts:["ক্রোমোজোম","DNA","জিন","RNA"], ans:2, exp:"বংশগতির গঠনগত ও কার্যগত এককের নাম জিন। আণবিকভাবে জিন হল DNA বা RNA-র এমন একটি অংশ যেটি প্রোটিন সংশ্লেষের সংকেত বহন করে।"},
+        {q:"'জিন' (Gene) শব্দটি সর্বপ্রথম কে ব্যবহার করেন?", opts:["মেন্ডেল","জোহানসেন","ডারউইন","ডি ভ্রিস"], ans:1, exp:"মেন্ডেল একে ফ্যাক্টর নামে অভিহিত করেন, কিন্তু ১৯০৯ সালে বিজ্ঞানী জোহানসেন প্রথম 'জিন' শব্দটি ব্যবহার করেন।"},
+        {q:"একই জিনের বিভিন্ন রূপকে কী বলা হয়?", opts:["লোকাস","অ্যালিল","ফ্যাক্টর","গ্যামেট"], ans:1, exp:"একই জিনের বিভিন্ন রূপকে অ্যালিল (Allele) বলা হয়। সাধারণত একটি জীবের নির্দিষ্ট চরিত্রের জন্য একজোড়া অ্যালিল থাকে।"},
+        {q:"ক্রোমোজোমের যে নির্দিষ্ট স্থানে জিন অবস্থান করে, তাকে কী বলে?", opts:["সেন্ট্রোমিয়ার","টেলোমিয়ার","লোকাস","অ্যালিল"], ans:2, exp:"ক্রোমোজোমের যে অঞ্চলে জিনের অবস্থান, তাকে লোকাস (Locus) বলে।"},
+        {q:"জিনের গঠনে আকস্মিক, স্থায়ী ও বৃহৎ পরিবর্তনকে কী বলা হয়?", opts:["ক্রসিং ওভার","প্রকরণ","সংকরায়ণ","মিউটেশন বা পরিব্যক্তি"], ans:3, exp:"ক্রোমোজোমের সংখ্যা বা গঠনের বদল বা DNA-র গঠনের পরিবর্তনের কারণে জিনের গঠন পরিবর্তিত হলে যে হঠাৎ স্থায়ী ও বৃহৎ পরিবর্তন দেখা যায় তা হলো মিউটেশন।"},
+        {q:"মানুষের মুক্ত ও সংযুক্ত কানের লতির বৈশিষ্ট্য কোন ক্রোমোজোম দ্বারা নিয়ন্ত্রিত হয়?", opts:["সেক্স ক্রোমোজোম","অটোজোম","Y ক্রোমোজোম","X ক্রোমোজোম"], ans:1, exp:"একটি অটোজোমীয় জিন মানুষের মুক্ত কানের লতির জন্য দায়ী এবং ওই অটোজোমীয় জিনের প্রচ্ছন্ন অ্যালিল যুগ্ম যুক্ত কানের লতির জন্য দায়ী।"},
+        {q:"মানুষের রোলার জিভ (Roller tongue) নিয়ন্ত্রণকারী জিনটি কত নম্বর ক্রোমোজোমে অবস্থান করে?", opts:["অষ্টম","দশম","দ্বাদশ","একুশতম"], ans:0, exp:"জিভের রোল করার বৈশিষ্ট্যটি মানুষের অষ্টম ক্রোমোজোমে অবস্থান করে।"},
+        {q:"রোলার জিভের বৈশিষ্ট্যটি মানুষের ক্ষেত্রে কী প্রকৃতির?", opts:["প্রচ্ছন্ন","প্রকট","অসম্পূর্ণ প্রকট","সহ-প্রকট"], ans:1, exp:"জিনটির প্রকট বৈশিষ্ট্য জিভ রোলের জন্য দায়ী এবং পৃথিবীর ৮০-৮৫% মানুষ এই বৈশিষ্ট্য যুক্ত।"},
+        {q:"জননের মাধ্যমে জনিতৃ জীবের গুণগত প্রলক্ষণগুলি বংশপরম্পরায় অপত্য জীবে সঞ্চারিত হওয়াকে কী বলে?", opts:["প্রকরণ","সংকরায়ণ","বংশগতি","বিবর্তন"], ans:2, exp:"জননের মাধ্যমে জনিতৃ জীবের গুণগত প্রলক্ষণগুলি অপত্য জীবে বংশ পরম্পরায় সঞ্চারিত হওয়াকে বংশগতি বলা হয়।"},
+        {q:"জিনের গঠন, কার্যপদ্ধতি ও বংশগতি সম্পর্কিত বিজ্ঞানকে কী বলা হয়?", opts:["ভ্রূণতত্ত্ব","সুপ্রজননবিদ্যা বা জেনেটিকস","শারীরস্থান","বাস্তুতন্ত্রবিদ্যা"], ans:1, exp:"জিনের গঠন, কার্যপদ্ধতি, বংশানুক্রমিক সঞ্চারণ ও বংশগতি সম্পর্কিত সকল তথ্য ও তত্ত্বাদির সম্পর্কে জ্ঞানলাভ করা হলে তাকে জিনতত্ত্ব বা জেনেটিকস বলে।"},
+        {q:"দুটি সমসংস্থ ক্রোমোজোমের কোনো লোকাসে একই গুণবাহী অ্যালিল যুগ্ম থাকলে জীবটিকে কী বলা হয়?", opts:["বিষমসংকর","সংকর জীব","সমসংকর বা হোমোজাইগাস","হেটেরোজাইগাস"], ans:2, exp:"দুটি সমসংস্থ ক্রোমোজোমের কোনো লোকাসে একই গুণবাহী অ্যালিল যুগ্ম থাকলে ওই চরিত্রটির সাপেক্ষে জীবটিকে সমসংকর (homozygous) জীব বলা হয়।"},
+        {q:"যে বৈশিষ্ট্যগুলি বংশানুক্রমে অপরিবর্তিত থাকে না এবং মিশ্রিত হয়ে যায়, তাদের কী চরিত্র বলে?", opts:["খাঁটি চরিত্র","বিশুদ্ধ চরিত্র","সংকর চরিত্র","প্রচ্ছন্ন চরিত্র"], ans:2, exp:"যে বৈশিষ্ট্যগুলি বংশানুক্রমে বজায় থাকে না, মিশ্রিত হয়ে যায়, তাদের সংকর চরিত্র (Hybrid character) বলে।"},
+        {q:"একই পিতামাতার সব সন্তান হুবহু একই রকম না হওয়াকে কী বলে?", opts:["মিউটেশন","প্রকরণ বা বিভেদ","বংশগতি","সংকরায়ণ"], ans:1, exp:"একই প্রজাতির সকল জীব একরকমের নয় এবং একই পিতামাতার সব সন্তান একই রকম নয়। যে বৈচিত্র্যের জন্য একজনকে অন্যের থেকে পৃথক করা যায় তাকেই প্রকরণ বা বিভেদ বলে।"},
+        {q:"সংকরায়ণের সময় নির্বাচিত চারিত্রিক বৈশিষ্ট্যসম্পন্ন জীব দুটিকে কী জনু বলা হয়?", opts:["F1 জনু","F2 জনু","জনিতৃ জনু বা 'P' জনু","অপত্য জনু"], ans:2, exp:"সংকরায়ণের সময় নির্বাচিত চারিত্রিক বৈশিষ্ট্যসম্পন্ন জীব দুটিকে জনিতৃ জনু (parental generation) বা 'P' জনু বলে।"},
+        {q:"মিয়োসিস কোশ বিভাজনের সময় ক্রোমোজোমের খণ্ডাংশ বিনিময়ের মাধ্যমে জিনের পুনঃসংযুক্তিকে কী বলে?", opts:["অসম্পূর্ণ প্রকটতা","ক্রসিং ওভার","মিউটেশন","লোকাস"], ans:1, exp:"ক্রসিং ওভারের মাধ্যমে ক্রোমোজোমের মধ্যে জিনের পুনঃসংযুক্তি ঘটলে তা জীবের মধ্যে পৃথক বৈশিষ্ট্যের বহিঃপ্রকাশে সাহায্য করে।"}
+    ],
+    // ===================== SET 2: মেন্ডেলের একসংকর জনন ও তার সূত্র =====================
+    [
+        {q:"জিনতত্ত্বের বা সুপ্রজননবিদ্যার জনক কাকে বলা হয়?", opts:["চার্লস ডারউইন","জোহানসেন","গ্রেগর জোহান মেন্ডেল","ল্যামার্ক"], ans:2, exp:"গ্রেগর যোহান মেন্ডেল সর্বপ্রথম জিনতত্ত্বের মৌলিক সূত্রগুলি প্রতিষ্ঠিত করেন, তাই মেন্ডেলকে জিনতত্ত্বের জনক বলা হয়।"},
+        {q:"মেন্ডেল তাঁর সংকরায়ণ পরীক্ষার জন্য কোন উদ্ভিদ নির্বাচন করেছিলেন?", opts:["গিনিপিগ","সন্ধ্যামালতি","মটর গাছ","ড্রসোফিলা"], ans:2, exp:"মটরগাছের সংকরায়ণ পরীক্ষা করে তিনি বংশগতির সুনির্দিষ্ট সূত্র আবিষ্কার করেন।"},
+        {q:"মেন্ডেল তাঁর পরীক্ষার জন্য মটরগাছের কত জোড়া বিপরীতধর্মী বৈশিষ্ট্য নির্বাচন করেছিলেন?", opts:["৩ জোড়া","৭ জোড়া","১৪ জোড়া","২১ জোড়া"], ans:1, exp:"মেন্ডেল সাতজোড়া চরিত্র নিয়ে কাজ করেছিলেন, মটরগাছের দেহকোশে ক্রোমোজোম সংখ্যাও সাত জোড়া।"},
+        {q:"মটরগাছের বীজের আকারের ক্ষেত্রে প্রকট বৈশিষ্ট্য কোনটি?", opts:["কুঞ্চিত","সবুজ","হলুদ","গোলাকার"], ans:3, exp:"বীজের আকারের ক্ষেত্রে প্রকট বৈশিষ্ট্যটি হলো গোলাকার এবং প্রচ্ছন্ন চরিত্র হলো কুঞ্চিত।"},
+        {q:"মটর ফুলের পুংস্তবক কেটে বাদ দিয়ে তাকে স্ত্রী ফুলে পরিণত করার পদ্ধতিকে কী বলে?", opts:["পলিনেশন","ইমাসকুলেশন বা পুরুষাঙ্গ ছেদন","হাইব্রিডাইজেশন","ক্রসিং ওভার"], ans:1, exp:"কুঁড়ি অবস্থায় নির্বাচিত উদ্ভিদের ফুলের পরাগধানীগুলি কেটে বাদ দেবার পদ্ধতির নাম ইমাসকুলেশন।"},
+        {q:"একজোড়া বিপরীতধর্মী বৈশিষ্ট্যের ওপর ভিত্তি করে একই প্রজাতিভুক্ত দুটি জীবের সংকরায়ণকে কী বলে?", opts:["দ্বিসংকর জনন","একসংকর জনন বা মনোহাইব্রিড ক্রস","ব্যাক ক্রস","টেস্ট ক্রস"], ans:1, exp:"একজোড়া বিপরীতধর্মী বৈশিষ্ট্যর ওপর ভিত্তি করে একই প্রজাতিভুক্ত দুটি জীবের সংকরায়ণকে বলে একসংকর জনন।"},
+        {q:"মেন্ডেলের একসংকর জনন পরীক্ষায় F1 জনুতে উৎপন্ন সব মটরগাছ কী প্রকৃতির হয়েছিল?", opts:["বিশুদ্ধ লম্বা","বিশুদ্ধ বেঁটে","সংকর লম্বা","মাঝারি দৈর্ঘ্যের"], ans:2, exp:"বিশুদ্ধ লম্বা (TT) ও বিশুদ্ধ বেঁটে (tt) গাছের সংকরায়ণে সৃষ্ট F1 জনুর সব গাছই সংকর লম্বা (Tt) প্রকৃতির হয়েছিল।"},
+        {q:"মেন্ডেলের একসংকর জননের পরীক্ষায় F2 জনুতে ফিনোটাইপিক অনুপাত কত পাওয়া গিয়েছিল?", opts:["১:২:১","৩:১","৯:৩:৩:১","২:১"], ans:1, exp:"একসংকর সংকরায়ণের F2 জনুতে লম্বা ও বেঁটে গাছের অনুপাত ছিল ৩:১, যাকে মেন্ডেলীয় অনুপাত বলা হয়।"},
+        {q:"মেন্ডেলের একসংকর জননের পরীক্ষায় F2 জনুতে জিনোটাইপিক অনুপাত কত পাওয়া গিয়েছিল?", opts:["৩:১","১:১:১:১","১:২:১","৯:৩:৩:১"], ans:2, exp:"একসংকর জনন পরীক্ষায় ফিনোটাইপিক অনুপাত ৩:১ হলেও, এর জিনোটাইপিক অনুপাত হলো ১:২:১।"},
+        {q:"মেন্ডেলের একসংকর জনন পরীক্ষা থেকে তিনি কোন সূত্রটি প্রণয়ন করেন?", opts:["স্বাধীন বিন্যাস সূত্র","প্রকটতার সূত্র","পৃথকীভবন সূত্র","অসম্পূর্ণ প্রকটতার সূত্র"], ans:2, exp:"একসংকর জননের প্রাপ্তি থেকে মেন্ডেল যে সূত্রটি প্রণয়ন করেন তা হলো পৃথকীভবন সূত্র (Law of Segregation)।"},
+        {q:"যে অ্যালিল নিয়ন্ত্রিত বৈশিষ্ট্য বিপরীতধর্মী অ্যালিলের প্রকাশে বাধা দিয়ে নিজে প্রকাশিত হয়, তাকে কী বলে?", opts:["প্রচ্ছন্ন বৈশিষ্ট্য","প্রকট বৈশিষ্ট্য","সংকর বৈশিষ্ট্য","সহ-প্রকট বৈশিষ্ট্য"], ans:1, exp:"যে অ্যালিল নিয়ন্ত্রিত বৈশিষ্ট্য বিপরীতধর্মী অ্যালিলের প্রকাশে বাধা দিয়ে নিজে প্রকাশিত হয়, তাকে প্রকট বৈশিষ্ট্য বলে।"},
+        {q:"জীবের কোনো চরিত্রের বাহ্যিক প্রকাশকে কী বলা হয়?", opts:["জিনোটাইপ","ফিনোটাইপ","লোকাস","অ্যালিল"], ans:1, exp:"ফিনোটাইপ হলো জীবের কোনো চরিত্রের বাহ্যিক প্রকাশ।"},
+        {q:"গিনিপিগের গায়ের রঙের একসংকর জনন পরীক্ষায় F2 জনুতে উৎপন্ন বিশুদ্ধ কালো (BB) গিনিপিগের শতকরা হার কত?", opts:["১০০%","৭৫%","৫০%","২৫%"], ans:3, exp:"গিনিপিগের একসংকর জনন পরীক্ষায় F2 জনুতে উৎপন্ন কালো গিনিপিগগুলির মধ্যে ২৫% বিশুদ্ধ কালো অর্থাৎ হোমোজাইগাস প্রকট (BB) হয়।"},
+        {q:"মটরগাছের ফুলের বর্ণের ক্ষেত্রে প্রচ্ছন্ন গুণ কোনটি?", opts:["বেগুনি","সাদা","হলুদ","সবুজ"], ans:1, exp:"মটর গাছের ফুলের রঙের ক্ষেত্রে প্রকট চরিত্র বেগুনি এবং প্রচ্ছন্ন চরিত্র সাদা।"},
+        {q:"গ্যামেট গঠনকালে বৈশিষ্ট্য নিয়ন্ত্রণকারী ফ্যাক্টরগুলো একে অপরের থেকে আলাদা হয়ে যায়—এটি মেন্ডেলের কোন সূত্রের মূল কথা?", opts:["স্বাধীন বিন্যাস সূত্র","পৃথকীভবন সূত্র","গ্যামেটের বিশুদ্ধতার নীতি","অসম্পূর্ণ প্রকটতা"], ans:1, exp:"পৃথকীভবন সূত্রের মূল কথা হলো যে, গ্যামেট গঠন কালে ফ্যাক্টরগুলি একে অপরের থেকে আলাদা হয়ে যায়।"}
+    ],
+    // ===================== SET 3: মেন্ডেলের দ্বিসংকর জনন ও অসম্পূর্ণ প্রকটতা =====================
+    [
+        {q:"দু-জোড়া বিপরীতধর্মী চারিত্রিক বৈশিষ্ট্যসম্পন্ন একই প্রজাতিভুক্ত দুটি জীবের মধ্যে সংকরায়ণকে কী বলে?", opts:["একসংকর জনন","দ্বিসংকর জনন","ব্যাক ক্রস","মাল্টিপল ক্রস"], ans:1, exp:"দুজোড়া বিপরীতধর্মী চারিত্রিক বৈশিষ্ট্যসম্পন্ন একই প্রজাতিভুক্ত দুটি জীবের মধ্যে সংকরায়ণকে দ্বিসংকর জনন বা ডাইহাইব্রিড ক্রস বলে।"},
+        {q:"মটরগাছের দ্বিসংকর জনন পরীক্ষায় মেন্ডেল কোন দুটি চরিত্র নির্বাচন করেছিলেন?", opts:["কাণ্ডের দৈর্ঘ্য ও ফুলের বর্ণ","বীজপত্রের বর্ণ ও বীজের আকার","ফলের আকার ও ফুলের অবস্থান","বীজের আকার ও ফলের বর্ণ"], ans:1, exp:"মেন্ডেলের দ্বিসংকর জনন পরীক্ষায় নির্বাচিত দুটি চরিত্র ছিল বীজপত্রের বর্ণ (হলুদ/সবুজ) এবং বীজের আকার (গোল/কুঞ্চিত)।"},
+        {q:"মটরগাছের দ্বিসংকর জনন পরীক্ষায় বিশুদ্ধ হলুদ-গোল বীজযুক্ত গাছের জিনোটাইপ কী?", opts:["yyrr","YyRr","YYRR","YyRR"], ans:2, exp:"বিশুদ্ধ হলুদ রঙের গোলাকার বীজযুক্ত মটর গাছের জিনোটাইপ হলো YYRR।"},
+        {q:"মটরগাছের দ্বিসংকর জনন পরীক্ষায় F1 জনুতে উৎপন্ন সব গাছের ফিনোটাইপ কী ছিল?", opts:["সবুজ কুঞ্চিত","হলুদ কুঞ্চিত","সবুজ গোলাকার","হলুদ গোলাকার"], ans:3, exp:"বিশুদ্ধ হলুদ গোলাকার (YYRR) ও বিশুদ্ধ সবুজ কুঞ্চিত (yyrr) গাছের সংকরায়ণে F1 জনুতে সব গাছের বীজ হলুদ রঙের গোলাকার (YyRr) হয়েছিল।"},
+        {q:"মটরগাছের দ্বিসংকর জনন পরীক্ষায় F2 জনুতে কত প্রকারের ফিনোটাইপযুক্ত মটরগাছ তৈরি হয়?", opts:["২ প্রকার","৩ প্রকার","৪ প্রকার","৮ প্রকার"], ans:2, exp:"সংকর চরিত্রের F1 জনুর গাছগুলির মধ্যে স্বপরাগযোগে প্রাপ্ত F2 জনুতে চার ধরনের ফিনোটাইপযুক্ত মটরগাছ তৈরি হয়।"},
+        {q:"মেন্ডেলের দ্বিসংকর জনন পরীক্ষার F2 জনুর ফিনোটাইপিক অনুপাতটি কী?", opts:["৯:৩:৩:১","১:২:১","৩:১","১:২:২:৪:১:২:১:২:১"], ans:0, exp:"মটরগাছের দ্বিসংকর জননে প্রাপ্ত F2 জনুতে হলুদ গোল, হলুদ কুঞ্চিত, সবুজ গোল ও সবুজ কুঞ্চিত গাছের অনুপাত হলো ৯:৩:৩:১।"},
+        {q:"দ্বিসংকর জননের পরীক্ষা থেকে মেন্ডেল কোন সূত্রটি আবিষ্কার করেন?", opts:["প্রকটতার সূত্র","পৃথকীভবন সূত্র","গ্যামেটের বিশুদ্ধতার সূত্র","স্বাধীন বিন্যাস সূত্র"], ans:3, exp:"দ্বিসংকর জননের প্রাপ্তি থেকে মেন্ডেল যে সূত্রটি প্রণয়ন করেন তা হলো স্বাধীন বিন্যাস সূত্র (Law of Independent Assortment)।"},
+        {q:"স্বাধীন বিন্যাস সূত্রটি প্রযোজ্য হওয়ার প্রধান শর্ত কী?", opts:["বৈশিষ্ট্যগুলি একই ক্রোমোজোমে থাকতে হবে","বৈশিষ্ট্যগুলি সেক্স ক্রোমোজোমে থাকতে হবে","বিকল্প বৈশিষ্ট্যসম্পন্ন অ্যালিলগুলিকে ভিন্ন ভিন্ন ক্রোমোজোম জোড়ায় থাকতে হবে","গ্যামেটগুলি অবিশুদ্ধ হতে হবে"], ans:2, exp:"দুটি বিকল্প ও বিপরীত জোড়া বৈশিষ্ট্যসম্পন্ন অ্যালিল ভিন্ন ভিন্ন ক্রোমোজোম জোড়ায় থাকলে, তবেই স্বাধীন বিন্যাস সূত্র প্রযুক্ত হবে।"},
+        {q:"গিনিপিগের দ্বিসংকর জনন পরীক্ষায় F2 জনুতে ফিনোটাইপিক অনুপাত কত পাওয়া যায়?", opts:["৩:১","১:২:১","৯:৩:৩:১","১:১"], ans:2, exp:"মেন্ডেল প্রস্তাবিত পরীক্ষা পদ্ধতি অনুসরণ করে গিনিপিগেও দ্বিসংকরায়ণ ঘটালে ফিনোটাইপ অনুপাত ৯:৩:৩:১ পাওয়া যায়।"},
+        {q:"মেন্ডেলের বংশগতি সংক্রান্ত সূত্রের একটি উল্লেখযোগ্য বিচ্যুতি বা ব্যতিক্রম কোনটি?", opts:["প্রকটতা","পৃথকীভবন","স্বাধীন বিন্যাস","অসম্পূর্ণ প্রকটতা"], ans:3, exp:"বংশগতির বহু বিষয় মেন্ডেলের সূত্রের পরিপন্থী, যার মধ্যে অসম্পূর্ণ প্রকটতা একটি উল্লেখযোগ্য ব্যতিক্রম।"},
+        {q:"অসম্পূর্ণ প্রকটতা কোন উদ্ভিদে স্পষ্টভাবে দেখা যায়?", opts:["মটর গাছ","গিনিপিগ","সন্ধ্যামালতি","আম গাছ"], ans:2, exp:"অসম্পূর্ণ প্রকটতার একটি উৎকৃষ্ট উদাহরণ হলো সন্ধ্যামালতি (Mirabilis jalapa) উদ্ভিদের ফুলের রঙ।"},
+        {q:"সন্ধ্যামালতির বিশুদ্ধ লাল (RR) ও বিশুদ্ধ সাদা (ww) ফুলের সংকরায়ণ ঘটালে F1 জনুতে কী রঙের ফুল পাওয়া যায়?", opts:["লাল","সাদা","হলুদ","গোলাপি"], ans:3, exp:"লাল (R) ও সাদা (w) অ্যালিল একত্রিত অবস্থায় (Rw) অসম্পূর্ণ প্রকটতায় গোলাপি রঙের ফুল তৈরি করে।"},
+        {q:"সন্ধ্যামালতি উদ্ভিদের ক্ষেত্রে F2 জনুতে ফিনোটাইপিক ও জিনোটাইপিক অনুপাত কত হয়?", opts:["৩:১","৯:৩:৩:১","১:২:১","২:১:১"], ans:2, exp:"অসম্পূর্ণ প্রকটতার ক্ষেত্রে F2 জনুতে ফিনোটাইপিক এবং জিনোটাইপিক অনুপাত (১:২:১) অভিন্ন হয়।"},
+        {q:"কোন অবস্থায় প্রকট জিন তার সম্পূর্ণ বহিঃপ্রকাশ ঘটাতে পারে না এবং একটি মধ্যবর্তী বৈশিষ্ট্যের সৃষ্টি হয়?", opts:["সহ-প্রকটতা","অসম্পূর্ণ প্রকটতা","সম্পূর্ণ প্রকটতা","মাল্টিপল অ্যালিল"], ans:1, exp:"সংকরায়ণে যখন প্রকট জিনটি তার সম্পূর্ণ বহিঃপ্রকাশ ঘটাতে অক্ষম এবং মধ্যবর্তী বৈশিষ্ট্যযুক্ত জীবের সৃষ্টি হয়, তখন তাকে অসম্পূর্ণ প্রকটতা বলে।"},
+        {q:"অসম্পূর্ণ প্রকটতায় লাল ও সাদা রঙের পরিবর্তে গোলাপি রঙ কেন তৈরি হয়?", opts:["লাল অ্যালিলটি সম্পূর্ণ প্রকট হওয়ার কারণে","সাদা অ্যালিলটি সম্পূর্ণ প্রকট হওয়ার কারণে","R এবং w উভয় অ্যালিলের সমান আধিপত্য থাকার কারণে","ক্রসিং ওভার ঘটার কারণে"], ans:2, exp:"R এবং w একই লোকাসে থাকা দুটি অ্যালিল, কেউ অন্যটির উপর প্রকট বা প্রচ্ছন্ন নয়, উভয়েরই সমান আধিপত্য থাকায় গোলাপি রঙ তৈরি হয়।"}
+    ],
+    // ===================== SET 4: মানুষের লিঙ্গ নির্ধারণ এবং জিনগত রোগের প্রাথমিক ধারণা =====================
+    [
+        {q:"মানুষের প্রতিটি দেহকোশের নিউক্লিয়াসে ক্রোমোজোমের সংখ্যা কত?", opts:["৪৬টি বা ২৩ জোড়া","৪৪টি বা ২২ জোড়া","২৩টি","২২টি"], ans:0, exp:"মানুষের প্রতি দেহকোশের নিউক্লিয়াসে ৪৬টি অর্থাৎ ২৩ জোড়া ক্রোমোজোম থাকে।"},
+        {q:"মানুষের দেহকোশে অটোজোমের সংখ্যা কত?", opts:["৪৬টি বা ২৩ জোড়া","৪৪টি বা ২২ জোড়া","২টি বা ১ জোড়া","২৩টি"], ans:1, exp:"মানুষের ৪৬টি ক্রোমোজোমের মধ্যে ২২ জোড়া অর্থাৎ ৪৪টি অটোজোম এবং ১ জোড়া যৌন ক্রোমোজোম থাকে।"},
+        {q:"পুরুষের যৌন ক্রোমোজোম বা অ্যালোজোমের প্রকৃতি কীরূপ?", opts:["XX","YY","XY","X0"], ans:2, exp:"পুরুষের যৌন ক্রোমোজোম যুগ্মের একটি বড়ো 'X' এবং একটি ছোটো 'Y' ক্রোমোজোম অর্থাৎ XY প্রকৃতির।"},
+        {q:"মহিলাদের যৌন ক্রোমোজোম বা অ্যালোজোমের প্রকৃতি কীরূপ?", opts:["XY","YY","XX","X0"], ans:2, exp:"মহিলার ক্ষেত্রে অ্যালোজোম দুটি একই প্রকৃতির এবং XX নামে পরিচিত।"},
+        {q:"মানব ডিম্বাণুর ক্রোমোজোম বিন্যাস কোনটি?", opts:["22A + X","22A + Y","44A + XX","44A + XY"], ans:0, exp:"মহিলার সব ডিম্বাণুই সমপ্রকৃতির হয় এবং তাদের ক্রোমোজোম বিন্যাস হলো (A + X) বা 22A + X।"},
+        {q:"মানব শুক্রাণু কয় প্রকারের হতে পারে?", opts:["১ প্রকারের","২ প্রকারের","৩ প্রকারের","৪ প্রকারের"], ans:1, exp:"পুরুষের দেহ থেকে দুই ধরনের শুক্রাণু উৎপন্ন হয়, একটি (A + X) এবং অপরটি (A + Y) প্রকৃতির।"},
+        {q:"মানুষের লিঙ্গ নির্ধারণে কার ভূমিকা প্রধান?", opts:["মাতার","পিতার","উভয়ের","পরিবেশের"], ans:1, exp:"Y ক্রোমোজোম থাকে কেবলমাত্র পুরুষের ক্ষেত্রে, যা সরাসরি বাবার থেকে ছেলের দেহে সঞ্চারিত হয়, তাই লিঙ্গ নির্ধারণে বাবার ভূমিকাই প্রধান।"},
+        {q:"Y ক্রোমোজোমের ক্ষুদ্র বাহুর DNA-তে থাকা কোন জিনটি পুরুষের লিঙ্গ নির্ধারণের জন্য দায়ী?", opts:["Locus জিন","SRY জিন","X-লিঙ্কড জিন","ফ্যাক্টর VIII"], ans:1, exp:"Y ক্রোমোজোমের ক্ষুদ্র বাহুর DNA-র উপর SRY নামক এক জিন থাকে, যেটি পুরুষের লিঙ্গ নির্ধারণের জন্য দায়ী।"},
+        {q:"কন্যা সন্তানের লিঙ্গ নির্ধারণের জন্য কোন শুক্রাণুটি দায়ী?", opts:["Y ক্রোমোজোম যুক্ত শুক্রাণু","অটোজোম যুক্ত শুক্রাণু","X ক্রোমোজোম যুক্ত শুক্রাণু","কোনোটিই নয়"], ans:2, exp:"পিতার X ক্রোমোজোম যুক্ত শুক্রাণু (A+X) যখন মাতার ডিম্বাণুকে (A+X) নিষিক্ত করে, তখন XX হয় এবং কন্যা সন্তানের জন্ম হয়।"},
+        {q:"অটোজোমে থাকা জিনের পরিব্যক্তি বা মিউটেশনের ফলে সৃষ্ট একটি জিনগত রোগের নাম কী?", opts:["হিমোফিলিয়া","বর্ণান্ধতা","থ্যালাসেমিয়া","ডেঙ্গু"], ans:2, exp:"অটোজোমে থাকা জিনের পরিব্যক্তির ফলে থ্যালাসেমিয়া এবং অ্যালবিনিজম্ রোগ হয়।"},
+        {q:"সেক্স ক্রোমোজোম বা X-ক্রোমোজোমে থাকা জিনের পরিব্যক্তির ফলে সৃষ্ট রোগ কোনটি?", opts:["থ্যালাসেমিয়া","হিমোফিলিয়া","কলেরা","ডায়াবেটিস"], ans:1, exp:"সেক্স ক্রোমোজোমে থাকা জিনের পরিব্যক্তির কারণে হিমোফিলিয়া এবং বর্ণান্ধতা নামক জিনগত রোগ হয়।"},
+        {q:"বর্ণান্ধতা রোগটি প্রধানত কোন ক্রোমোজোম ঘটিত রোগ?", opts:["অটোজোম ঘটিত প্রকট","Y-ক্রোমোজোম ঘটিত প্রচ্ছন্ন","X-ক্রোমোজোম ঘটিত প্রচ্ছন্ন","অটোজোম ঘটিত প্রচ্ছন্ন"], ans:2, exp:"বর্ণান্ধতা হলো একটি X ক্রোমোজোম ঘটিত প্রচ্ছন্ন বংশগত রোগ।"},
+        {q:"হিমোফিলিয়া রোগটি প্রধানত কোন ক্রোমোজোম ঘটিত রোগ?", opts:["অটোজোম ঘটিত প্রকট","X-ক্রোমোজোম ঘটিত প্রচ্ছন্ন","Y-ক্রোমোজোম ঘটিত প্রকট","অটোজোম ঘটিত প্রচ্ছন্ন"], ans:1, exp:"হিমোফিলিয়া একটি লিঙ্গ সংযোজিত বা X-ক্রোমোজোম বাহিত প্রচ্ছন্ন বংশগত রোগ।"},
+        {q:"জিনগত রোগ হিমোফিলিয়া পুরুষদের বেশি হয় কেন?", opts:["পুরুষদের দুটি X ক্রোমোজোম থাকে তাই","পুরুষদের একটি মাত্র X ক্রোমোজোম (হেমিজাইগাস) থাকে তাই প্রচ্ছন্ন জিনটি সহজেই প্রকাশ পায়","এটি Y ক্রোমোজোম বাহিত বলে","পুরুষদের অটোজোমে ত্রুটি থাকে বলে"], ans:1, exp:"হিমোফিলিয়া X ক্রোমোজোম বাহিত প্রচ্ছন্ন রোগ হওয়ায় ছেলেদের X ক্রোমোজোমে প্রচ্ছন্ন জিন থাকলে এবং অন্য ক্রোমোজোম Y হলে রোগের প্রকাশ ঘটে।"},
+        {q:"মহিলাদের হিমোফিলিয়া রোগে আক্রান্ত হওয়ার শর্ত কী?", opts:["একটি X ক্রোমোজোমে প্রচ্ছন্ন জিন থাকতে হবে","উভয় X ক্রোমোজোমে প্রচ্ছন্ন জিন থাকতে হবে","একটি X ক্রোমোজোমে প্রকট জিন থাকতে হবে","Y ক্রোমোজোমে প্রচ্ছন্ন জিন থাকতে হবে"], ans:1, exp:"মেয়েদের উভয় X ক্রোমোজোমে প্রচ্ছন্ন জিন থাকলে তবেই হিমোফিলিয়া দেখা যাবে।"}
+    ],
+    // ===================== SET 5: বর্ণান্ধতা, হিমোফিলিয়া, থ্যালাসেমিয়া এবং জেনেটিক কাউন্সেলিং =====================
+    [
+        {q:"বর্ণান্ধতা রোগে অক্ষিগোলকের কোন কোশ ক্ষতিগ্রস্ত হয় বা রঞ্জক তৈরিতে অক্ষম হয়?", opts:["রড কোশ","কোণ কোশ","বাইপোলার কোশ","গ্যাংলিয়ন কোশ"], ans:1, exp:"কোণ কোশ উজ্জ্বল আলোয় দেখতে ও বর্ণ নির্ধারণে সাহায্য করে। বর্ণান্ধতা রোগে এই কোণ কোশে রঞ্জক তৈরির জিন ত্রুটিপূর্ণ থাকে।"},
+        {q:"লাল বর্ণান্ধতাকে (Red color blindness) কী বলা হয়?", opts:["প্রোটোনোপিয়া","ডিউটেরানোপিয়া","ট্রাইটানোপিয়া","মায়োপিয়া"], ans:0, exp:"কোণ কোশে এরিথ্রোল্যাব রঞ্জকের অভাবে লাল বর্ণকে চিনতে না পারার সমস্যাকে প্রোটোনোপিয়া বলা হয়।"},
+        {q:"ডিউটেরানোপিয়া রোগে আক্রান্ত ব্যক্তি কোন বর্ণ চিনতে পারে না?", opts:["লাল","নীল","সবুজ","হলুদ"], ans:2, exp:"ডিউটেরানোপিয়া রোগে আক্রান্ত ব্যক্তি সবুজ বর্ণকে চিনতে পারে না, যা কোণ কোশে ক্লোরোল্যাব রঞ্জকের অভাবে ঘটে।"},
+        {q:"ট্রাইটানোপিয়া বা নীল বর্ণান্ধতা কোন ক্রোমোজোম বাহিত রোগ?", opts:["X-ক্রোমোজোম","Y-ক্রোমোজোম","৭ নং ক্রোমোজোম (অটোজোম)","২১ নং ক্রোমোজোম"], ans:2, exp:"নীল বর্ণান্ধতার জন্য দায়ী সায়ানোল্যাবের জিন ৭ নং ক্রোমোজোমে থাকে, তাই এটি একটি অটোজোম বাহিত রোগ।"},
+        {q:"বর্ণান্ধতার অপর নাম ডাল্টনিজম কেন রাখা হয়েছে?", opts:["বিজ্ঞানী ডাল্টন এটি আবিষ্কার করেন বলে","বিজ্ঞানী ডাল্টন নিজে বর্ণান্ধ ছিলেন বলে","এটি ডাল্টন শহরে প্রথম দেখা যায় বলে","এটি ডাল্টনের সূত্র মেনে চলে বলে"], ans:1, exp:"বর্ণান্ধতাকে ডাল্টনিজম বলা হয় কারণ বিজ্ঞানী ডাল্টন নিজে বর্ণান্ধ ছিলেন।"},
+        {q:"হিমোফিলিয়া A বা ক্লাসিক হিমোফিলিয়া রক্ত তঞ্চনকারী কোন ফ্যাক্টরের অভাবে হয়?", opts:["ফ্যাক্টর IV","ফ্যাক্টর IX","ফ্যাক্টর XI","ফ্যাক্টর VIII (AHF)"], ans:3, exp:"হিমোফিলিয়া A-তে X-ক্রোমোজোম factor VIII তৈরি করতে অক্ষম হয়। factor VIII হল অ্যান্টিহিমোফিলিক ফ্যাক্টর (AHF)।"},
+        {q:"হিমোফিলিয়া B বা খ্রিস্টমাস ডিজিজ রক্ত তঞ্চনকারী কোন ফ্যাক্টরের অভাবে হয়?", opts:["ফ্যাক্টর VIII","ফ্যাক্টর IX (খ্রিস্টমাস ফ্যাক্টর)","ফ্যাক্টর XI","ফ্যাক্টর IV"], ans:1, exp:"হিমোফিলিয়া B-তে X-ক্রোমোজোম factor IX তৈরি করতে অক্ষম হয়। factor IX হল খ্রিস্টমাস ফ্যাক্টর।"},
+        {q:"থ্যালাসেমিয়া রোগে প্রধানত রক্তে কোন উপাদানের ত্রুটি দেখা যায়?", opts:["শ্বেত রক্তকণিকা","অণুচক্রিকা","হিমোগ্লোবিন","প্লাজমা"], ans:2, exp:"থ্যালাসেমিয়া রোগে লোহিত রক্তকণিকায় হিমোগ্লোবিনের গ্লোবিন অংশে ত্রুটি থাকে।"},
+        {q:"থ্যালাসেমিয়া রোগে হিমোগ্লোবিনের আলফা (α) শৃঙ্খল তৈরির জিনটি কত নম্বর ক্রোমোজোমে থাকে?", opts:["১১ নং ক্রোমোজোমে","১৬ নং ক্রোমোজোমে","২১ নং ক্রোমোজোমে","৭ নং ক্রোমোজোমে"], ans:1, exp:"α চেনের জন্য দায়ী জিন ১৬ নং ক্রোমোজোমে থাকে, এই জিনের ত্রুটির কারণে আলফা থ্যালাসেমিয়া রোগ হয়।"},
+        {q:"থ্যালাসেমিয়া রোগে হিমোগ্লোবিনের বিটা (β) শৃঙ্খল তৈরির জিনটি কত নম্বর ক্রোমোজোমে থাকে?", opts:["১৬ নং ক্রোমোজোমে","২১ নং ক্রোমোজোমে","১১ নং ক্রোমোজোমে","অষ্টম ক্রোমোজোমে"], ans:2, exp:"β চেনের জন্য দায়ী জিন ১১ নং ক্রোমোজোমে থাকে, এই জিনের ত্রুটি হলে বিটা থ্যালাসেমিয়া হয়।"},
+        {q:"বাবা ও মা দুজনেই থ্যালাসেমিয়া মাইনর বা বাহক হলে, তাদের সন্তানের থ্যালাসেমিয়া মেজর হওয়ার সম্ভাবনা কত শতাংশ?", opts:["১০০%","৫০%","২৫%","০%"], ans:2, exp:"বাবা ও মা দুজনেই থ্যালাসেমিয়া মাইনর হলে ২৫% সন্তানের থ্যালাসেমিয়া মেজর দেখা যাবে।"},
+        {q:"কুলিজ অ্যানিমিয়া (Cooley's Anemia) কোন রোগের অপর নাম?", opts:["α-মেজর থ্যালাসেমিয়া","β-মেজর থ্যালাসেমিয়া","হিমোফিলিয়া","বর্ণান্ধতা"], ans:1, exp:"β-মেজর থ্যালাসেমিয়াকে কুলিজ অ্যানিমিয়া (Cooley's Anemia) বলা হয়।"},
+        {q:"থ্যালাসেমিয়া রোগীদের বারবার রক্ত নেওয়ার ফলে দেহে কোন খনিজ পদার্থ অতিরিক্ত মাত্রায় সঞ্চিত হয়ে বিভিন্ন অঙ্গের ক্ষতি করে?", opts:["ক্যালসিয়াম","সোডিয়াম","পটাশিয়াম","আয়রন বা লোহা"], ans:3, exp:"ঘন ঘন রক্ত দেওয়ার জন্য লোহিত রক্তকণিকার ধ্বংসের পর হিমোগ্লোবিন ভেঙে যে আয়রন সঞ্চিত হয়, তা হৃৎপিণ্ড, যকৃৎ ও অন্তঃক্ষরা গ্রন্থির ক্ষতি করে।"},
+        {q:"কোনো চরিত্র প্রসঙ্গে বংশানুক্রমিক তথ্য সংগ্রহ, বিশ্লেষণ ও জিনগত রোগ সম্পর্কে আগে থেকে পরামর্শ দেওয়ার পদ্ধতিকে কী বলে?", opts:["জেনেটিক ইঞ্জিনিয়ারিং","জেনেটিক কাউন্সেলিং","জিন থেরাপি","পেডিগ্রি অ্যানালাইসিস"], ans:1, exp:"জেনেটিক কাউন্সেলিং-এর অর্থ কোনো চরিত্র প্রসঙ্গে বংশানুক্রমিক তথ্য সংগ্রহ, বিশ্লেষণ এবং ত্রুটিপূর্ণ জিনের অস্তিত্ব থাকলে চিকিৎসকের পরামর্শ দেওয়া।"},
+        {q:"হিমোফিলিয়া রোগের ক্ষেত্রে একজন স্বাভাবিক পুরুষ (X^H Y) এবং একজন বাহক মহিলার (X^H X^h) বিবাহ হলে তাদের পুত্রদের হিমোফিলিক হওয়ার সম্ভাবনা কত?", opts:["২৫%","৫০%","৭৫%","১০০%"], ans:1, exp:"বাহক মহিলা (X^H X^h) এবং স্বাভাবিক পুরুষের (X^H Y) মিলনে দুটি পুত্রের মধ্যে একজন স্বাভাবিক (X^H Y) এবং অপরজন হিমোফিলিক (X^h Y) হতে পারে, অর্থাৎ পুত্রদের মধ্যে সম্ভাবনা ৫০%।"}
+    ]
+];
+
+// ====================================================================
+//  APP STATE
+// ====================================================================
+
+const SET_NAMES = [
+    'বংশগতি, জিনতত্ত্ব এবং প্রকরণ',
+    'মেন্ডেলের একসংকর জনন ও তার সূত্র',
+    'মেন্ডেলের দ্বিসংকর জনন ও অসম্পূর্ণ প্রকটতা',
+    'মানুষের লিঙ্গ নির্ধারণ এবং জিনগত রোগের প্রাথমিক ধারণা',
+    'বর্ণান্ধতা, হিমোফিলিয়া, থ্যালাসেমিয়া এবং জেনেটিক কাউন্সেলিং'
+];
+
+const SET_ICONS = ['🧬','🌱','🌸','⚤','⚕️'];
+const MAX_ATTEMPTS = 10;
+const STORAGE_KEY = 'testbazar_life_science_ch3';
+
+// ====================================================================
+//  QUIZ ENGINE
+// ====================================================================
+
+let currentSet = 0;
+let currentQ = 0;
+let score = 0;
+let wrong = 0;
+let answered = false;
+let timerInterval;
+let timeLeft = 600;
+let userAnswers = [];
+let loggedInUser = null;
+let pendingSet = -1;
+let attemptData = {};
+
+function loadAttemptData() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+        attemptData = JSON.parse(data);
+    } else {
+        attemptData = {};
+    }
+}
+
+function saveAttemptData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(attemptData));
+}
+
+function getAttempts(setIndex) {
+    const key = 'set_' + setIndex;
+    if (!attemptData[key]) {
+        attemptData[key] = { count: 0, scores: [] };
+    }
+    return attemptData[key];
+}
+
+function canAttempt(setIndex) {
+    const data = getAttempts(setIndex);
+    return data.count < MAX_ATTEMPTS;
+}
+
+function addAttempt(setIndex, scoreVal) {
+    const data = getAttempts(setIndex);
+    data.count++;
+    data.scores.push(scoreVal);
+    saveAttemptData();
+}
+
+function initSetGrid() {
+    const grid = document.getElementById('setGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < ALL_SETS.length; i++) {
+        const card = document.createElement('div');
+        card.className = 'set-card';
+        const attempts = getAttempts(i);
+        const remaining = MAX_ATTEMPTS - attempts.count;
+        const locked = remaining <= 0;
+        
+        if (locked) card.classList.add('locked');
+        
+        card.innerHTML = `
+            <div class="set-icon">${SET_ICONS[i] || '📝'}</div>
+            <div class="set-title">Set ${i + 1}</div>
+            <div class="set-sub">${SET_NAMES[i] || 'সেট ' + (i+1)}</div>
+            <span class="set-badge">১৫ প্রশ্ন</span>
+            <div class="attempts-left">🔄 বাকি: ${remaining} বার</div>
+            ${locked ? '<div class="lock-icon">🔒</div>' : ''}
+        `;
+        
+        if (!locked) {
+            card.onclick = () => {
+                pendingSet = i;
+                showLogin();
+            };
+        }
+        grid.appendChild(card);
+    }
+}
+
+function showSetSelection() {
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('timerBox').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('userInfo').classList.add('hidden');
+    loadAttemptData();
+    initSetGrid();
+}
+
+function showLogin() {
+    document.getElementById('loginModal').classList.add('show');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginUser').focus();
+}
+
+function closeLogin() {
+    document.getElementById('loginModal').classList.remove('show');
+    pendingSet = -1;
+}
+
+function verifyLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    const errorEl = document.getElementById('loginError');
+    
+    if (!user || !pass) {
+        errorEl.textContent = '❌ ইউজারনেম ও পাসওয়ার্ড দিন!';
+        errorEl.style.display = 'block';
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('testbazar_users') || '{}');
+    
+    if (users[user] && users[user].pass === pass) {
+        loggedInUser = user;
+        document.getElementById('loginModal').classList.remove('show');
+        document.getElementById('userInfo').classList.remove('hidden');
+        document.getElementById('userNameDisplay').textContent = user;
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        
+        if (pendingSet >= 0) {
+            startSet(pendingSet);
+            pendingSet = -1;
+        }
+    } else {
+        errorEl.textContent = '❌ ইউজারনেম বা পাসওয়ার্ড ভুল!';
+        errorEl.style.display = 'block';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+    }
+}
+
+function logoutUser() {
+    loggedInUser = null;
+    document.getElementById('userInfo').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    showSetSelection();
+    alert('✅ সফলভাবে লগআউট হয়েছে!');
+}
+
+function startSet(setIndex) {
+    if (!canAttempt(setIndex)) {
+        alert('⚠️ আপনি এই সেটটি সর্বোচ্চ ' + MAX_ATTEMPTS + ' বার দেওয়ার অনুমতি পেয়েছেন। দয়া করে অন্য সেট নির্বাচন করুন।');
+        return;
+    }
+    
+    currentSet = setIndex;
+    currentQ = 0;
+    score = 0;
+    wrong = 0;
+    answered = false;
+    userAnswers = [];
+    timeLeft = 600;
+
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('danger');
+    document.getElementById('setTitle').textContent = 'Set ' + (setIndex + 1) + ' — ' + (SET_NAMES[setIndex] || '');
+    document.getElementById('attemptCount').textContent = getAttempts(setIndex).count + 1;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(tick, 1000);
+    loadQuestion();
+}
+
+function tick() {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (timeLeft <= 60) document.getElementById('timerBox').classList.add('danger');
+    if (timeLeft <= 0) { clearInterval(timerInterval); showResult(); }
+}
+
+function loadQuestion() {
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    answered = false;
+
+    document.getElementById('qNum').textContent = 'প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'ফলাফল দেখো' : 'পরবর্তী →';
+    document.getElementById('explanation').classList.remove('show');
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt';
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        btn.onclick = () => selectAnswer(i);
+        opts.appendChild(btn);
+    });
+}
+
+function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    userAnswers[currentQ] = idx;
+
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b => b.classList.add('disabled'));
+    btns[q.ans].classList.add('correct');
+    if (idx !== q.ans) {
+        btns[idx].classList.add('wrong');
+        wrong++;
+    } else {
+        score++;
+    }
+
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+    document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+    const qs = ALL_SETS[currentSet];
+    currentQ++;
+    if (currentQ >= qs.length) {
+        clearInterval(timerInterval);
+        showResult();
+        return;
+    }
+    loadQuestion();
+}
+
+function showResult() {
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.add('show');
+    document.getElementById('timerBox').classList.add('hidden');
+
+    addAttempt(currentSet, score);
+
+    const total = ALL_SETS[currentSet].length;
+    const pct = Math.round(score / total * 100);
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('rbCorrect').textContent = score;
+    document.getElementById('rbWrong').textContent = wrong;
+    document.getElementById('rbPct').textContent = pct + '%';
+
+    let icon, grade;
+    if (pct >= 90) { icon = '🌟'; grade = 'অসাধারণ! তুমি দুর্দান্ত!'; }
+    else if (pct >= 70) { icon = '👍'; grade = 'খুব ভালো! আরও একটু practice করো।'; }
+    else if (pct >= 50) { icon = '📚'; grade = 'ভালো চেষ্টা! পরের সেট চেষ্টা করো।'; }
+    else { icon = '💪'; grade = 'চেষ্টা চালিয়ে যাও! নোটস পড়ে আবার দাও।'; }
+
+    document.getElementById('resultIcon').textContent = icon;
+    document.getElementById('resultGrade').textContent = grade;
+    initSetGrid();
+}
+
+function retrySet() {
+    document.getElementById('resultWrap').classList.remove('show');
+    startSet(currentSet);
+}
+
+function showReview() {
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    currentQ = 0;
+    loadReview();
+}
+
+function loadReview() {
+    const qs = ALL_SETS[currentSet];
+    if (currentQ >= qs.length) {
+        document.getElementById('quizScreen').classList.add('hidden');
+        document.getElementById('resultWrap').classList.add('show');
+        return;
+    }
+    const q = qs[currentQ];
+    document.getElementById('qNum').textContent = 'Review — প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'শেষ করো' : 'পরবর্তী →';
+    document.getElementById('nextBtn').onclick = () => { currentQ++; loadReview(); };
+    document.getElementById('scoreShow').textContent = '🟢 সবুজ = সঠিক উত্তর';
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt disabled';
+        if (i === q.ans) btn.classList.add('correct');
+        else if (userAnswers[currentQ] === i) btn.classList.add('wrong');
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        opts.appendChild(btn);
+    });
+
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+}
+
+// ====================================================================
+//  KEYBOARD SUPPORT
+// ====================================================================
+
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') verifyLogin();
+});
+
+document.getElementById('loginUser').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('loginPass').focus();
+});
+
+// ====================================================================
+//  INIT
+// ====================================================================
+
+showSetSelection();
+console.log('✅ Class 10 — জীববিজ্ঞান Chapter 3 Loaded!');
+console.log('📚 মোট সেট: ' + ALL_SETS.length);
+console.log('📝 মোট প্রশ্ন: ' + (ALL_SETS.length * 15));
+console.log('🔄 প্রতি সেটে Attempt Limit: ' + MAX_ATTEMPTS);
+console.log('🔑 ইউজারনেম ও পাসওয়ার্ড Admin Panel থেকে নিতে হবে');
+</script>
+</body>
+</html>
