@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ভৌতবিজ্ঞান — Chapter 3 | Class 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c2e24}
+        
+        .top-bar{background:#1a7a4a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+        .top-logo{font-size:1.1rem;font-weight:800;color:white;cursor:pointer}
+        .top-logo span{color:#f9a825}
+        .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .user-info{color:#f9a825;font-weight:600;font-size:0.85rem}
+        .logout-btn{background:#dc3545;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-family:'Syne',sans-serif;font-size:0.75rem}
+        .logout-btn:hover{background:#c82333}
+        .timer-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:0.3rem 0.8rem;display:flex;align-items:center;gap:6px;font-size:0.9rem;font-weight:700;color:white}
+        .timer-box.danger{background:#dc3545}
+        
+        .main{max-width:800px;margin:0 auto;padding:1.5rem 1rem}
+        
+        .start-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb}
+        .start-wrap h2{font-family:'Tiro Bangla',serif;font-size:1.4rem;color:#1c2e24;margin-bottom:0.5rem}
+        .start-wrap p{font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#5a7a66;line-height:1.7;margin-bottom:1.2rem}
+        
+        .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+        .set-card{background:white;border-radius:12px;padding:1rem;border:1.5px solid #c5dccb;cursor:pointer;text-align:center;transition:0.3s;position:relative}
+        .set-card:hover{border-color:#1a7a4a;transform:translateY(-3px);box-shadow:0 4px 15px rgba(26,122,74,0.1)}
+        .set-card.locked{opacity:0.5;cursor:not-allowed}
+        .set-card.locked:hover{transform:none;box-shadow:none}
+        .set-icon{font-size:1.8rem;margin-bottom:0.2rem}
+        .set-title{font-family:'Tiro Bangla',serif;font-weight:700;font-size:0.95rem;color:#1c2e24}
+        .set-sub{font-family:'Tiro Bangla',serif;font-size:0.7rem;color:#5a7a66;margin-top:0.2rem}
+        .set-badge{display:inline-block;background:#e8f7ef;color:#1a7a4a;padding:0.1rem 0.6rem;border-radius:12px;font-size:0.6rem;font-weight:700;margin-top:0.3rem}
+        .attempts-left{font-size:0.7rem;color:#e8730a;font-weight:600;margin-top:0.3rem}
+        .lock-icon{position:absolute;top:5px;right:8px;font-size:1rem}
+        
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999;display:none;justify-content:center;align-items:center}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:white;padding:2rem;border-radius:14px;width:90%;max-width:400px;text-align:center}
+        .modal-box h2{color:#1a7a4a;margin-top:0}
+        .modal-box p{color:#5a7a66;font-size:0.9rem;margin-bottom:1rem}
+        .modal-box input{width:100%;padding:12px;margin:8px 0;border:1.5px solid #c5dccb;border-radius:8px;font-size:1rem;font-family:'Syne',sans-serif}
+        .modal-box .error-msg{color:#dc3545;font-weight:bold;margin:8px 0;display:none}
+        .modal-box .btn-primary{background:#1a7a4a;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-primary:hover{background:#2aad68}
+        .modal-box .btn-danger{background:#dc3545;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-danger:hover{background:#c82333}
+        
+        .quiz-info{background:white;border-radius:12px;padding:0.8rem 1.2rem;margin-bottom:1.2rem;border:1px solid #c5dccb;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+        .info-item{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66}
+        .info-item strong{color:#1a7a4a}
+        .progress-wrap{background:#c5dccb;border-radius:4px;height:6px;margin-bottom:1.2rem;overflow:hidden}
+        .progress-fill{height:100%;background:#1a7a4a;border-radius:4px;transition:width 0.3s}
+        .q-card{background:white;border-radius:14px;padding:1.4rem;margin-bottom:1rem;border:1px solid #c5dccb;box-shadow:0 2px 10px rgba(26,122,74,0.06)}
+        .q-num{font-size:0.75rem;font-weight:700;color:#e8730a;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+        .q-text{font-family:'Tiro Bangla',serif;font-size:1rem;color:#1c2e24;line-height:1.7;margin-bottom:1.1rem}
+        .opts{display:flex;flex-direction:column;gap:0.6rem}
+        .opt{display:flex;align-items:flex-start;gap:10px;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;width:100%}
+        .opt:hover:not(.disabled){border-color:#1a7a4a;background:#f0faf4}
+        .opt-circle{min-width:28px;height:28px;border-radius:50%;border:1.5px solid #c5dccb;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5a7a66;flex-shrink:0}
+        .opt-text{font-family:'Tiro Bangla',serif;font-size:0.92rem;color:#1c2e24;line-height:1.6;padding-top:2px}
+        .opt.correct{border-color:#1a7a4a;background:#e8f7ef}
+        .opt.correct .opt-circle{background:#1a7a4a;border-color:#1a7a4a;color:white}
+        .opt.wrong{border-color:#dc3545;background:#fdf0f0}
+        .opt.wrong .opt-circle{background:#dc3545;border-color:#dc3545;color:white}
+        .opt.disabled{cursor:default}
+        .explanation{background:#f0faf4;border-left:3px solid #1a7a4a;border-radius:0 8px 8px 0;padding:0.8rem 1rem;margin-top:0.8rem;display:none}
+        .explanation.show{display:block}
+        .explanation p{font-family:'Tiro Bangla',serif;font-size:0.88rem;color:#2c4035;line-height:1.7}
+        .explanation strong{color:#1a7a4a}
+        .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;flex-wrap:wrap;gap:10px}
+        .score-show{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+        .next-btn{background:#1a7a4a;color:white;border:none;padding:0.6rem 1.4rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:0.9rem;cursor:pointer}
+        .next-btn:hover{background:#2aad68}
+        .next-btn:disabled{background:#c5dccb;cursor:default}
+        
+        .result-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb;display:none}
+        .result-wrap.show{display:block}
+        .result-icon{font-size:3rem;margin-bottom:0.5rem}
+        .result-score{font-size:3.5rem;font-weight:800;color:#1a7a4a}
+        .result-total{font-size:1rem;color:#5a7a66;margin-bottom:0.5rem;font-family:'Tiro Bangla',serif}
+        .result-grade{font-size:1.2rem;font-weight:600;color:#1c2e24;margin-bottom:1.5rem;font-family:'Tiro Bangla',serif}
+        .result-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+        .result-bar{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+        .rb-num{font-size:1.4rem;font-weight:800}
+        .rb-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66;margin-top:0.2rem}
+        .action-btns{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap}
+        .retry-btn{background:#1a7a4a;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .review-btn{background:white;color:#1a7a4a;border:1.5px solid #1a7a4a;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .back-btn{background:white;color:#5a7a66;border:1.5px solid #c5dccb;padding:0.6rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-top:0.6rem}
+        
+        .hidden{display:none !important}
+        .text-center{text-align:center}
+        
+        @media(max-width:600px){
+            .set-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+            .result-bars{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="top-logo" onclick="window.location.href='../../index.html'">Test <span>Bazar</span></div>
+    <div class="top-right">
+        <span class="user-info hidden" id="userInfo">👤 <span id="userNameDisplay"></span></span>
+        <button class="logout-btn hidden" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        <div class="timer-box hidden" id="timerBox">⏱ <span id="timerDisplay">10:00</span></div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2>🔐 Login Required</h2>
+            <p>সেটটি আনলক করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+            <input type="text" id="loginUser" placeholder="Username">
+            <input type="password" id="loginPass" placeholder="Password">
+            <div class="error-msg" id="loginError">❌ ইউজারনেম বা পাসওয়ার্ড ভুল!</div>
+            <button class="btn-primary" onclick="verifyLogin()">লগইন</button>
+            <button class="btn-danger" onclick="closeLogin()">বাতিল</button>
+        </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div class="start-wrap" id="startScreen">
+        <div style="font-size:2.5rem;margin-bottom:0.8rem">⚗️</div>
+        <h2>ভৌতবিজ্ঞান — Chapter 3</h2>
+        <p style="font-size:0.9rem;color:#5a7a66;">রাসায়নিক গণনা (Chemical Calculations)</p>
+        <p style="font-size:0.8rem;color:#5a7a66;margin-bottom:1rem;">২টি সেট | প্রতিটি সেটে ১৫টি প্রশ্ন | সময়: ১০ মিনিট | Attempt: ১০ বার</p>
+        
+        <div class="set-grid" id="setGrid"></div>
+        
+        <button class="back-btn" onclick="window.location.href='../../index.html'" style="margin-top:1.5rem;">← Home এ ফিরে যাও</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+        <div class="quiz-info">
+            <div class="info-item">⚗️ <strong id="setTitle">Set 1</strong></div>
+            <div class="info-item">📝 Class 10 | ভৌতবিজ্ঞান Chapter 3</div>
+            <div class="info-item" style="margin-left:auto;">🔄 Attempt: <span id="attemptCount">1</span>/10</div>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="q-card" id="qCard">
+            <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+            <div class="q-text" id="qText"></div>
+            <div class="opts" id="qOpts"></div>
+            <div class="explanation" id="explanation"><p id="explanationText"></p></div>
+            <div class="nav-row">
+                <div class="score-show" id="scoreShow">✅ সঠিক: ০ | ❌ ভুল: ০</div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>পরবর্তী →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="result-wrap" id="resultWrap">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-score" id="finalScore"></div>
+        <div class="result-total">/ ১৫</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="result-bars">
+            <div class="result-bar"><div class="rb-num" id="rbCorrect" style="color:#1a7a4a"></div><div class="rb-label">সঠিক</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbWrong" style="color:#dc3545"></div><div class="rb-label">ভুল</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbPct" style="color:#e8730a"></div><div class="rb-label">স্কোর</div></div>
+        </div>
+        <div class="action-btns">
+            <button class="retry-btn" onclick="retrySet()">আবার চেষ্টা করো</button>
+            <button class="review-btn" onclick="showReview()">উত্তর দেখো</button>
+        </div>
+        <button class="back-btn" onclick="showSetSelection()">← সেট লিস্টে ফিরে যাও</button>
+    </div>
+
+</div>
+
+<script>
+// ====================================================================
+//  ALL QUESTIONS - 2 SETS (15 Questions Each) = 30 Questions
+// ====================================================================
+
+const ALL_SETS = [
+    // ===================== SET 1: রাসায়নিক সমীকরণ, ভরের সংরক্ষণ ও বাষ্পঘনত্ব =====================
+    [
+        {q:"যে পদার্থগুলি রাসায়নিক বিক্রিয়ায় অংশগ্রহণ করে, তাদের কী বলা হয়?", opts:["বিক্রিয়াজাত পদার্থ","বিক্রিয়ক (Reactants)","অনুঘটক","দ্রাবক"], ans:1, exp:"রাসায়নিক বিক্রিয়ায় যে পদার্থগুলি অংশগ্রহণ করে তাদের বিক্রিয়ক বলা হয় এবং বিক্রিয়ার ফলে যে নতুন পদার্থ উৎপন্ন হয় তাদের বিক্রিয়াজাত পদার্থ বলা হয়।"},
+        {q:"রাসায়নিক বিক্রিয়ার ক্ষেত্রে 'ভরের সংরক্ষণ সূত্র' অনুযায়ী নিচের কোনটি সঠিক?", opts:["বিক্রিয়কের মোট ভর > উৎপন্ন পদার্থের মোট ভর","বিক্রিয়কের মোট ভর < উৎপন্ন পদার্থের মোট ভর","বিক্রিয়কের মোট ভর = উৎপন্ন পদার্থের মোট ভর","ভরের কোনো হিসাব থাকে না"], ans:2, exp:"পদার্থের ভর অবিনশ্বর। কোনো রাসায়নিক পরিবর্তনের আগে ও পরে পদার্থের মোট ভর সর্বদা সমান থাকে, একেই ভরের সংরক্ষণ সূত্র বলে।"},
+        {q:"বিজ্ঞানী আইনস্টাইনের ভর-শক্তির তুল্যতা সমীকরণ কোনটি?", opts:["E = m/c²","E = mc²","E = m²c","E = 1/2 mc²"], ans:1, exp:"আইনস্টাইন প্রমাণ করেন যে, ভর এবং শক্তি পরস্পরের তুল্য। কোনো পদার্থের 'm' ভর সম্পূর্ণভাবে শক্তিতে রূপান্তরিত হলে উৎপন্ন শক্তির পরিমাণ হয় E = mc², যেখানে 'c' হলো আলোর বেগ।"},
+        {q:"E = mc² সমীকরণে 'c' কী নির্দেশ করে?", opts:["শব্দের বেগ","ইলেকট্রনের বেগ","শূন্য মাধ্যমে আলোর বেগ","প্ল্যাঙ্ক ধ্রুবক"], ans:2, exp:"আইনস্টাইনের সমীকরণে 'c' হলো শূন্য মাধ্যমে আলোর গতিবেগ, যার মান 3 × 10¹⁰ সেমি/সেকেন্ড বা 3 × 10⁸ মিটার/সেকেন্ড।"},
+        {q:"সাধারণ রাসায়নিক বিক্রিয়ায় ভরের পরিবর্তন কেন পরিমাপ করা যায় না?", opts:["বিক্রিয়কগুলি গ্যাসে পরিণত হয় বলে","উৎপন্ন শক্তি আবার ভরে ফিরে আসে বলে","অত্যন্ত সামান্য পরিমাণ ভর তাপশক্তিতে রূপান্তরিত হয় যা সাধারণ পাল্লায় ধরা যায় না বলে","রাসায়নিক বিক্রিয়ায় ভরের সংরক্ষণ সূত্র খাটে না বলে"], ans:2, exp:"রাসায়নিক পরিবর্তনের সময় সামান্য ভর শক্তিতে রূপান্তরিত হলেও তার পরিমাণ এতই নগণ্য যে সাধারণ ল্যাবরেটরির পাল্লায় তা মাপা সম্ভব হয় না। তবে নিউক্লিয় বিক্রিয়ায় এই ভরের পরিবর্তন স্পষ্টভাবে মাপা যায়।"},
+        {q:"কোনো গ্যাসের বাষ্পঘনত্ব (D) এবং তার আণবিক ভরের (M) মধ্যে গাণিতিক সম্পর্ক কী?", opts:["M = D/2","M = D","M = 2D","M = D²"], ans:2, exp:"অ্যাভোগাড্রোর সূত্র প্রয়োগ করে প্রমাণ করা যায় যে, কোনো গ্যাসের আণবিক ভর তার বাষ্পঘনত্বের ঠিক দ্বিগুণ হয়। অর্থাৎ, M = 2D।"},
+        {q:"গ্যাসের বাষ্পঘনত্ব পরিমাপের ক্ষেত্রে প্রমাণ গ্যাস হিসেবে কোন গ্যাসকে ধরা হয়?", opts:["অক্সিজেন","নাইট্রোজেন","কার্বন ডাইঅক্সাইড","হাইড্রোজেন"], ans:3, exp:"একই চাপ ও উষ্ণতায় কোনো নির্দিষ্ট আয়তনের গ্যাস সম-আয়তন হাইড্রোজেন (H₂) গ্যাসের তুলনায় যতগুণ ভারী, সেই সংখ্যাটিকেই ওই গ্যাসের বাষ্পঘনত্ব বা আপেক্ষিক ঘনত্ব বলা হয়।"},
+        {q:"কার্বন ডাইঅক্সাইড (CO₂)-এর আণবিক ভর 44 হলে, এর বাষ্পঘনত্ব কত?", opts:["11","22","44","88"], ans:1, exp:"আমরা জানি, আণবিক ভর (M) = 2 × বাষ্পঘনত্ব (D)। তাই বাষ্পঘনত্ব (D) = M/2 = 44/2 = 22।"},
+        {q:"কোনো গ্যাসের বাষ্পঘনত্বের কোনো একক থাকে না কেন?", opts:["গ্যাস হালকা হয় বলে","এটি দুটি সমজাতীয় রাশির (ভরের) অনুপাত বলে","গ্যাসের আয়তন স্থির থাকে না বলে","গ্যাসের আণবিক ভর পরিবর্তনশীল বলে"], ans:1, exp:"বাষ্পঘনত্ব হলো নির্দিষ্ট আয়তনের কোনো গ্যাসের ভর এবং সম-আয়তন হাইড্রোজেন গ্যাসের ভরের অনুপাত। দুটি ভরের অনুপাত হওয়ায় এর কোনো একক থাকে না।"},
+        {q:"প্রমাণ চাপ ও তাপমাত্রায় (STP) 1 মোল যেকোনো আদর্শ গ্যাসের আয়তন কত?", opts:["11.2 লিটার","22.4 লিটার","44.8 লিটার","2.24 লিটার"], ans:1, exp:"অ্যাভোগাড্রো সূত্র এবং মোল ধারণার একটি অন্যতম প্রধান গাণিতিক ভিত্তি হলো, STP-তে 1 মোল বা 1 গ্রাম-অণু পরিমাণ যেকোনো গ্যাসের আয়তন সর্বদা 22.4 লিটার বা 22400 cm³ হয়।"},
+        {q:"2H₂ + O₂ → 2H₂O বিক্রিয়ায় 4 গ্রাম হাইড্রোজেন কত গ্রাম অক্সিজেনের সঙ্গে বিক্রিয়া করে?", opts:["16 গ্রাম","32 গ্রাম","8 গ্রাম","64 গ্রাম"], ans:1, exp:"সমীকরণ অনুযায়ী 2 অণু H₂ (ভর = 2×2 = 4 গ্রাম) 1 অণু O₂ (ভর = 2×16 = 32 গ্রাম)-এর সাথে বিক্রিয়া করে 36 গ্রাম জল উৎপন্ন করে। তাই 4 গ্রাম হাইড্রোজেনের জন্য 32 গ্রাম অক্সিজেন লাগবে।"},
+        {q:"কোনো গ্যাসের প্রমাণ ঘনত্ব এবং বাষ্পঘনত্বের মধ্যে সম্পর্ক কী?", opts:["প্রমাণ ঘনত্ব = বাষ্পঘনত্ব × 0.089","প্রমাণ ঘনত্ব = বাষ্পঘনত্ব / 2","বাষ্পঘনত্ব = প্রমাণ ঘনত্ব × 0.089","প্রমাণ ঘনত্ব = বাষ্পঘনত্ব"], ans:0, exp:"STP-তে 1 লিটার H₂ গ্যাসের ভর 0.089 গ্রাম। তাই কোনো গ্যাসের প্রমাণ ঘনত্ব = গ্যাসটির বাষ্পঘনত্ব × H₂ গ্যাসের প্রমাণ ঘনত্ব (0.089 g/L)।"},
+        {q:"1.7 গ্রাম ভরের একটি গ্যাসের STP-তে আয়তন 2.24 লিটার হলে গ্যাসটির বাষ্পঘনত্ব কত?", opts:["8.5","17","34","44"], ans:0, exp:"2.24 লিটার গ্যাসের ভর = 1.7 গ্রাম। ∴ 22.4 লিটার (1 মোল) গ্যাসের ভর = (1.7/2.24) × 22.4 = 17 গ্রাম (আণবিক ভর)। যেহেতু আণবিক ভর 17, তাই বাষ্পঘনত্ব = 17/2 = 8.5।"},
+        {q:"একটি রাসায়নিক বিক্রিয়ার পরিমাণগত তথ্য থেকে আমরা কী জানতে পারি?", opts:["বিক্রিয়ায় অংশগ্রহণকারী মৌলগুলোর নাম","বিক্রিয়ক ও উৎপন্ন পদার্থের অণু-পরমাণুর সংখ্যা এবং ওজনের অনুপাত","বিক্রিয়াটি কত দ্রুত বা ধীরে হচ্ছে","বিক্রিয়াটিতে তাপ লাগবে কিনা"], ans:1, exp:"পরিমাণগত তথ্য আমাদের একদম নিখুঁত গাণিতিক হিসাব দেয়, অর্থাৎ ঠিক কত ভাগ ওজনের বিক্রিয়ক থেকে কত ভাগ ওজনের বিক্রিয়াজাত পদার্থ তৈরি হলো তা জানা যায়।"},
+        {q:"শুষ্ক বায়ু অপেক্ষা আর্দ্র বায়ু হালকা (লঘু) হয় কেন?", opts:["আর্দ্র বায়ুতে অক্সিজেন বেশি থাকে বলে","জলীয় বাষ্পের বাষ্পঘনত্ব শুষ্ক বায়ুর বাষ্পঘনত্বের চেয়ে কম বলে","জলীয় বাষ্পের বাষ্পঘনত্ব বেশি বলে","আর্দ্র বায়ুতে নাইট্রোজেন কম থাকে বলে"], ans:1, exp:"শুষ্ক বায়ুর গড় বাষ্পঘনত্ব প্রায় 14.4, কিন্তু জলীয় বাষ্পের বাষ্পঘনত্ব মাত্র 9। যেহেতু জলীয় বাষ্প বাতাসের চেয়ে হালকা, তাই বাতাসে জলীয় বাষ্প মিশলে সম-আয়তনের আর্দ্র বায়ু শুষ্ক বায়ুর চেয়ে হালকা বা লঘু হয়ে যায়।"}
+    ],
+    // ===================== SET 2: রাসায়নিক গণনার গাণিতিক প্রয়োগ (Stoichiometry) =====================
+    [
+        {q:"100 গ্রাম ক্যালশিয়াম কার্বনেট (CaCO₃) সম্পূর্ণ বিয়োজিত হলে কত গ্রাম কার্বন ডাইঅক্সাইড (CO₂) পাওয়া যায়? [Ca=40, C=12, O=16]", opts:["22 গ্রাম","44 গ্রাম","56 গ্রাম","100 গ্রাম"], ans:1, exp:"CaCO₃ এর আণবিক ভর = 40+12+(3×16) = 100 গ্রাম। CO₂ এর আণবিক ভর = 12+(2×16) = 44 গ্রাম। বিক্রিয়া CaCO₃ → CaO + CO₂ অনুযায়ী, 100 গ্রাম খনিজ থেকে ঠিক 44 গ্রাম CO₂ গ্যাস পাওয়া যায়।"},
+        {q:"480 গ্রাম একটি কঠিন যৌগকে 352 গ্রাম অক্সিজেনে পোড়ালে 320 গ্রাম অপর একটি কঠিন যৌগ এবং একটি গ্যাসীয় যৌগ উৎপন্ন হয়। উৎপন্ন গ্যাসীয় যৌগটির ভর কত?", opts:["128 গ্রাম","512 গ্রাম","832 গ্রাম","160 গ্রাম"], ans:1, exp:"ভরের সংরক্ষণ সূত্র অনুযায়ী, বিক্রিয়ার আগে মোট ভর = 480 + 352 = 832 গ্রাম। বিক্রিয়ার পরে মোট ভর = 320 গ্রাম + গ্যাসীয় যৌগ। ∴ গ্যাসীয় যৌগের ভর = 832 - 320 = 512 গ্রাম।"},
+        {q:"21 গ্রাম লোহিত তপ্ত আয়রনের ওপর দিয়ে স্টিম চালনা করলে STP-তে কত লিটার H₂ গ্যাস পাওয়া যাবে? [Fe = 56]", opts:["11.2 লিটার","22.4 লিটার","44.8 লিটার","5.6 লিটার"], ans:0, exp:"বিক্রিয়া: 3Fe + 4H₂O → Fe₃O₄ + 4H₂। 3 মোল Fe (3×56 = 168 গ্রাম) থেকে পাওয়া যায় 4 মোল H₂ (আয়তন = 4×22.4 লিটার)। ∴ 21 গ্রাম Fe থেকে পাওয়া যাবে = (4×22.4×21)/168 = 11.2 লিটার।"},
+        {q:"4.90 গ্রাম সালফিউরিক অ্যাসিডের (H₂SO₄) সঙ্গে সম্পূর্ণরূপে বিক্রিয়া করার জন্য কত গ্রাম সোডিয়াম হাইড্রক্সাইড (NaOH) প্রয়োজন? [H=1, S=32, O=16, Na=23]", opts:["2.0 গ্রাম","4.0 গ্রাম","8.0 গ্রাম","10 গ্রাম"], ans:1, exp:"বিক্রিয়া: H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O। H₂SO₄ এর আণবিক ভর 98 গ্রাম, 2NaOH এর ভর 80 গ্রাম। 98 গ্রাম অ্যাসিডের জন্য লাগে 80 গ্রাম ক্ষার। ∴ 4.90 গ্রামের জন্য লাগবে = (80 × 4.90)/98 = 4.0 গ্রাম।"},
+        {q:"24.5 গ্রাম পটাশিয়াম ক্লোরেটকে (KClO₃) উত্তপ্ত করলে কত গ্রাম অক্সিজেন (O₂) গ্যাস উৎপন্ন হবে? [K=39, Cl=35.5, O=16]", opts:["9.6 গ্রাম","19.2 গ্রাম","14.4 গ্রাম","4.8 গ্রাম"], ans:0, exp:"বিক্রিয়া: 2KClO₃ → 2KCl + 3O₂। 2 মোল KClO₃ (2×122.5 = 245 গ্রাম) থেকে পাওয়া যায় 3 মোল O₂ (3×32 = 96 গ্রাম)। ∴ 24.5 গ্রাম থেকে পাওয়া যাবে = (96 × 24.5)/245 = 9.6 গ্রাম।"},
+        {q:"17 গ্রাম হাইড্রোজেন সালফাইড (H₂S) গ্যাস ক্লোরিন দ্রবণে চালনা করলে কত গ্রাম সালফার (S) অধঃক্ষিপ্ত হবে? [H=1, S=32]", opts:["16 গ্রাম","32 গ্রাম","8 গ্রাম","64 গ্রাম"], ans:0, exp:"বিক্রিয়া: H₂S + Cl₂ → 2HCl + S↓। 34 গ্রাম H₂S (আণবিক ভর) থেকে 32 গ্রাম সালফার পাওয়া যায়। ∴ 17 গ্রাম থেকে পাওয়া যাবে = (32 × 17)/34 = 16 গ্রাম।"},
+        {q:"1 কেজি H₂ গ্যাস একটি সিলিন্ডারে রাখা গেলে, একই চাপ ও উষ্ণতায় ওই সিলিন্ডারে কত কেজি CO₂ গ্যাস রাখা যাবে? [H=1, C=12, O=16]", opts:["11 কেজি","22 কেজি","44 কেজি","88 কেজি"], ans:1, exp:"অ্যাভোগাড্রো সূত্র অনুযায়ী, একই চাপ ও উষ্ণতায় সম-আয়তন গ্যাসে অণুসংখ্যা সমান থাকে। CO₂ এর আণবিক ভর (44) H₂ এর (2) চেয়ে 22 গুণ বেশি (44/2 = 22)। তাই সম-আয়তন সিলিন্ডারে ভরের পরিমাণও 22 গুণ বেশি হবে।"},
+        {q:"2.3 গ্রাম ধাতব সোডিয়ামকে (Na) অতিরিক্ত জলের সঙ্গে বিক্রিয়া ঘটালে উৎপন্ন হাইড্রোজেনের STP-তে আয়তন কত হবে? [Na=23]", opts:["22.4 লিটার","11.2 লিটার","2.24 লিটার","1.12 লিটার"], ans:3, exp:"বিক্রিয়া: 2Na + 2H₂O → 2NaOH + H₂। 2 মোল Na (2×23 = 46 গ্রাম) থেকে 1 মোল H₂ (22.4 লিটার) পাওয়া যায়। ∴ 2.3 গ্রাম Na থেকে পাওয়া যাবে = (22.4 × 2.3)/46 = 1.12 লিটার।"},
+        {q:"উচ্চ উষ্ণতায় 40 গ্রাম ধাতব অক্সাইডের সঙ্গে অ্যালুমিনিয়ামের বিক্রিয়ায় 28 গ্রাম ধাতু এবং 25.50 গ্রাম অ্যালুমিনিয়াম অক্সাইড উৎপন্ন হলো। এই বিক্রিয়ায় কত গ্রাম অ্যালুমিনিয়াম প্রয়োজন হয়েছিল?", opts:["27 গ্রাম","54 গ্রাম","13.5 গ্রাম","15 গ্রাম"], ans:2, exp:"ভরের সংরক্ষণ সূত্র অনুযায়ী: ধাতব অক্সাইড (40g) + অ্যালুমিনিয়াম (x) = ধাতু (28g) + অ্যালুমিনিয়াম অক্সাইড (25.50g)। 40 + x = 53.50 ∴ x = 53.50 - 40 = 13.5 গ্রাম।"},
+        {q:"27°C এবং 740 mm চাপে 3 লিটার অক্সিজেন উৎপন্ন করতে কত গ্রাম KClO₃ প্রয়োজন?", opts:["24.5 গ্রাম","9.7 গ্রাম","12.25 গ্রাম","4.85 গ্রাম"], ans:1, exp:"প্রথমে P₁V₁/T₁ = P₂V₂/T₂ সূত্র দিয়ে আয়তনকে STP-তে নিতে হবে। STP-তে আয়তন হবে 2.66 লিটার। সমীকরণ অনুযায়ী 3×22.4 লিটার O₂ পেতে 245 গ্রাম KClO₃ লাগে। ∴ 2.66 লিটার পেতে লাগবে = (245 × 2.66)/67.2 ≈ 9.7 গ্রাম।"},
+        {q:"রাসায়নিক গণনায় অংক কষার ক্ষেত্রে কোন সূত্রটি আবশ্যিকভাবে মান্য করা হয়?", opts:["অ্যাভোগাড্রো সূত্র","বয়েলের সূত্র","ভরের সংরক্ষণ সূত্র","চার্লসের সূত্র"], ans:2, exp:"স্টয়সিওমেট্রি বা রাসায়নিক গণনার মূল ভিত্তিই হলো ভরের সংরক্ষণ সূত্র, কারণ বিক্রিয়ার আগে ও পরে বিক্রিয়ক এবং বিক্রিয়াজাত পদার্থের মোট ভর সমান ধরেই ঐকিক নিয়মে সমস্ত অংক কষা হয়।"},
+        {q:"অ্যামোনিয়াম সালফেটকে কস্টিকসোডা দ্রবণসহ উত্তপ্ত করে 6.80 গ্রাম অ্যামোনিয়া (NH₃) উৎপন্ন করতে কত গ্রাম অ্যামোনিয়াম সালফেট প্রয়োজন?", opts:["132 গ্রাম","66 গ্রাম","26.4 গ্রাম","13.2 গ্রাম"], ans:2, exp:"বিক্রিয়া অনুযায়ী, 132 গ্রাম অ্যামোনিয়াম সালফেট থেকে 34 গ্রাম (2 মোল) NH₃ পাওয়া যায়। ∴ 6.80 গ্রাম NH₃ পেতে লাগবে = (132 × 6.80)/34 = 26.4 গ্রাম।"},
+        {q:"100 গ্রাম হাইড্রোজেন (H₂) পেতে হলে কত গ্রাম ম্যাগনেশিয়ামের (Mg) সঙ্গে লঘু সালফিউরিক অ্যাসিডের বিক্রিয়া ঘটাতে হবে? [Mg = 24]", opts:["240 গ্রাম","1200 গ্রাম","2400 গ্রাম","120 গ্রাম"], ans:1, exp:"বিক্রিয়া: Mg + H₂SO₄ → MgSO₄ + H₂। 2 গ্রাম H₂ পেতে 24 গ্রাম Mg প্রয়োজন। ∴ 100 গ্রাম H₂ পেতে প্রয়োজন = (24 × 100)/2 = 1200 গ্রাম।"},
+        {q:"1 মোল কার্বন (12 গ্রাম) সম্পূর্ণ দহনে কত আয়তন (STP-তে) CO₂ উৎপন্ন করে?", opts:["11.2 লিটার","22.4 লিটার","44.8 লিটার","2.24 লিটার"], ans:1, exp:"বিক্রিয়া: C + O₂ → CO₂। 1 মোল কার্বন পুড়িয়ে 1 মোল CO₂ পাওয়া যায়। আর STP-তে 1 মোল যেকোনো গ্যাসের আয়তন 22.4 লিটার।"},
+        {q:"1.16 গ্রাম সোডিয়াম ক্লোরাইডের (NaCl) সাথে কত গ্রাম সিলভার নাইট্রেট (AgNO₃) বিক্রিয়া করলে 1.70 গ্রাম সোডিয়াম নাইট্রেট এবং 2.87 গ্রাম সিলভার ক্লোরাইড উৎপন্ন হবে?", opts:["1.70 গ্রাম","2.87 গ্রাম","3.41 গ্রাম","4.57 গ্রাম"], ans:2, exp:"ভরের সংরক্ষণ সূত্র অনুযায়ী: বিক্রিয়কের মোট ভর = উৎপন্ন পদার্থের মোট ভর। 1.16 + AgNO₃ = 1.70 + 2.87 → 1.16 + AgNO₃ = 4.57 ∴ AgNO₃ = 4.57 - 1.16 = 3.41 গ্রাম।"}
+    ]
+];
+
+// ====================================================================
+//  APP STATE
+// ====================================================================
+
+const SET_NAMES = [
+    'রাসায়নিক সমীকরণ, ভরের সংরক্ষণ ও বাষ্পঘনত্ব',
+    'রাসায়নিক গণনার গাণিতিক প্রয়োগ (Stoichiometry)'
+];
+
+const SET_ICONS = ['📊','🧮'];
+const MAX_ATTEMPTS = 10;
+const STORAGE_KEY = 'testbazar_physical_science_ch3';
+
+// ====================================================================
+//  QUIZ ENGINE
+// ====================================================================
+
+let currentSet = 0;
+let currentQ = 0;
+let score = 0;
+let wrong = 0;
+let answered = false;
+let timerInterval;
+let timeLeft = 600;
+let userAnswers = [];
+let loggedInUser = null;
+let pendingSet = -1;
+let attemptData = {};
+
+function loadAttemptData() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+        attemptData = JSON.parse(data);
+    } else {
+        attemptData = {};
+    }
+}
+
+function saveAttemptData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(attemptData));
+}
+
+function getAttempts(setIndex) {
+    const key = 'set_' + setIndex;
+    if (!attemptData[key]) {
+        attemptData[key] = { count: 0, scores: [] };
+    }
+    return attemptData[key];
+}
+
+function canAttempt(setIndex) {
+    const data = getAttempts(setIndex);
+    return data.count < MAX_ATTEMPTS;
+}
+
+function addAttempt(setIndex, scoreVal) {
+    const data = getAttempts(setIndex);
+    data.count++;
+    data.scores.push(scoreVal);
+    saveAttemptData();
+}
+
+function initSetGrid() {
+    const grid = document.getElementById('setGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < ALL_SETS.length; i++) {
+        const card = document.createElement('div');
+        card.className = 'set-card';
+        const attempts = getAttempts(i);
+        const remaining = MAX_ATTEMPTS - attempts.count;
+        const locked = remaining <= 0;
+        
+        if (locked) card.classList.add('locked');
+        
+        card.innerHTML = `
+            <div class="set-icon">${SET_ICONS[i] || '📝'}</div>
+            <div class="set-title">Set ${i + 1}</div>
+            <div class="set-sub">${SET_NAMES[i] || 'সেট ' + (i+1)}</div>
+            <span class="set-badge">১৫ প্রশ্ন</span>
+            <div class="attempts-left">🔄 বাকি: ${remaining} বার</div>
+            ${locked ? '<div class="lock-icon">🔒</div>' : ''}
+        `;
+        
+        if (!locked) {
+            card.onclick = () => {
+                pendingSet = i;
+                showLogin();
+            };
+        }
+        grid.appendChild(card);
+    }
+}
+
+function showSetSelection() {
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('timerBox').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('userInfo').classList.add('hidden');
+    loadAttemptData();
+    initSetGrid();
+}
+
+function showLogin() {
+    document.getElementById('loginModal').classList.add('show');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginUser').focus();
+}
+
+function closeLogin() {
+    document.getElementById('loginModal').classList.remove('show');
+    pendingSet = -1;
+}
+
+function verifyLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    const errorEl = document.getElementById('loginError');
+    
+    if (!user || !pass) {
+        errorEl.textContent = '❌ ইউজারনেম ও পাসওয়ার্ড দিন!';
+        errorEl.style.display = 'block';
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('testbazar_users') || '{}');
+    
+    if (users[user] && users[user].pass === pass) {
+        loggedInUser = user;
+        document.getElementById('loginModal').classList.remove('show');
+        document.getElementById('userInfo').classList.remove('hidden');
+        document.getElementById('userNameDisplay').textContent = user;
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        
+        if (pendingSet >= 0) {
+            startSet(pendingSet);
+            pendingSet = -1;
+        }
+    } else {
+        errorEl.textContent = '❌ ইউজারনেম বা পাসওয়ার্ড ভুল!';
+        errorEl.style.display = 'block';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+    }
+}
+
+function logoutUser() {
+    loggedInUser = null;
+    document.getElementById('userInfo').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    showSetSelection();
+    alert('✅ সফলভাবে লগআউট হয়েছে!');
+}
+
+function startSet(setIndex) {
+    if (!canAttempt(setIndex)) {
+        alert('⚠️ আপনি এই সেটটি সর্বোচ্চ ' + MAX_ATTEMPTS + ' বার দেওয়ার অনুমতি পেয়েছেন। দয়া করে অন্য সেট নির্বাচন করুন।');
+        return;
+    }
+    
+    currentSet = setIndex;
+    currentQ = 0;
+    score = 0;
+    wrong = 0;
+    answered = false;
+    userAnswers = [];
+    timeLeft = 600;
+
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('danger');
+    document.getElementById('setTitle').textContent = 'Set ' + (setIndex + 1) + ' — ' + (SET_NAMES[setIndex] || '');
+    document.getElementById('attemptCount').textContent = getAttempts(setIndex).count + 1;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(tick, 1000);
+    loadQuestion();
+}
+
+function tick() {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (timeLeft <= 60) document.getElementById('timerBox').classList.add('danger');
+    if (timeLeft <= 0) { clearInterval(timerInterval); showResult(); }
+}
+
+function loadQuestion() {
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    answered = false;
+
+    document.getElementById('qNum').textContent = 'প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'ফলাফল দেখো' : 'পরবর্তী →';
+    document.getElementById('explanation').classList.remove('show');
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt';
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        btn.onclick = () => selectAnswer(i);
+        opts.appendChild(btn);
+    });
+}
+
+function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    userAnswers[currentQ] = idx;
+
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b => b.classList.add('disabled'));
+    btns[q.ans].classList.add('correct');
+    if (idx !== q.ans) {
+        btns[idx].classList.add('wrong');
+        wrong++;
+    } else {
+        score++;
+    }
+
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+    document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+    const qs = ALL_SETS[currentSet];
+    currentQ++;
+    if (currentQ >= qs.length) {
+        clearInterval(timerInterval);
+        showResult();
+        return;
+    }
+    loadQuestion();
+}
+
+function showResult() {
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.add('show');
+    document.getElementById('timerBox').classList.add('hidden');
+
+    addAttempt(currentSet, score);
+
+    const total = ALL_SETS[currentSet].length;
+    const pct = Math.round(score / total * 100);
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('rbCorrect').textContent = score;
+    document.getElementById('rbWrong').textContent = wrong;
+    document.getElementById('rbPct').textContent = pct + '%';
+
+    let icon, grade;
+    if (pct >= 90) { icon = '🌟'; grade = 'অসাধারণ! তুমি দুর্দান্ত!'; }
+    else if (pct >= 70) { icon = '👍'; grade = 'খুব ভালো! আরও একটু practice করো।'; }
+    else if (pct >= 50) { icon = '📚'; grade = 'ভালো চেষ্টা! পরের সেট চেষ্টা করো।'; }
+    else { icon = '💪'; grade = 'চেষ্টা চালিয়ে যাও! নোটস পড়ে আবার দাও।'; }
+
+    document.getElementById('resultIcon').textContent = icon;
+    document.getElementById('resultGrade').textContent = grade;
+    initSetGrid();
+}
+
+function retrySet() {
+    document.getElementById('resultWrap').classList.remove('show');
+    startSet(currentSet);
+}
+
+function showReview() {
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    currentQ = 0;
+    loadReview();
+}
+
+function loadReview() {
+    const qs = ALL_SETS[currentSet];
+    if (currentQ >= qs.length) {
+        document.getElementById('quizScreen').classList.add('hidden');
+        document.getElementById('resultWrap').classList.add('show');
+        return;
+    }
+    const q = qs[currentQ];
+    document.getElementById('qNum').textContent = 'Review — প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'শেষ করো' : 'পরবর্তী →';
+    document.getElementById('nextBtn').onclick = () => { currentQ++; loadReview(); };
+    document.getElementById('scoreShow').textContent = '🟢 সবুজ = সঠিক উত্তর';
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt disabled';
+        if (i === q.ans) btn.classList.add('correct');
+        else if (userAnswers[currentQ] === i) btn.classList.add('wrong');
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        opts.appendChild(btn);
+    });
+
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+}
+
+// ====================================================================
+//  KEYBOARD SUPPORT
+// ====================================================================
+
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') verifyLogin();
+});
+
+document.getElementById('loginUser').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('loginPass').focus();
+});
+
+// ====================================================================
+//  INIT
+// ====================================================================
+
+showSetSelection();
+console.log('✅ Class 10 — ভৌতবিজ্ঞান Chapter 3 Loaded!');
+console.log('📚 মোট সেট: ' + ALL_SETS.length);
+console.log('📝 মোট প্রশ্ন: ' + (ALL_SETS.length * 15));
+console.log('🔄 প্রতি সেটে Attempt Limit: ' + MAX_ATTEMPTS);
+console.log('🔑 ইউজারনেম ও পাসওয়ার্ড Admin Panel থেকে নিতে হবে');
+</script>
+</body>
+</html>
