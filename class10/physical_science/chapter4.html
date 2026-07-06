@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ভৌতবিজ্ঞান — Chapter 4 | Class 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c2e24}
+        
+        .top-bar{background:#1a7a4a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+        .top-logo{font-size:1.1rem;font-weight:800;color:white;cursor:pointer}
+        .top-logo span{color:#f9a825}
+        .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .user-info{color:#f9a825;font-weight:600;font-size:0.85rem}
+        .logout-btn{background:#dc3545;color:white;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-family:'Syne',sans-serif;font-size:0.75rem}
+        .logout-btn:hover{background:#c82333}
+        .timer-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:0.3rem 0.8rem;display:flex;align-items:center;gap:6px;font-size:0.9rem;font-weight:700;color:white}
+        .timer-box.danger{background:#dc3545}
+        
+        .main{max-width:800px;margin:0 auto;padding:1.5rem 1rem}
+        
+        .start-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb}
+        .start-wrap h2{font-family:'Tiro Bangla',serif;font-size:1.4rem;color:#1c2e24;margin-bottom:0.5rem}
+        .start-wrap p{font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#5a7a66;line-height:1.7;margin-bottom:1.2rem}
+        
+        .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-top:1.5rem}
+        .set-card{background:white;border-radius:12px;padding:1rem;border:1.5px solid #c5dccb;cursor:pointer;text-align:center;transition:0.3s;position:relative}
+        .set-card:hover{border-color:#1a7a4a;transform:translateY(-3px);box-shadow:0 4px 15px rgba(26,122,74,0.1)}
+        .set-card.locked{opacity:0.5;cursor:not-allowed}
+        .set-card.locked:hover{transform:none;box-shadow:none}
+        .set-icon{font-size:1.8rem;margin-bottom:0.2rem}
+        .set-title{font-family:'Tiro Bangla',serif;font-weight:700;font-size:0.95rem;color:#1c2e24}
+        .set-sub{font-family:'Tiro Bangla',serif;font-size:0.7rem;color:#5a7a66;margin-top:0.2rem}
+        .set-badge{display:inline-block;background:#e8f7ef;color:#1a7a4a;padding:0.1rem 0.6rem;border-radius:12px;font-size:0.6rem;font-weight:700;margin-top:0.3rem}
+        .attempts-left{font-size:0.7rem;color:#e8730a;font-weight:600;margin-top:0.3rem}
+        .lock-icon{position:absolute;top:5px;right:8px;font-size:1rem}
+        
+        .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999;display:none;justify-content:center;align-items:center}
+        .modal-overlay.show{display:flex}
+        .modal-box{background:white;padding:2rem;border-radius:14px;width:90%;max-width:400px;text-align:center}
+        .modal-box h2{color:#1a7a4a;margin-top:0}
+        .modal-box p{color:#5a7a66;font-size:0.9rem;margin-bottom:1rem}
+        .modal-box input{width:100%;padding:12px;margin:8px 0;border:1.5px solid #c5dccb;border-radius:8px;font-size:1rem;font-family:'Syne',sans-serif}
+        .modal-box .error-msg{color:#dc3545;font-weight:bold;margin:8px 0;display:none}
+        .modal-box .btn-primary{background:#1a7a4a;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-primary:hover{background:#2aad68}
+        .modal-box .btn-danger{background:#dc3545;color:white;border:none;padding:12px;border-radius:8px;font-size:1rem;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;font-family:'Tiro Bangla',serif}
+        .modal-box .btn-danger:hover{background:#c82333}
+        
+        .quiz-info{background:white;border-radius:12px;padding:0.8rem 1.2rem;margin-bottom:1.2rem;border:1px solid #c5dccb;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+        .info-item{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66}
+        .info-item strong{color:#1a7a4a}
+        .progress-wrap{background:#c5dccb;border-radius:4px;height:6px;margin-bottom:1.2rem;overflow:hidden}
+        .progress-fill{height:100%;background:#1a7a4a;border-radius:4px;transition:width 0.3s}
+        .q-card{background:white;border-radius:14px;padding:1.4rem;margin-bottom:1rem;border:1px solid #c5dccb;box-shadow:0 2px 10px rgba(26,122,74,0.06)}
+        .q-num{font-size:0.75rem;font-weight:700;color:#e8730a;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+        .q-text{font-family:'Tiro Bangla',serif;font-size:1rem;color:#1c2e24;line-height:1.7;margin-bottom:1.1rem}
+        .opts{display:flex;flex-direction:column;gap:0.6rem}
+        .opt{display:flex;align-items:flex-start;gap:10px;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;width:100%}
+        .opt:hover:not(.disabled){border-color:#1a7a4a;background:#f0faf4}
+        .opt-circle{min-width:28px;height:28px;border-radius:50%;border:1.5px solid #c5dccb;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5a7a66;flex-shrink:0}
+        .opt-text{font-family:'Tiro Bangla',serif;font-size:0.92rem;color:#1c2e24;line-height:1.6;padding-top:2px}
+        .opt.correct{border-color:#1a7a4a;background:#e8f7ef}
+        .opt.correct .opt-circle{background:#1a7a4a;border-color:#1a7a4a;color:white}
+        .opt.wrong{border-color:#dc3545;background:#fdf0f0}
+        .opt.wrong .opt-circle{background:#dc3545;border-color:#dc3545;color:white}
+        .opt.disabled{cursor:default}
+        .explanation{background:#f0faf4;border-left:3px solid #1a7a4a;border-radius:0 8px 8px 0;padding:0.8rem 1rem;margin-top:0.8rem;display:none}
+        .explanation.show{display:block}
+        .explanation p{font-family:'Tiro Bangla',serif;font-size:0.88rem;color:#2c4035;line-height:1.7}
+        .explanation strong{color:#1a7a4a}
+        .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;flex-wrap:wrap;gap:10px}
+        .score-show{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+        .next-btn{background:#1a7a4a;color:white;border:none;padding:0.6rem 1.4rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:0.9rem;cursor:pointer}
+        .next-btn:hover{background:#2aad68}
+        .next-btn:disabled{background:#c5dccb;cursor:default}
+        
+        .result-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb;display:none}
+        .result-wrap.show{display:block}
+        .result-icon{font-size:3rem;margin-bottom:0.5rem}
+        .result-score{font-size:3.5rem;font-weight:800;color:#1a7a4a}
+        .result-total{font-size:1rem;color:#5a7a66;margin-bottom:0.5rem;font-family:'Tiro Bangla',serif}
+        .result-grade{font-size:1.2rem;font-weight:600;color:#1c2e24;margin-bottom:1.5rem;font-family:'Tiro Bangla',serif}
+        .result-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+        .result-bar{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+        .rb-num{font-size:1.4rem;font-weight:800}
+        .rb-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66;margin-top:0.2rem}
+        .action-btns{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap}
+        .retry-btn{background:#1a7a4a;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .review-btn{background:white;color:#1a7a4a;border:1.5px solid #1a7a4a;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+        .back-btn{background:white;color:#5a7a66;border:1.5px solid #c5dccb;padding:0.6rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-top:0.6rem}
+        
+        .hidden{display:none !important}
+        .text-center{text-align:center}
+        
+        @media(max-width:600px){
+            .set-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+            .result-bars{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="top-logo" onclick="window.location.href='../../index.html'">Test <span>Bazar</span></div>
+    <div class="top-right">
+        <span class="user-info hidden" id="userInfo">👤 <span id="userNameDisplay"></span></span>
+        <button class="logout-btn hidden" id="logoutBtn" onclick="logoutUser()">Logout</button>
+        <div class="timer-box hidden" id="timerBox">⏱ <span id="timerDisplay">10:00</span></div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2>🔐 Login Required</h2>
+            <p>সেটটি আনলক করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+            <input type="text" id="loginUser" placeholder="Username">
+            <input type="password" id="loginPass" placeholder="Password">
+            <div class="error-msg" id="loginError">❌ ইউজারনেম বা পাসওয়ার্ড ভুল!</div>
+            <button class="btn-primary" onclick="verifyLogin()">লগইন</button>
+            <button class="btn-danger" onclick="closeLogin()">বাতিল</button>
+        </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div class="start-wrap" id="startScreen">
+        <div style="font-size:2.5rem;margin-bottom:0.8rem">🔥</div>
+        <h2>ভৌতবিজ্ঞান — Chapter 4</h2>
+        <p style="font-size:0.9rem;color:#5a7a66;">তাপের ঘটনাসমূহ (Thermal Phenomena)</p>
+        <p style="font-size:0.8rem;color:#5a7a66;margin-bottom:1rem;">৪টি সেট | প্রতিটি সেটে ১৫টি প্রশ্ন | সময়: ১০ মিনিট | Attempt: ১০ বার</p>
+        
+        <div class="set-grid" id="setGrid"></div>
+        
+        <button class="back-btn" onclick="window.location.href='../../index.html'" style="margin-top:1.5rem;">← Home এ ফিরে যাও</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+        <div class="quiz-info">
+            <div class="info-item">🔥 <strong id="setTitle">Set 1</strong></div>
+            <div class="info-item">📝 Class 10 | ভৌতবিজ্ঞান Chapter 4</div>
+            <div class="info-item" style="margin-left:auto;">🔄 Attempt: <span id="attemptCount">1</span>/10</div>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="q-card" id="qCard">
+            <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+            <div class="q-text" id="qText"></div>
+            <div class="opts" id="qOpts"></div>
+            <div class="explanation" id="explanation"><p id="explanationText"></p></div>
+            <div class="nav-row">
+                <div class="score-show" id="scoreShow">✅ সঠিক: ০ | ❌ ভুল: ০</div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>পরবর্তী →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="result-wrap" id="resultWrap">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-score" id="finalScore"></div>
+        <div class="result-total">/ ১৫</div>
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="result-bars">
+            <div class="result-bar"><div class="rb-num" id="rbCorrect" style="color:#1a7a4a"></div><div class="rb-label">সঠিক</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbWrong" style="color:#dc3545"></div><div class="rb-label">ভুল</div></div>
+            <div class="result-bar"><div class="rb-num" id="rbPct" style="color:#e8730a"></div><div class="rb-label">স্কোর</div></div>
+        </div>
+        <div class="action-btns">
+            <button class="retry-btn" onclick="retrySet()">আবার চেষ্টা করো</button>
+            <button class="review-btn" onclick="showReview()">উত্তর দেখো</button>
+        </div>
+        <button class="back-btn" onclick="showSetSelection()">← সেট লিস্টে ফিরে যাও</button>
+    </div>
+
+</div>
+
+<script>
+// ====================================================================
+//  ALL QUESTIONS - 4 SETS (15 Questions Each) = 60 Questions
+// ====================================================================
+
+const ALL_SETS = [
+    // ===================== SET 1: তাপীয় প্রসারণ এবং দৈনন্দিন জীবনে এর প্রভাব =====================
+    [
+        {q:"সমপরিমাণ তাপ প্রয়োগে কঠিন, তরল ও গ্যাসীয় পদার্থের মধ্যে কোনটির প্রসারণ সবচেয়ে বেশি হয়?", opts:["কঠিন","তরল","গ্যাসীয়","সবগুলোর প্রসারণ সমান হয়"], ans:2, exp:"তাপের প্রভাবে সব পদার্থেরই প্রসারণ ঘটে, তবে কঠিনের প্রসারণ সবচেয়ে কম হয়, তরলের প্রসারণ কঠিনের চেয়ে বেশি এবং গ্যাসীয় পদার্থের তাপীয় প্রসারণ সর্বোচ্চ হয়।"},
+        {q:"গরুর গাড়ির কাঠের চাকায় লোহার বেড় বা রিং পরানোর সময় রিংটির পরিধি চাকার পরিধির তুলনায় কেমন রাখা হয়?", opts:["সামান্য বড় রাখা হয়","সামান্য ছোট রাখা হয়","একেবারে সমান রাখা হয়","অনেক বড় রাখা হয়"], ans:1, exp:"লোহার বেড়টিকে চাকার পরিধির চেয়ে সামান্য ছোট করে তৈরি করা হয়। এরপর এটিকে উত্তপ্ত করে প্রসারিত করা হয় এবং চাকার ওপর পরানো হয়। ঠান্ডা হওয়ার পর এটি সংকুচিত হয়ে চাকাকে শক্তভাবে চেপে ধরে।"},
+        {q:"সমান মাপের তামা ও লোহার পাত দিয়ে তৈরি একটি দ্বিধাতব পাতকে উত্তপ্ত করলে কী ঘটবে?", opts:["পাতটি সোজা থাকবে","পাতটি তামার দিকে বেঁকে যাবে","পাতটি লোহার দিকে বেঁকে যাবে","পাতটি গুটিয়ে যাবে"], ans:2, exp:"তামার প্রসারণ লোহার প্রসারণের চেয়ে বেশি হয়। তাই উত্তপ্ত করলে তামার দিকটি বেশি প্রসারিত হয় এবং পুরো দ্বিধাতব পাতটি লোহার দিকে বেঁকে যায়।"},
+        {q:"থার্মোস্ট্যাট (Thermostat) এবং ফায়ার অ্যালার্ম যন্ত্রে নিচের কোন প্রযুক্তিটি ব্যবহার করা হয়?", opts:["পারদ স্তম্ভ","কাচের প্রসারণ","দ্বিধাতব পাত","ইনভারের দণ্ড"], ans:2, exp:"ইলেকট্রিক হিটার, ইস্ত্রি বা ফায়ার অ্যালার্মের ক্ষেত্রে তাপমাত্রা নির্দিষ্ট সীমা অতিক্রম করলে দ্বিধাতব পাত বেঁকে গিয়ে বৈদ্যুতিক সংযোগ ছিন্ন করে দেয় বা অ্যালার্ম বাজিয়ে দেয়।"},
+        {q:"রেললাইনের দুটি পাতের জোড়ের মুখে সামান্য ফাঁক রাখা হয় কেন?", opts:["ট্রেন চলার সময় শব্দ কমানোর জন্য","গ্রীষ্মকালে তাপীয় প্রসারণের ফলে লাইন যাতে বেঁকে না যায়","লোহা বাঁচানোর জন্য","লাইনে জল জমার সুবিধার্থে"], ans:1, exp:"গ্রীষ্মকালে রোদের তাপে এবং ট্রেনের চাকার ঘর্ষণে উৎপন্ন তাপে রেললাইন প্রসারিত হয়। ফাঁকা জায়গা না থাকলে লাইনটি প্রসারিত হওয়ার জায়গা না পেয়ে বেঁকে গিয়ে ভয়াবহ দুর্ঘটনা ঘটাতে পারে।"},
+        {q:"নিচের কোন পদার্থের তাপীয় প্রসারণ প্রায় নগণ্য?", opts:["তামা","অ্যালুমিনিয়াম","ইনভার (Invar)","লোহা"], ans:2, exp:"ইনভার হলো লোহা ও নিকেলের একটি সংকর ধাতু। এর তাপীয় প্রসারণ এবং সংকোচন এতটাই নগণ্য যে তাপমাত্রার পরিবর্তনে এর আকারের প্রায় কোনো পরিবর্তন হয় না।"},
+        {q:"টান করা একটি রবার ব্যান্ডকে গরম করলে কী ঘটবে?", opts:["এটি প্রসারিত হবে","এটি সংকুচিত হবে","এটি গলে যাবে","এর কোনো পরিবর্তন হবে না"], ans:1, exp:"এটি তাপীয় প্রসারণের একটি ব্যতিক্রমী ঘটনা। সাধারণ পদার্থের মতো প্রসারিত না হয়ে, টান করা রবার ব্যান্ডকে উত্তপ্ত করলে সেটি সংকুচিত হয়ে যায়।"},
+        {q:"মোটা কাচের গ্লাসে হঠাৎ গরম জল ঢাললে গ্লাসটি ফেটে যায় কেন?", opts:["কাচ তাপের সুপরিবাহী বলে","কাচের ভেতরের ও বাইরের অংশের অসম প্রসারণের জন্য","গরম জলে গ্যাসের চাপের জন্য","কাচের গলনাঙ্ক কম বলে"], ans:1, exp:"গরম জল ঢালার ফলে গ্লাসের ভেতরের পৃষ্ঠের দ্রুত তাপীয় প্রসারণ ঘটে, কিন্তু কাচ তাপের কুপরিবাহী হওয়ায় বাইরের অংশ ঠান্ডা থাকে এবং প্রসারিত হতে পারে না। এই অসম প্রসারণের জন্যই গ্লাসটি ফেটে যায়।"},
+        {q:"কাচের বোতলের ধাতব ঢাকনা শক্তভাবে আটকে গেলে কী করলে তা সহজে খোলা যায়?", opts:["বোতলটিকে বরফের মধ্যে রাখলে","ঢাকনাটির ওপর গরম জল ঢাললে","বোতলটি জোরে ঝাঁকালে","বোতলের নিচে তাপ দিলে"], ans:1, exp:"ধাতব ঢাকনার ওপর গরম জল ঢাললে ঢাকনাটির তাপীয় প্রসারণ ঘটে এবং ব্যাস বেড়ে যায়। এর ফলে এটি কিছুটা ঢিলে হয়ে যায় এবং সহজেই খোলা যায়।"},
+        {q:"পরীক্ষাগারে ব্যবহৃত টেস্টটিউব বা বিকার সাধারণত কোন কাচ দিয়ে তৈরি হয়, যার তাপীয় প্রসারণ নগণ্য?", opts:["ক্রাউন কাচ","পাইরেক্স কাচ (Pyrex glass)","ফ্লিন্ট কাচ","সাধারণ কাচ"], ans:1, exp:"পাইরেক্স কাচের তাপীয় প্রসারণ অত্যন্ত নগণ্য হয়। তাই ল্যাবরেটরিতে তাপ দিলেও অসম প্রসারণের কারণে এটি ফেটে যায় না।"},
+        {q:"কঠিন পদার্থের কয়টি প্রসারণ গুণাঙ্ক থাকে?", opts:["একটি","দুটি","তিনটি","অসংখ্য"], ans:2, exp:"কঠিন বস্তুর নির্দিষ্ট আকার ও আয়তন থাকায় এর দৈর্ঘ্য প্রসারণ, ক্ষেত্র প্রসারণ এবং আয়তন প্রসারণ—তিনটিই ঘটে থাকে।"},
+        {q:"থার্মোস্ট্যাট যন্ত্রের মূল কাজ কী?", opts:["তাপমাত্রা পরিমাপ করা","কোনো আবদ্ধ জায়গার বা সংস্থার উষ্ণতা নিয়ন্ত্রণ করা","তাপ পরিবহন করা","আগুন নেভানো"], ans:1, exp:"থার্মোস্ট্যাট হলো এমন একটি যান্ত্রিক ব্যবস্থা যা দ্বিধাতব পাতের প্রসারণ ধর্মকে কাজে লাগিয়ে বৈদ্যুতিক সংযোগ চালু বা বন্ধ করে কোনো যন্ত্রের তাপমাত্রা স্বয়ংক্রিয়ভাবে নিয়ন্ত্রণ করে।"},
+        {q:"তরল ও গ্যাসীয় পদার্থের ক্ষেত্রে কোন প্রসারণটি দেখা যায় না?", opts:["আয়তন প্রসারণ","দৈর্ঘ্য ও ক্ষেত্র প্রসারণ","আপাত প্রসারণ","প্রকৃত প্রসারণ"], ans:1, exp:"তরল বা গ্যাসীয় পদার্থের নির্দিষ্ট কোনো আকার বা আকৃতি থাকে না, এরা ধারক পাত্রের আকার ধারণ করে। তাই এদের কেবলমাত্র আয়তন প্রসারণ ঘটে, দৈর্ঘ্য বা ক্ষেত্র প্রসারণ দেখা যায় না।"},
+        {q:"ইনভার (Invar) কোন কোন ধাতুর সংকর?", opts:["লোহা ও তামা","নিকেল ও ইস্পাত (লোহা)","অ্যালুমিনিয়াম ও লোহা","সিসা ও টিন"], ans:1, exp:"ইনভার হলো লোহা (ইস্পাত) এবং নিকেলের একটি বিশেষ সংকর ধাতু, যার দৈর্ঘ্য প্রসারণ গুণাঙ্কের মান অত্যন্ত কম (0.9 × 10⁻⁶/°C)।"},
+        {q:"দ্বিধাতব পাত উত্তপ্ত করলে বেঁকে যাওয়ার প্রধান কারণ কী?", opts:["দুটি ধাতুর গলনাঙ্ক আলাদা","দুটি ধাতুর তাপ পরিবাহিতা আলাদা","দুটি ধাতুর দৈর্ঘ্য প্রসারণ গুণাঙ্ক আলাদা","দুটি ধাতুর ঘনত্ব আলাদা"], ans:2, exp:"একই উষ্ণতা পরিবর্তনের ফলে বিভিন্ন ধাতুর প্রসারণের পরিমাণ বিভিন্ন হয় (অর্থাৎ আলফার মান আলাদা)। তাই রিভেট করে যুক্ত দুটি ভিন্ন ধাতুর পাতকে উত্তপ্ত করলে অসম প্রসারণের কারণে পাতটি বেঁকে যায়।"}
+    ],
+    // ===================== SET 2: কঠিন পদার্থের প্রসারণ গুণাঙ্ক (আলফা, বিটা, গামা) =====================
+    [
+        {q:"কঠিন পদার্থের দৈর্ঘ্য প্রসারণ গুণাঙ্কের (α) একক কোনটির ওপর নির্ভর করে না?", opts:["তাপমাত্রার এককের ওপর","ভরের এককের ওপর","দৈর্ঘ্যের এককের ওপর","সময়ের এককের ওপর"], ans:2, exp:"দৈর্ঘ্য প্রসারণ গুণাঙ্কের সূত্রে ওপরে (দৈর্ঘ্য প্রসারণ) এবং নিচে (প্রাথমিক দৈর্ঘ্য) একই একক থাকায় তারা একে অপরকে বাতিল করে দেয়। তাই এর মান দৈর্ঘ্যের এককের ওপর নির্ভর করে না, শুধুমাত্র তাপমাত্রার এককের ওপর নির্ভর করে।"},
+        {q:"কঠিন পদার্থের ক্ষেত্রে আলফা (α), বিটা (β) এবং গামা (γ)-এর মধ্যে সঠিক সম্পর্ক কোনটি?", opts:["α = β = γ","α = 2β = 3γ","α = β/2 = γ/3","3α = 2β = γ"], ans:2, exp:"কঠিনের তিন প্রকার প্রসারণ গুণাঙ্কের মধ্যে গাণিতিক সম্পর্কটি হলো: রৈখিক প্রসারণ গুণাঙ্ক = (ক্ষেত্র প্রসারণ গুণাঙ্ক) ÷ ২ = (আয়তন প্রসারণ গুণাঙ্ক) ÷ ৩।"},
+        {q:"একটি কঠিন পদার্থের দৈর্ঘ্য প্রসারণ গুণাঙ্ক α, ক্ষেত্র প্রসারণ গুণাঙ্ক β এবং আয়তন প্রসারণ গুণাঙ্ক γ হলে, α : β : γ এর অনুপাত কত?", opts:["১ : ২ : ৩","৩ : ২ : ১","১ : ১ : ১","১ : ৪ : ৯"], ans:0, exp:"যেহেতু α = β/2 = γ/3, তাই এদের অনুপাত করলে দাঁড়ায় α : β : γ = 1 : 2 : 3। অর্থাৎ, বিটার মান আলফার দ্বিগুণ এবং গামার মান আলফার তিনগুণ।"},
+        {q:"সেলসিয়াস স্কেলে দৈর্ঘ্য প্রসারণ গুণাঙ্ক α_C এবং ফারেনহাইট স্কেলে α_F হলে, এদের মধ্যে সম্পর্ক কী?", opts:["α_F = 9/5 α_C","α_F = 5/9 α_C","α_F = α_C + 32","α_C = 5/9 α_F"], ans:1, exp:"১ ডিগ্রি ফারেনহাইট উষ্ণতা বৃদ্ধি = ৫/৯ ডিগ্রি সেলসিয়াস উষ্ণতা বৃদ্ধির সমান। তাই ফারেনহাইট স্কেলে প্রসারণ গুণাঙ্কের মান সেলসিয়াস স্কেলের মানের ৫/৯ অংশ হয়।"},
+        {q:"দৈর্ঘ্য প্রসারণ গুণাঙ্কের মাত্রা কী?", opts:["[L]","[L θ⁻¹]","[θ⁻¹]","[M L T⁻¹]"], ans:2, exp:"আলফা, বিটা এবং গামা—তিনটি প্রসারণ গুণাঙ্কই দৈর্ঘ্য, ক্ষেত্রফল বা আয়তনের এককের ওপর নির্ভর করে না। এদের মাত্রা শুধুমাত্র তাপমাত্রার মাত্রার ব্যস্তানুপাতিক হয়, অর্থাৎ [θ⁻¹] বা [K⁻¹]।"},
+        {q:"পিতলের দৈর্ঘ্য প্রসারণ গুণাঙ্ক 19 × 10⁻⁶ /°C বলতে কী বোঝায়?", opts:["১°C উষ্ণতা বৃদ্ধিতে ১ মিটার লম্বা পিতলের দৈর্ঘ্য 19 × 10⁻⁶ মিটার বৃদ্ধি পায়","১৯°C উষ্ণতা বৃদ্ধিতে পিতলের দৈর্ঘ্য ১ মিটার বাড়ে","১°C উষ্ণতা বৃদ্ধিতে পিতলের আয়তন বাড়ে","পিতল ১৯ গুণ প্রসারিত হয়"], ans:0, exp:"দৈর্ঘ্য প্রসারণ গুণাঙ্কের সংজ্ঞানুযায়ী, একক উষ্ণতা বৃদ্ধিতে প্রতি একক দৈর্ঘ্যে যে পরিমাণ দৈর্ঘ্য প্রসারণ ঘটে, তাকেই ওই পদার্থের দৈর্ঘ্য প্রসারণ গুণাঙ্ক বলে।"},
+        {q:"একটি আয়তাকার ধাতব পাতের তাপমাত্রা বৃদ্ধি করলে তার ক্ষেত্রফলের যে প্রসারণ হয়, তা পরিমাপের ধ্রুবকটিকে কী বলে?", opts:["দৈর্ঘ্য প্রসারণ গুণাঙ্ক","ক্ষেত্র প্রসারণ গুণাঙ্ক (β)","আয়তন প্রসারণ গুণাঙ্ক (γ)","তাপ পরিবাহিতাঙ্ক"], ans:1, exp:"কোনো কঠিনের উষ্ণতা ১° বৃদ্ধি করলে এর পৃষ্ঠতলের একক ক্ষেত্রফলে যে পরিমাণ ক্ষেত্রফল বৃদ্ধি হয়, তাকে ওই কঠিনের ক্ষেত্র প্রসারণ গুণাঙ্ক বা বিটা (β) বলে।"},
+        {q:"আয়তন প্রসারণ গুণাঙ্কের (γ) SI একক কোনটি?", opts:["°C⁻¹","°F⁻¹","K⁻¹ (কেলভিন ইনভার্স)","m³/°C"], ans:2, exp:"প্রসারণ গুণাঙ্কের মান কেবলমাত্র তাপমাত্রার এককের ওপর নির্ভর করে। আন্তর্জাতিক পদ্ধতি বা SI স্কেলে তাপমাত্রার একক কেলভিন (K), তাই প্রসারণ গুণাঙ্কের একক হলো K⁻¹।"},
+        {q:"তামার দৈর্ঘ্য প্রসারণ গুণাঙ্ক 17 × 10⁻⁶ /°C হলে এর আয়তন প্রসারণ গুণাঙ্কের (γ) মান কত হবে?", opts:["8.5 × 10⁻⁶ /°C","17 × 10⁻⁶ /°C","34 × 10⁻⁶ /°C","51 × 10⁻⁶ /°C"], ans:3, exp:"আমরা জানি, γ = 3α। তাই তামার আয়তন প্রসারণ গুণাঙ্ক হবে = ৩ × 17 × 10⁻⁶ /°C = 51 × 10⁻⁶ /°C।"},
+        {q:"সেলসিয়াস ও কেলভিন স্কেলে দৈর্ঘ্য প্রসারণ গুণাঙ্কের মানের গাণিতিক সম্পর্ক কী?", opts:["α_C = α_K + 273","α_K = α_C + 273","α_C = α_K","α_C = 273 α_K"], ans:2, exp:"১ ডিগ্রি সেলসিয়াস (1°C) উষ্ণতা বৃদ্ধি এবং ১ কেলভিন (1 K) উষ্ণতা বৃদ্ধি গাণিতিকভাবে সম্পূর্ণ সমান। তাই সেলসিয়াস এবং কেলভিন স্কেলে প্রসারণ গুণাঙ্কের মান একদম একই থাকে (α_C = α_K)।"},
+        {q:"অন্তিম দৈর্ঘ্য (l₂) নির্ণয়ের সমীকরণ কোনটি?", opts:["l₂ = l₁[1 + α(θ₂ - θ₁)]","l₂ = l₁ α (θ₂ - θ₁)","l₂ = l₁ / [1 + α(θ₂ - θ₁)]","l₂ = l₁ + α(θ₂ - θ₁)"], ans:0, exp:"প্রাথমিক দৈর্ঘ্য l₁ এবং তাপমাত্রা বৃদ্ধি (θ₂ - θ₁) হলে, দৈর্ঘ্য প্রসারণ হয় l₁ α (θ₂ - θ₁)। তাই অন্তিম দৈর্ঘ্য হবে প্রাথমিক দৈর্ঘ্য + দৈর্ঘ্য প্রসারণ = l₁[1 + α(θ₂ - θ₁)]।"},
+        {q:"লোহার দৈর্ঘ্য প্রসারণ গুণাঙ্ক 12 × 10⁻⁶ /°C হলে, ফারেনহাইট স্কেলে এর মান কত হবে?", opts:["12 × 10⁻⁶ /°F","6.66 × 10⁻⁶ /°F","21.6 × 10⁻⁶ /°F","108 × 10⁻⁶ /°F"], ans:1, exp:"সূত্র অনুযায়ী α_F = 5/9 α_C। তাই ফারেনহাইট স্কেলে মান হবে 12 × 10⁻⁶ × (5/9) = 60/9 × 10⁻⁶ ≈ 6.66 × 10⁻⁶ /°F।"},
+        {q:"কঠিনের প্রসারণ গুণাঙ্কগুলির মান কোন বিষয়ের ওপর নির্ভর করে?", opts:["বস্তুর ভর ও আয়তনের ওপর","বস্তুর প্রাথমিক দৈর্ঘ্য ও ক্ষেত্রফলের ওপর","বস্তুর উপাদান এবং উষ্ণতার এককের ওপর","কেবল বস্তুর আকারের ওপর"], ans:2, exp:"প্রসারণ গুণাঙ্ক হলো পদার্থের একটি নিজস্ব ধর্ম। এটি লোহা, তামা না পিতল—তার ওপর নির্ভর করে। এছাড়া এটি সেলসিয়াস না ফারেনহাইট স্কেলে মাপা হচ্ছে, তার ওপরও এর মান নির্ভর করে।"},
+        {q:"ক্ষেত্র প্রসারণ গুণাঙ্ক (β)-এর গাণিতিক সমীকরণ কোনটি?", opts:["β = (A₂ - A₁)/A₁(θ₂ - θ₁)","β = A₁(A₂ - A₁)/(θ₂ - θ₁)","β = (θ₂ - θ₁)/A₁(A₂ - A₁)","β = A₁[1 + (θ₂ - θ₁)]"], ans:0, exp:"সংজ্ঞানুযায়ী, ক্ষেত্র প্রসারণ গুণাঙ্ক = (ক্ষেত্র প্রসারণ) ÷ (প্রাথমিক ক্ষেত্রফল × উষ্ণতা বৃদ্ধি)।"},
+        {q:"কোনো কঠিন পদার্থের ক্ষেত্র প্রসারণ গুণাঙ্ক ও দৈর্ঘ্য প্রসারণ গুণাঙ্কের অনুপাত কত?", opts:["১ : ২","২ : ১","৩ : ১","১ : ৩"], ans:1, exp:"আমরা জানি, β = 2α। তাই ক্ষেত্র প্রসারণ গুণাঙ্ক এবং দৈর্ঘ্য প্রসারণ গুণাঙ্কের অনুপাত হবে β : α = 2α : α = 2 : 1。"}
+    ],
+    // ===================== SET 3: তরল ও গ্যাসীয় পদার্থের প্রসারণ =====================
+    [
+        {q:"তরল পদার্থের প্রসারণের ক্ষেত্রে কয়টি আয়তন প্রসারণ গুণাঙ্ক বিবেচনা করা হয়?", opts:["একটি","দুটি","তিনটি","শূন্য"], ans:1, exp:"তরলকে সর্বদা কোনো পাত্রে রেখে উত্তপ্ত করতে হয়। তাই পাত্রের প্রসারণের কথা বিবেচনা করে তরলের দুটি প্রসারণ গুণাঙ্ক ধরা হয়— ১) আপাত প্রসারণ গুণাঙ্ক এবং ২) প্রকৃত প্রসারণ গুণাঙ্ক।"},
+        {q:"তরলের ক্ষেত্রে প্রকৃত প্রসারণ (γ_r), আপাত প্রসারণ (γ_a) এবং পাত্রের প্রসারণ (γ_g)-এর মধ্যে সঠিক সম্পর্ক কোনটি?", opts:["γ_a = γ_r + γ_g","γ_r = γ_a - γ_g","γ_r = γ_a + γ_g","γ_g = γ_r + γ_a"], ans:2, exp:"তরলের প্রকৃত প্রসারণ সবসময় তার আপাত প্রসারণ এবং পাত্রের প্রসারণের যোগফলের সমান হয়।"},
+        {q:"তরলের কোন প্রসারণটি তরলের নিজস্ব ধর্ম?", opts:["আপাত প্রসারণ","পাত্রের প্রসারণ","প্রকৃত প্রসারণ","রৈখিক প্রসারণ"], ans:2, exp:"তরলের প্রকৃত প্রসারণ পাত্রের প্রসারণের ওপর নির্ভর করে না। এটি তরলের একটি নিজস্ব এবং অপরিবর্তনশীল ধর্ম। অন্যদিকে, পাত্রের উপাদানের ওপর নির্ভর করে আপাত প্রসারণ বদলে যেতে পারে।"},
+        {q:"একটি ফ্লাস্কে কানায় কানায় তরল ভর্তি করে উত্তপ্ত করলে একেবারে শুরুতে কী ঘটবে?", opts:["তরল উপচে পড়বে","তরলতল কিছুটা নিচে নেমে যাবে","তরলের রং বদলে যাবে","তরলতল স্থির থাকবে"], ans:1, exp:"তাপ প্রয়োগ করলে প্রথমে তা কাচের পাত্রে পৌঁছায় এবং পাত্রটি প্রসারিত হয়ে আকারে কিছুটা বড়ো হয়ে যায়। এই কারণেই প্রথমে তরলতল নিচে নেমে যায়। পরে তরল তাপ পেয়ে প্রসারিত হলে তা দ্রুত ওপরে ওঠে।"},
+        {q:"তরলের আপাত প্রসারণ গুণাঙ্কের মান কোনটির ওপর নির্ভর করে?", opts:["কেবল তরলের প্রকৃতির ওপর","কেবল তাপমাত্রার ওপর","তরলের প্রকৃতি এবং পাত্রের উপাদানের ওপর","বায়ুমণ্ডলীয় চাপের ওপর"], ans:2, exp:"আপাত প্রসারণ মাপার সময় পাত্রের প্রসারণকে বাদ দেওয়া হয়। কিন্তু আলাদা আলাদা পদার্থের তৈরি পাত্রের প্রসারণ আলাদা হয়। তাই একই তরলকে আলাদা পাত্রে রেখে উত্তপ্ত করলে আপাত প্রসারণের মানও আলাদা হয়।"},
+        {q:"যদি এমন কোনো কাল্পনিক পাত্র পাওয়া যায় যার তাপীয় প্রসারণ শূন্য, তবে সেই পাত্রে তরলের আপাত ও প্রকৃত প্রসারণের সম্পর্ক কেমন হবে?", opts:["আপাত প্রসারণ > প্রকৃত প্রসারণ","আপাত প্রসারণ < প্রকৃত প্রসারণ","আপাত প্রসারণ = প্রকৃত প্রসারণ","আপাত প্রসারণ শূন্য হবে"], ans:2, exp:"সূত্র অনুযায়ী γ_r = γ_a + γ_g। যদি পাত্রের প্রসারণ না হয় (অর্থাৎ γ_g = 0), তবে গাণিতিকভাবে তরলের প্রকৃত প্রসারণ এবং আপাত প্রসারণ সম্পূর্ণ সমান হয়ে যাবে।"},
+        {q:"গ্যাসের আয়তন প্রসারণ গুণাঙ্কের সংজ্ঞায় কোন রাশিটি স্থির রাখা আবশ্যিক?", opts:["গ্যাসের আয়তন","গ্যাসের চাপ","গ্যাসের তাপমাত্রা","গ্যাসের ঘনত্ব"], ans:1, exp:"চাপ ও উষ্ণতার সামান্য পার্থক্যের জন্য গ্যাসের প্রসারণে অনেক বেশি তারতম্য দেখা যায়। তাই গ্যাসের আয়তন প্রসারণ গুণাঙ্ক মাপার সময় চাপকে স্থির রাখা বাধ্যতামূলক।"},
+        {q:"সকল আদর্শ গ্যাসের ক্ষেত্রে আয়তন প্রসারণ গুণাঙ্কের মান কত হয়?", opts:["1/100 /°C","1/273 /°C","273 /°C","1/373 /°C"], ans:1, exp:"চার্লসের সূত্র অনুযায়ী, চাপ স্থির রাখলে প্রতি ১°C উষ্ণতা বৃদ্ধিতে গ্যাসের আয়তন তার ০°C উষ্ণতার আয়তনের ১/২৭৩ অংশ বৃদ্ধি পায়। এই ১/২৭৩ ভগ্নাংশটিই হলো গ্যাসের আয়তন প্রসারণ গুণাঙ্ক।"},
+        {q:"গ্যাসীয় পদার্থের প্রসারণের একটি বিশেষ বৈশিষ্ট্য কী?", opts:["এদের কেবল দৈর্ঘ্য প্রসারণ হয়","এদের প্রসারণ কঠিন বা তরলের চেয়ে অনেক গুণ বেশি হয়","সমান উষ্ণতার পার্থক্যের জন্য ভিন্ন গ্যাসের প্রসারণ ভিন্ন হয়","গ্যাসকে উত্তপ্ত করলে সংকুচিত হয়"], ans:1, exp:"গ্যাসীয় পদার্থের অণুগুলোর মধ্যে আকর্ষণ বল অত্যন্ত কম থাকে। তাই তাপ প্রয়োগে গ্যাসের প্রসারণ কঠিন বা তরলের প্রসারণের চেয়ে অনেক গুণ বেশি হয় এবং পাত্রের প্রসারণকে এক্ষেত্রে হিসেবে ধরাই হয় না।"},
+        {q:"গ্যাসের আয়তন প্রসারণ গুণাঙ্ক কোন সূত্রের সাহায্যে খুব সহজেই নির্ণয় ও প্রমাণ করা যায়?", opts:["বয়েলের সূত্র","ওহমের সূত্র","চার্লসের সূত্র","অ্যাভোগাড্রো সূত্র"], ans:2, exp:"চার্লসের সূত্রের গাণিতিক রূপ V_t = V₀(1 + t/273) থেকেই সরাসরি প্রমাণিত হয় যে গ্যাসের আয়তন প্রসারণ গুণাঙ্ক γ = 1/273 /°C।"},
+        {q:"জ্বর মাপার থার্মোমিটারে পারদ ব্যবহারের অন্যতম বৈজ্ঞানিক কারণ কী?", opts:["পারদ তাপের কুপরিবাহী","পারদ একটি গ্যাস","উষ্ণতার পরিবর্তনে পারদের আয়তন প্রসারণ খুব নিয়মিত হয়","পারদ কাচের সাথে আটকে থাকে"], ans:2, exp:"পারদ একটি তরল ধাতু এবং তাপমাত্রার পরিবর্তনে পারদের আয়তনের যে প্রসারণ ঘটে তা অত্যন্ত নিয়মানুগ হয়। তাই থার্মোমিটারের সরু নলের ভেতর পারদের প্রসারণ দেখে নিখুঁতভাবে উষ্ণতা মাপা যায়।"},
+        {q:"বোতলের মুখে লাগানো চুপসে থাকা বেলুন, বোতলটিকে গরম জলে বসালে ফুলে ওঠে কেন?", opts:["বোতলের ভেতরের বায়ুর তাপীয় প্রসারণ ঘটে বলে","জলের বাষ্প বেলুনে ঢুকে যায় বলে","বেলুনের নিজস্ব প্রসারণের জন্য","বায়ুর চাপ কমে যায় বলে"], ans:0, exp:"গরম জলের তাপে বোতলের ভেতরের বাতাস উত্তপ্ত হয় এবং গ্যাসের প্রসারণ ধর্ম অনুযায়ী সেই বাতাস প্রসারিত হয়ে ওপরে উঠে বেলুনটিকে ফুলিয়ে দেয়।"},
+        {q:"তরল পদার্থের নিজস্ব কোনো আকার না থাকায় এদের কোন প্রসারণটি গাণিতিকভাবে মাপা সম্ভব নয়?", opts:["প্রকৃত প্রসারণ","আপাত প্রসারণ","রৈখিক বা ক্ষেত্র প্রসারণ","আয়তন প্রসারণ"], ans:2, exp:"তরলকে যে পাত্রে রাখা হয়, সে সেই পাত্রেরই আকার ধারণ করে। তাই এর নির্দিষ্ট দৈর্ঘ্য বা ক্ষেত্রফল থাকে না, ফলে রৈখিক বা ক্ষেত্র প্রসারণও ঘটে না।"},
+        {q:"ফুটন্ত দুধ কড়াই থেকে উথলে ওঠে কেন?", opts:["দুধের ঘনত্ব বেড়ে যায় বলে","দুধের ভেতর দ্রবীভূত বায়ুর তাপীয় প্রসারণের ফলে","পাত্রের প্রসারণের জন্য","দুধ বাষ্পীভূত হয় না বলে"], ans:1, exp:"দুধ গরম করলে তার ভেতরে দ্রবীভূত থাকা বাতাস বা গ্যাস প্রসারিত হতে চায় এবং আয়তনে বেড়ে যায়। এই গ্যাসের প্রসারণের ফলেই দুধ ফুলে উঠে উথলিয়ে পড়ে।"},
+        {q:"গ্যাসের আয়তন প্রসারণ গুণাঙ্ক মাপার সময় সূত্র অনুযায়ী প্রাথমিক আয়তন (V₀) কোন তাপমাত্রায় মাপা হয়?", opts:["ঘরের তাপমাত্রায় (২৫°C)","১০০°C তাপমাত্রায়","০°C (শূন্য ডিগ্রি সেলসিয়াস) তাপমাত্রায়","২৭৩°C তাপমাত্রায়"], ans:2, exp:"চার্লসের সূত্র এবং আয়তন প্রসারণ গুণাঙ্কের সংজ্ঞায় স্পষ্টভাবে বলা হয়েছে যে, প্রতি ১°C উষ্ণতা বৃদ্ধির জন্য গ্যাসের আয়তন ০°C উষ্ণতায় তার যে আয়তন থাকে (V₀), তার সাপেক্ষে বৃদ্ধি বা হ্রাস পায়。"}
+    ],
+    // ===================== SET 4: তাপের পরিবহণ, পরিবাহিতাঙ্ক এবং তাপীয় রোধ =====================
+    [
+        {q:"যে পদ্ধতিতে কঠিন পদার্থের মধ্য দিয়ে তাপ উষ্ণতর অংশ থেকে শীতলতর অংশে সঞ্চালিত হয়, কিন্তু অণুগুলির স্থানচ্যুতি হয় না, তাকে কী বলে?", opts:["তাপের বিকিরণ","তাপের পরিচলন","তাপের পরিবহণ","তাপের প্রসারণ"], ans:2, exp:"কঠিন পদার্থের অণুগুলো নিজেদের স্থান পরিবর্তন করতে পারে না। তারা শুধু নিজেদের জায়গায় থেকে কম্পনের মাধ্যমে পাশের অণুকে তাপ দিয়ে দেয়। তাপ সঞ্চালনের এই পদ্ধতিকেই পরিবহণ বলে।"},
+        {q:"নিচের কোন পদার্থটি তড়িতের কুপরিবাহী হলেও তাপের অত্যন্ত সুপরিবাহী?", opts:["তামা","লোহা","রূপো","হীরক (Diamond)"], ans:3, exp:"এটি একটি খুব চমৎকার ব্যতিক্রম। হীরক তড়িৎ পরিবহন করতে পারে না (কুপরিবাহী), কিন্তু এর তাপ পরিবহণ ক্ষমতা রূপো বা তামার চেয়েও বেশি!"},
+        {q:"ইঞ্জেন হাউজের পরীক্ষায় (Ingen Hausz's experiment) কোন ধাতুর দণ্ডে মোমের প্রলেপ সবচেয়ে বেশি গলে?", opts:["অ্যালুমিনিয়াম","তামা","লোহা","রূপো"], ans:3, exp:"এই পরীক্ষা প্রমাণ করে যে বিভিন্ন পদার্থের তাপ পরিবহণ ক্ষমতা আলাদা। রূপো, তামা, অ্যালুমিনিয়াম ও লোহার মধ্যে রূপোর তাপ পরিবাহিতা সবচেয়ে বেশি, তাই রূপোর দণ্ডে তাপ সবচেয়ে দ্রুত পরিবাহিত হয়ে মোমকে গলিয়ে দেয়।"},
+        {q:"তাপ পরিবাহিতার অধঃক্রম (বড় থেকে ছোট) অনুযায়ী নিচের কোন ক্রমটি সঠিক?", opts:["লোহা > অ্যালুমিনিয়াম > তামা > রূপা","তামা > রূপা > লোহা > অ্যালুমিনিয়াম","রূপা > তামা > অ্যালুমিনিয়াম > লোহা","অ্যালুমিনিয়াম > রূপা > তামা > লোহা"], ans:2, exp:"ধাতুগুলোর মধ্যে রূপা তাপের শ্রেষ্ঠ পরিবাহী, এরপর তামা, তারপর অ্যালুমিনিয়াম এবং সবশেষে লোহা।"},
+        {q:"তাপ পরিবাহিতাঙ্ক (k)-এর SI (আন্তর্জাতিক) একক কোনটি?", opts:["cal·cm⁻¹·s⁻¹·°C⁻¹","W·m⁻¹·K⁻¹ (ওয়াট প্রতি মিটার প্রতি কেলভিন)","J·kg⁻¹·K⁻¹","K·W⁻¹"], ans:1, exp:"SI পদ্ধতিতে তাপ বা শক্তির হার (Q/t) মাপা হয় ওয়াট (W) এককে, বেধ মিটারে এবং তাপমাত্রা কেলভিনে। এগুলো সমীকরণে বসালে k-এর একক দাঁড়ায় W·m⁻¹·K⁻¹।"},
+        {q:"একটি আদর্শ পরিবাহীর (Ideal Conductor) ক্ষেত্রে তাপ পরিবাহিতার মান কত হওয়া উচিত?", opts:["শূন্য","এক","একশো","অসীম"], ans:3, exp:"একটি আদর্শ পরিবাহীর মধ্য দিয়ে কোনো রকম বাধা ছাড়াই তাপ পরিবাহিত হতে পারে। তাই তাত্ত্বিকভাবে এর তাপ পরিবাহিতার মান অসীম বা ইনফিনিটি (∞) হয়।"},
+        {q:"তাপ পরিবাহিতাঙ্কের (k) মাত্রা (Dimension) কী?", opts:["[ML²T⁻²]","[MLT⁻³θ⁻¹]","[M⁻¹L⁻²T³θ]","[θ⁻¹]"], ans:1, exp:"Q = kA(θ₁ - θ₂)t/d সূত্র থেকে k-কে আলাদা করে সবগুলোর মাত্রা বসালে তাপ পরিবাহিতাঙ্কের মাত্রা পাওয়া যায় [MLT⁻³θ⁻¹]。"},
+        {q:"কোনো পদার্থের দুই প্রান্তের উষ্ণতার পার্থক্য স্থির থাকলে, পরিবাহিত তাপ (Q) পরিবাহীর বেধ বা পুরুত্বের (d) সাথে কীভাবে পরিবর্তিত হয়?", opts:["সমানুপাতে বাড়ে","ব্যস্তানুপাতে পরিবর্তিত হয়","বর্গের সমানুপাতিক হয়","কোনো পরিবর্তন হয় না"], ans:1, exp:"সূত্র অনুযায়ী পরিবাহিত তাপ Q ∝ 1/d। অর্থাৎ পাতটি যত বেশি পুরু বা মোটা হবে, তাপ এক প্রান্ত থেকে অন্য প্রান্তে যেতে তত বেশি সময় নেবে বা কম তাপ পরিবাহিত হবে।"},
+        {q:"তড়িৎবিজ্ঞানের 'তড়িৎ প্রবাহমাত্রা' (I)-এর সাথে তাপবিজ্ঞানের কোন রাশিটির চমৎকার সাদৃশ্য বা মিল রয়েছে?", opts:["উষ্ণতার পার্থক্য","তাপ পরিবাহিতাঙ্ক","তাপ পরিবহণের হার বা পরিবাহিত তাপ/সময় (Q/t)","তাপীয় রোধাঙ্ক"], ans:2, exp:"তড়িৎ প্রবাহমাত্রা হলো একক সময়ে পরিবাহিত আধান (q/t)। ঠিক একইভাবে, তাপবিজ্ঞানে একক সময়ে পরিবাহিত তাপ (Q/t) হলো তড়িৎ প্রবাহমাত্রার সমতুল্য রাশি।"},
+        {q:"তাপীয় রোধের (R_th) গাণিতিক সমীকরণ কোনটি?", opts:["kA/d","d/kA","kAd","d/A"], ans:1, exp:"তাপ পরিবহণের সমীকরণটিকে ওহমের সূত্রের (I = V/R) সাথে তুলনা করলে দেখা যায়, উষ্ণতার পার্থক্যকে d/kA দিয়ে ভাগ করা হচ্ছে। তাই তড়িৎ রোধের অনুরূপ এই d/kA রাশিটিকেই তাপীয় রোধ বলা হয়।"},
+        {q:"তড়িৎবিজ্ঞানের বিভবপার্থক্য (V₁ - V₂)-এর সমতুল্য তাপীয় রাশি কোনটি?", opts:["তাপীয় রোধ","তাপ পরিবাহিতাঙ্ক","উষ্ণতার পার্থক্য (θ₁ - θ₂)","তাপীয় রোধাঙ্ক"], ans:2, exp:"বিভবপার্থক্য যেমন তড়িৎ প্রবাহের কারণ এবং উচ্চ বিভব থেকে নিম্ন বিভবে তড়িৎ যায়, তেমনি উষ্ণতার পার্থক্য হলো তাপ প্রবাহের কারণ এবং উচ্চ উষ্ণতা থেকে নিম্ন উষ্ণতায় তাপ পরিবাহিত হয়।"},
+        {q:"তাপীয় রোধের (Thermal Resistance) SI একক কী?", opts:["K·W⁻¹ (কেলভিন পার ওয়াট)","W·m⁻¹·K⁻¹","J·s⁻¹","m·K·W⁻¹"], ans:0, exp:"তাপীয় রোধ = উষ্ণতার পার্থক্য / তাপ পরিবহণের হার। উষ্ণতার একক কেলভিন (K) এবং তাপ পরিবহণের হারের একক ওয়াট (W)। তাই এককটি হলো K/W বা K·W⁻¹।"},
+        {q:"তড়িৎ রোধাঙ্ক বা ρ (রো)-এর সমতুল্য তাপীয় রাশিটিকে কী বলা হয়?", opts:["তাপ পরিবাহিতাঙ্ক (k)","তাপীয় রোধাঙ্ক (1/k)","তাপীয় রোধ","তাপের যান্ত্রিক তুল্যাঙ্ক"], ans:1, exp:"তড়িৎ রোধের সূত্রে যেমন R = ρ d/A থাকে, তেমনি তাপীয় রোধের সূত্রে (1/k) d/A থাকে। তাই তড়িৎ রোধাঙ্কের সমতুল্য রাশিটি হলো 1/k, যাকে তাপীয় রোধাঙ্ক বলে।"},
+        {q:"তাপীয় রোধাঙ্কের SI একক কোনটি?", opts:["K·W⁻¹","m·K·W⁻¹ (মিটার কেলভিন পার ওয়াট)","W·m⁻¹·K⁻¹","J·s⁻¹·m⁻¹"], ans:1, exp:"তাপীয় রোধাঙ্ক হলো তাপ পরিবাহিতাঙ্কের (k) ঠিক উলটো। k-এর একক W·m⁻¹·K⁻¹ হওয়ায়, তাপীয় রোধাঙ্কের একক উলটে গিয়ে m·K·W⁻¹ হয়ে যায়।"},
+        {q:"একটি আদর্শ অপরিবাহী বা কুপরিবাহী (Ideal Insulator) পদার্থের তাপ পরিবাহিতাঙ্কের (k) মান কত হয়?", opts:["অসীম","এক","শূন্য","ঋণাত্মক"], ans:2, exp:"কুপরিবাহী পদার্থের মধ্য দিয়ে তাপ একদমই প্রবাহিত হতে পারে না। তাই তাত্ত্বিকভাবে একটি আদর্শ অপরিবাহীর তাপ পরিবহণ ক্ষমতা বা তাপ পরিবাহিতাঙ্কের মান সম্পূর্ণ শূন্য (0) হয়।"}
+    ]
+];
+
+// ====================================================================
+//  APP STATE
+// ====================================================================
+
+const SET_NAMES = [
+    'তাপীয় প্রসারণ এবং দৈনন্দিন জীবনে এর প্রভাব',
+    'কঠিন পদার্থের প্রসারণ গুণাঙ্ক (আলফা, বিটা, গামা)',
+    'তরল ও গ্যাসীয় পদার্থের প্রসারণ',
+    'তাপের পরিবহণ, পরিবাহিতাঙ্ক এবং তাপীয় রোধ'
+];
+
+const SET_ICONS = ['🌡️','📐','💧','🔩'];
+const MAX_ATTEMPTS = 10;
+const STORAGE_KEY = 'testbazar_physical_science_ch4';
+
+// ====================================================================
+//  QUIZ ENGINE
+// ====================================================================
+
+let currentSet = 0;
+let currentQ = 0;
+let score = 0;
+let wrong = 0;
+let answered = false;
+let timerInterval;
+let timeLeft = 600;
+let userAnswers = [];
+let loggedInUser = null;
+let pendingSet = -1;
+let attemptData = {};
+
+function loadAttemptData() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+        attemptData = JSON.parse(data);
+    } else {
+        attemptData = {};
+    }
+}
+
+function saveAttemptData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(attemptData));
+}
+
+function getAttempts(setIndex) {
+    const key = 'set_' + setIndex;
+    if (!attemptData[key]) {
+        attemptData[key] = { count: 0, scores: [] };
+    }
+    return attemptData[key];
+}
+
+function canAttempt(setIndex) {
+    const data = getAttempts(setIndex);
+    return data.count < MAX_ATTEMPTS;
+}
+
+function addAttempt(setIndex, scoreVal) {
+    const data = getAttempts(setIndex);
+    data.count++;
+    data.scores.push(scoreVal);
+    saveAttemptData();
+}
+
+function initSetGrid() {
+    const grid = document.getElementById('setGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < ALL_SETS.length; i++) {
+        const card = document.createElement('div');
+        card.className = 'set-card';
+        const attempts = getAttempts(i);
+        const remaining = MAX_ATTEMPTS - attempts.count;
+        const locked = remaining <= 0;
+        
+        if (locked) card.classList.add('locked');
+        
+        card.innerHTML = `
+            <div class="set-icon">${SET_ICONS[i] || '📝'}</div>
+            <div class="set-title">Set ${i + 1}</div>
+            <div class="set-sub">${SET_NAMES[i] || 'সেট ' + (i+1)}</div>
+            <span class="set-badge">১৫ প্রশ্ন</span>
+            <div class="attempts-left">🔄 বাকি: ${remaining} বার</div>
+            ${locked ? '<div class="lock-icon">🔒</div>' : ''}
+        `;
+        
+        if (!locked) {
+            card.onclick = () => {
+                pendingSet = i;
+                showLogin();
+            };
+        }
+        grid.appendChild(card);
+    }
+}
+
+function showSetSelection() {
+    document.getElementById('startScreen').style.display = 'block';
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('timerBox').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('userInfo').classList.add('hidden');
+    loadAttemptData();
+    initSetGrid();
+}
+
+function showLogin() {
+    document.getElementById('loginModal').classList.add('show');
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginUser').focus();
+}
+
+function closeLogin() {
+    document.getElementById('loginModal').classList.remove('show');
+    pendingSet = -1;
+}
+
+function verifyLogin() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+    const errorEl = document.getElementById('loginError');
+    
+    if (!user || !pass) {
+        errorEl.textContent = '❌ ইউজারনেম ও পাসওয়ার্ড দিন!';
+        errorEl.style.display = 'block';
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('testbazar_users') || '{}');
+    
+    if (users[user] && users[user].pass === pass) {
+        loggedInUser = user;
+        document.getElementById('loginModal').classList.remove('show');
+        document.getElementById('userInfo').classList.remove('hidden');
+        document.getElementById('userNameDisplay').textContent = user;
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        
+        if (pendingSet >= 0) {
+            startSet(pendingSet);
+            pendingSet = -1;
+        }
+    } else {
+        errorEl.textContent = '❌ ইউজারনেম বা পাসওয়ার্ড ভুল!';
+        errorEl.style.display = 'block';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').focus();
+    }
+}
+
+function logoutUser() {
+    loggedInUser = null;
+    document.getElementById('userInfo').classList.add('hidden');
+    document.getElementById('logoutBtn').classList.add('hidden');
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.remove('show');
+    showSetSelection();
+    alert('✅ সফলভাবে লগআউট হয়েছে!');
+}
+
+function startSet(setIndex) {
+    if (!canAttempt(setIndex)) {
+        alert('⚠️ আপনি এই সেটটি সর্বোচ্চ ' + MAX_ATTEMPTS + ' বার দেওয়ার অনুমতি পেয়েছেন। দয়া করে অন্য সেট নির্বাচন করুন।');
+        return;
+    }
+    
+    currentSet = setIndex;
+    currentQ = 0;
+    score = 0;
+    wrong = 0;
+    answered = false;
+    userAnswers = [];
+    timeLeft = 600;
+
+    document.getElementById('startScreen').style.display = 'none';
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('hidden');
+    document.getElementById('timerBox').classList.remove('danger');
+    document.getElementById('setTitle').textContent = 'Set ' + (setIndex + 1) + ' — ' + (SET_NAMES[setIndex] || '');
+    document.getElementById('attemptCount').textContent = getAttempts(setIndex).count + 1;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(tick, 1000);
+    loadQuestion();
+}
+
+function tick() {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    if (timeLeft <= 60) document.getElementById('timerBox').classList.add('danger');
+    if (timeLeft <= 0) { clearInterval(timerInterval); showResult(); }
+}
+
+function loadQuestion() {
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    answered = false;
+
+    document.getElementById('qNum').textContent = 'প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'ফলাফল দেখো' : 'পরবর্তী →';
+    document.getElementById('explanation').classList.remove('show');
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt';
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        btn.onclick = () => selectAnswer(i);
+        opts.appendChild(btn);
+    });
+}
+
+function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const qs = ALL_SETS[currentSet];
+    const q = qs[currentQ];
+    userAnswers[currentQ] = idx;
+
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b => b.classList.add('disabled'));
+    btns[q.ans].classList.add('correct');
+    if (idx !== q.ans) {
+        btns[idx].classList.add('wrong');
+        wrong++;
+    } else {
+        score++;
+    }
+
+    document.getElementById('scoreShow').textContent = '✅ সঠিক: ' + score + ' | ❌ ভুল: ' + wrong;
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+    document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+    const qs = ALL_SETS[currentSet];
+    currentQ++;
+    if (currentQ >= qs.length) {
+        clearInterval(timerInterval);
+        showResult();
+        return;
+    }
+    loadQuestion();
+}
+
+function showResult() {
+    document.getElementById('quizScreen').classList.add('hidden');
+    document.getElementById('resultWrap').classList.add('show');
+    document.getElementById('timerBox').classList.add('hidden');
+
+    addAttempt(currentSet, score);
+
+    const total = ALL_SETS[currentSet].length;
+    const pct = Math.round(score / total * 100);
+    document.getElementById('finalScore').textContent = score;
+    document.getElementById('rbCorrect').textContent = score;
+    document.getElementById('rbWrong').textContent = wrong;
+    document.getElementById('rbPct').textContent = pct + '%';
+
+    let icon, grade;
+    if (pct >= 90) { icon = '🌟'; grade = 'অসাধারণ! তুমি দুর্দান্ত!'; }
+    else if (pct >= 70) { icon = '👍'; grade = 'খুব ভালো! আরও একটু practice করো।'; }
+    else if (pct >= 50) { icon = '📚'; grade = 'ভালো চেষ্টা! পরের সেট চেষ্টা করো।'; }
+    else { icon = '💪'; grade = 'চেষ্টা চালিয়ে যাও! নোটস পড়ে আবার দাও।'; }
+
+    document.getElementById('resultIcon').textContent = icon;
+    document.getElementById('resultGrade').textContent = grade;
+    initSetGrid();
+}
+
+function retrySet() {
+    document.getElementById('resultWrap').classList.remove('show');
+    startSet(currentSet);
+}
+
+function showReview() {
+    document.getElementById('resultWrap').classList.remove('show');
+    document.getElementById('quizScreen').classList.remove('hidden');
+    currentQ = 0;
+    loadReview();
+}
+
+function loadReview() {
+    const qs = ALL_SETS[currentSet];
+    if (currentQ >= qs.length) {
+        document.getElementById('quizScreen').classList.add('hidden');
+        document.getElementById('resultWrap').classList.add('show');
+        return;
+    }
+    const q = qs[currentQ];
+    document.getElementById('qNum').textContent = 'Review — প্রশ্ন ' + (currentQ + 1) + ' / ' + qs.length;
+    document.getElementById('qText').textContent = q.q;
+    document.getElementById('progressFill').style.width = ((currentQ + 1) / qs.length * 100) + '%';
+    document.getElementById('nextBtn').disabled = false;
+    document.getElementById('nextBtn').textContent = currentQ === qs.length - 1 ? 'শেষ করো' : 'পরবর্তী →';
+    document.getElementById('nextBtn').onclick = () => { currentQ++; loadReview(); };
+    document.getElementById('scoreShow').textContent = '🟢 সবুজ = সঠিক উত্তর';
+
+    const opts = document.getElementById('qOpts');
+    opts.innerHTML = '';
+    const labels = ['ক', 'খ', 'গ', 'ঘ'];
+    q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt disabled';
+        if (i === q.ans) btn.classList.add('correct');
+        else if (userAnswers[currentQ] === i) btn.classList.add('wrong');
+        btn.innerHTML = '<div class="opt-circle">' + labels[i] + '</div><div class="opt-text">' + o + '</div>';
+        opts.appendChild(btn);
+    });
+
+    document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+    document.getElementById('explanation').classList.add('show');
+}
+
+// ====================================================================
+//  KEYBOARD SUPPORT
+// ====================================================================
+
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') verifyLogin();
+});
+
+document.getElementById('loginUser').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('loginPass').focus();
+});
+
+// ====================================================================
+//  INIT
+// ====================================================================
+
+showSetSelection();
+console.log('✅ Class 10 — ভৌতবিজ্ঞান Chapter 4 Loaded!');
+console.log('📚 মোট সেট: ' + ALL_SETS.length);
+console.log('📝 মোট প্রশ্ন: ' + (ALL_SETS.length * 15));
+console.log('🔄 প্রতি সেটে Attempt Limit: ' + MAX_ATTEMPTS);
+console.log('🔑 ইউজারনেম ও পাসওয়ার্ড Admin Panel থেকে নিতে হবে');
+</script>
+</body>
+</html>
